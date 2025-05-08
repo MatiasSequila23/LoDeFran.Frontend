@@ -1,0 +1,43 @@
+﻿using LoDeFran.Frontend.Models;
+using System.Net.Http.Json;
+
+namespace LoDeFran.Frontend.Services
+{
+    public class ProveedorService
+    {
+        private readonly HttpClient _http;
+
+        public ProveedorService(HttpClient http)
+        {
+            _http = http;
+        }
+
+        public async Task<List<Proveedor>> GetProveedoresAsync()
+        {
+            return await _http.GetFromJsonAsync<List<Proveedor>>("Proveedores") ?? new();
+        }
+
+        public async Task<Proveedor?> GetProductoByIdAsync(int id)
+        {
+            return await _http.GetFromJsonAsync<Proveedor>($"Proveedores/{id}");
+        }
+
+        public async Task<bool> CrearProveedorAsync(Proveedor Proveedores)
+        {
+            var response = await _http.PostAsJsonAsync("Proveedores", Proveedores);
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> ActualizarProveedorAsync(Proveedor Proveedores)
+        {
+            var response = await _http.PutAsJsonAsync($"Proveedores/{Proveedores.Id}", Proveedores);
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> EliminarProveedorAsync(int id)
+        {
+            var response = await _http.DeleteAsync($"Proveedores/{id}");
+            return response.IsSuccessStatusCode;
+        }
+    }
+}

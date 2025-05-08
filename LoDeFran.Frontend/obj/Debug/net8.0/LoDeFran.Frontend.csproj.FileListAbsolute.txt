@@ -615,6 +615,7 @@ C:\SISTEMA LoDeFran\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\LoDeFra
 C:\SISTEMA LoDeFran\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\LoDeFran.Frontend.AssemblyInfo.cs
 C:\SISTEMA LoDeFran\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\LoDeFran.Frontend.csproj.CoreCompileInputs.cache
 C:\SISTEMA LoDeFran\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\LoDeFran.Frontend.MvcApplicationPartsAssemblyInfo.cache
+C:\SISTEMA LoDeFran\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\LoDeFran.Frontend.sourcelink.json
 C:\SISTEMA LoDeFran\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\webcil\Microsoft.AspNetCore.Authorization.wasm
 C:\SISTEMA LoDeFran\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\webcil\Microsoft.AspNetCore.Components.wasm
 C:\SISTEMA LoDeFran\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\webcil\Microsoft.AspNetCore.Components.Forms.wasm

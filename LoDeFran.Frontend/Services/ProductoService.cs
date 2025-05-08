@@ -1,4 +1,5 @@
 ﻿using LoDeFran.Frontend.Models;
+using System.Net.Http;
 using System.Net.Http.Json;
 
 namespace LoDeFran.Frontend.Services
@@ -46,6 +47,31 @@ namespace LoDeFran.Frontend.Services
         public async Task<List<EstadoProducto>> GetEstadosProductosAsync()
         {
             return await _http.GetFromJsonAsync<List<EstadoProducto>>("EstadosProductos") ?? new();
+        }
+        public async Task<List<Insumo>> GetInsumosAsync()
+        {
+            return await _http.GetFromJsonAsync<List<Insumo>>("Insumos") ?? new();
+        }
+        public async Task<bool> AsociarInsumoAProducto(int id, InsumoProducto insumo)
+        {
+            // POST a API
+            var response = await _http.PostAsJsonAsync($"Productos/{id}/insumos", insumo);
+            return response.IsSuccessStatusCode;
+        }
+        public async Task<List<InsumoProducto>> GetInsumosAsignadosAsync(int id)
+        {
+            var response = await _http.GetFromJsonAsync<List<InsumoProducto>>($"Productos/{id}/insumos") ?? new();
+            return response;
+        }
+        public async Task<bool> ActualizarInsumoProductoAsync(int productoId, int insumoId, InsumoProducto insumo)
+        {
+            var response = await _http.PutAsJsonAsync($"Productos/{productoId}/insumos/{insumoId}", insumo);
+            return response.IsSuccessStatusCode;
+        }
+        public async Task<bool> EliminarInsumoProductoAsync(int productoId, int insumoId)
+        {
+            var response = await _http.DeleteAsync($"Productos/{productoId}/insumos/{insumoId}");
+            return response.IsSuccessStatusCode;
         }
 
     }

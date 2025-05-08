@@ -15,17 +15,19 @@
         </article>
     </main>
     <script>
-        window.deletetablaProductos_wrapper = function () {
-            const wrapper = document.getElementById("tablaProductos_wrapper");
-            if (wrapper) {
-                wrapper.remove();
-            }
+        window.deleteAllTableWrappers = function () {
+            document.querySelectorAll("[id$='_wrapper']").forEach(el => {
+                el.remove();
+            });
         };
     </script>
+
+
 </div>
 @code {
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await JS.InvokeVoidAsync("deletetablaProductos_wrapper");
+        await JS.InvokeVoidAsync("deleteAllTableWrappers");
     }
 }
+

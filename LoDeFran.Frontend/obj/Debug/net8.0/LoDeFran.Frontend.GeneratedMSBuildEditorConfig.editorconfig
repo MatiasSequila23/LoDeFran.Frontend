@@ -34,8 +34,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9tZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/SISTEMA LoDeFran/LoDeFran.Frontend/LoDeFran.Frontend/Pages/Insumo/Insumos.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5zdW1vXEluc3Vtb3MucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/SISTEMA LoDeFran/LoDeFran.Frontend/LoDeFran.Frontend/Pages/Producto/Productos.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvZHVjdG9cUHJvZHVjdG9zLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/SISTEMA LoDeFran/LoDeFran.Frontend/LoDeFran.Frontend/Pages/Proveedor/Proveedores.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvdmVlZG9yXFByb3ZlZWRvcmVzLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/SISTEMA LoDeFran/LoDeFran.Frontend/LoDeFran.Frontend/Pages/Weather.razor]

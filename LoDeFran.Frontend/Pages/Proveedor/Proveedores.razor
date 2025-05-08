@@ -1,0 +1,156 @@
+﻿@page "/Proveedor/Proveedores"
+@inject Services.ProveedorService ProveedorService
+@inject IJSRuntime JS
+@using LoDeFran.Frontend.Models
+
+<h3 class="mt-4 mb-4">Gestión de Proveedores</h3>
+
+<button class="btn btn-primary mb-3" @onclick="MostrarModalNuevo"><i class="fas fa-plus"> </i>Nuevo Proveedor</button>
+
+@if (proveedores == null)
+{
+    <div class="text-center">
+        <div class="spinner-border text-warning" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+    </div>
+}
+else
+{
+    <table class="table table-striped" id="tablaProveedores">
+        <thead class="table-dark">
+            <tr>
+                <th>Nombre</th>
+                <th>Teléfono</th>
+                <th>Dirección</th>
+                <th>Email</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in proveedores)
+            {
+                <tr>
+                    <td>@p.Nombre</td>
+                    <td>@p.Telefono</td>
+                    <td>@p.Direccion</td>
+                    <td>@p.Email</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary me-2" title="Editar" @onclick="() => EditarProveedor(p)">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" title="Eliminar" @onclick="() => EliminarProveedor(p.Id)">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@if (mostrarModal)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@((proveedorEditar.Id == 0) ? "Agregar Proveedor" : "Editar Proveedor")</h5>
+                    <button type="button" class="btn-close" @onclick="CerrarModal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-2">
+                        <label>Nombre</label>
+                        <input class="form-control" @bind="proveedorEditar.Nombre" />
+                    </div>
+                    <div class="mb-2">
+                        <label>Teléfono</label>
+                        <input class="form-control" @bind="proveedorEditar.Telefono" />
+                    </div>
+                    <div class="mb-2">
+                        <label>Dirección</label>
+                        <input class="form-control" @bind="proveedorEditar.Direccion" />
+                    </div>
+                    <div class="mb-2">
+                        <label>Email</label>
+                        <input class="form-control" @bind="proveedorEditar.Email" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="CerrarModal">Cancelar</button>
+                    <button class="btn btn-primary" @onclick="GuardarProveedor">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    List<Models.Proveedor> proveedores = new();
+    Models.Proveedor proveedorEditar = new();
+    bool mostrarModal = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarProveedores();
+    }
+
+    async Task CargarProveedores()
+    {
+        proveedores = await ProveedorService.GetProveedoresAsync();
+        StateHasChanged();
+        await JS.InvokeVoidAsync("initializeDataTable", "tablaProveedores");
+    }
+
+    void MostrarModalNuevo()
+    {
+        proveedorEditar = new Models.Proveedor();
+        mostrarModal = true;
+    }
+
+    void EditarProveedor(Models.Proveedor p)
+    {
+        proveedorEditar = new Models.Proveedor
+            {
+                Id = p.Id,
+                Nombre = p.Nombre,
+                Telefono = p.Telefono,
+                Direccion = p.Direccion,
+                Email = p.Email
+            };
+        mostrarModal = true;
+    }
+
+    void CerrarModal()
+    {
+        mostrarModal = false;
+    }
+
+    async Task GuardarProveedor()
+    {
+        bool ok;
+        if (proveedorEditar.Id == 0)
+        {
+            ok = await ProveedorService.CrearProveedorAsync(proveedorEditar);
+        }
+        else
+        {
+            ok = await ProveedorService.ActualizarProveedorAsync(proveedorEditar);
+        }
+
+        if (ok)
+        {
+            mostrarModal = false;
+            await CargarProveedores();
+        }
+    }
+
+    async Task EliminarProveedor(int id)
+    {
+        var ok = await ProveedorService.EliminarProveedorAsync(id);
+        if (ok)
+        {
+            await CargarProveedores();
+        }
+    }
+}
