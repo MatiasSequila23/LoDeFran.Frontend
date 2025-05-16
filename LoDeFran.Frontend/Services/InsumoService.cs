@@ -48,5 +48,9 @@ namespace LoDeFran.Frontend.Services
         {
             return await _http.GetFromJsonAsync<List<EstadoInsumo>>("EstadosInsumos") ?? new();
         }
+        public async Task<List<UnidadMedidaViewModel>> GetUnidadesMedidaAsync()
+        {
+            return await _http.GetFromJsonAsync<List<UnidadMedidaViewModel>>("UnidadesMedidas") ?? new();
+        }
     }
 }

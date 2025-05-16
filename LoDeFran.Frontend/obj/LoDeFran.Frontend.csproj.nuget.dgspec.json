@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\SISTEMA LoDeFran\\LoDeFran.Frontend\\LoDeFran.Frontend\\LoDeFran.Frontend.csproj": {}
+    "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\LoDeFran.Frontend.csproj": {}
   },
   "projects": {
-    "C:\\SISTEMA LoDeFran\\LoDeFran.Frontend\\LoDeFran.Frontend\\LoDeFran.Frontend.csproj": {
+    "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\LoDeFran.Frontend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\SISTEMA LoDeFran\\LoDeFran.Frontend\\LoDeFran.Frontend\\LoDeFran.Frontend.csproj",
+        "projectUniqueName": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\LoDeFran.Frontend.csproj",
         "projectName": "LoDeFran.Frontend",
-        "projectPath": "C:\\SISTEMA LoDeFran\\LoDeFran.Frontend\\LoDeFran.Frontend\\LoDeFran.Frontend.csproj",
+        "projectPath": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\LoDeFran.Frontend.csproj",
         "packagesPath": "C:\\Users\\USUARIO\\.nuget\\packages\\",
-        "outputPath": "C:\\Sistema LoDeFran\\LoDeFran.Frontend\\LoDeFran.Frontend\\obj\\",
+        "outputPath": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -58,6 +58,16 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[8.0.15, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[9.0.5, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.5, )"
             },
             "Microsoft.NET.ILLink.Tasks": {
               "suppressParent": "All",

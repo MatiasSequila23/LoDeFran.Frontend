@@ -8,7 +8,8 @@
 
         public string? Descripcion { get; set; }
 
-        public string? UnidadMedida { get; set; }
+        public int? UnidadMedidaId { get; set; }
+        public string? Abreviatura { get; set; }
 
         public decimal? Costo { get; set; }
 

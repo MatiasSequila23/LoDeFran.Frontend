@@ -12,4 +12,5 @@ builder.Services.AddScoped<ProductoService>();
 builder.Services.AddScoped<ProveedorService>();
 builder.Services.AddScoped<InsumoService>();
 builder.Services.AddScoped<EstadoInsumoService>();
+builder.Services.AddScoped<UnidadMedidaService>();
 await builder.Build().RunAsync();
