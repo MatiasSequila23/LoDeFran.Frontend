@@ -8,7 +8,7 @@
 
 <h3 class="mt-4 mb-4">Gestión de Productos</h3>
 
-<button class="btn btn-primary mb-3" @onclick="MostrarModalNuevo"><i class="fas fa-plus"> </i>Nuevo Producto</button>
+<button class="btn btn-primary mb-3" @onclick="MostrarModalNuevo"><i class="fas fa-plus"></i> Nuevo Producto</button>
 
 @if (productos == null)
 {
@@ -102,7 +102,8 @@ else
                             }
                             else
                             {
-                                <tr><td colspan="2">Sin insumos asignados</td></tr>
+                                <tr><td colspan="3">Sin insumos asignados</td></tr>
+
                             }
                         </tbody>
                     </table>
@@ -179,8 +180,10 @@ else
                             }
                         </select>
                     </div>
-
-
+                    <div class="mb-3 form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="tieneInsumosSwitch" @bind="productoEditar.TieneInsumos" />
+                        <label class="form-check-label" for="tieneInsumosSwitch">¿Tiene insumos?</label>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" @onclick="CerrarModal">Cancelar</button>
@@ -235,7 +238,8 @@ else
                 Precio = p.Precio,
                 Stock = p.Stock,
                 CategoriaProductoId = p.CategoriaProductoId,
-                EstadoId = p.EstadoId
+                EstadoId = p.EstadoId,
+                TieneInsumos = p.TieneInsumos                
             };
         mostrarModal = true;
     }
@@ -352,10 +356,13 @@ else
                     // Llama a POST en la API
                     await ProductoService.AsociarInsumoAProducto(productoSeleccionado.Id, nuevoInsumo);
                 }
+                productoSeleccionado = await ProductoService.RecalcularPrecioProductoAsync(productoSeleccionado.Id);
+                await CargarProductos();
             }
 
             // Limpia los campos del formulario
             nuevoInsumo = new InsumoProducto();
+            CerrarModalInsumos();
         }
     }
 

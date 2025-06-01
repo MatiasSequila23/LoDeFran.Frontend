@@ -52,5 +52,11 @@ namespace LoDeFran.Frontend.Services
         {
             return await _http.GetFromJsonAsync<List<UnidadMedidaViewModel>>("UnidadesMedidas") ?? new();
         }
+        public async Task<bool> RecalcularPreciosPorInsumoAsync(int insumoId)
+        {
+            var response = await _http.PutAsync($"Insumos/{insumoId}/recalcular-precios-productos", null);
+            return response.IsSuccessStatusCode;
+        }
+
     }
 }

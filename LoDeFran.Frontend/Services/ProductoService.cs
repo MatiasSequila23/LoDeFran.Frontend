@@ -73,6 +73,18 @@ namespace LoDeFran.Frontend.Services
             var response = await _http.DeleteAsync($"Productos/{productoId}/insumos/{insumoId}");
             return response.IsSuccessStatusCode;
         }
+        public async Task<Producto?> RecalcularPrecioProductoAsync(int id)
+        {
+            // Enviar un PUT con contenido vacío
+            var response = await _http.PutAsync($"Productos/{id}/recalcular-precio", new StringContent(""));
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<Producto>();
+            }
+
+            return null;
+        }
 
     }
 }

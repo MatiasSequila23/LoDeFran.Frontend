@@ -199,10 +199,14 @@ else
         bool ok;
 
         if (insumoEditar.Id == 0)
+        {
             ok = await InsumoService.CrearInsumoAsync(insumoEditar);
+        }
         else
+        {
             ok = await InsumoService.ActualizarInsumoAsync(insumoEditar);
-
+            ok = await InsumoService.RecalcularPreciosPorInsumoAsync(insumoEditar.Id);
+        }
         if (ok)
         {
             mostrarModal = false;
