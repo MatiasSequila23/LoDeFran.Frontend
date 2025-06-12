@@ -194,10 +194,10 @@ else
     </div>
 }
 @code {
-    List<Producto> productos = new();
-    Producto productoEditar = new();
-    List<CategoriaProducto> categorias = new();
-    List<EstadoProducto> estados = new();
+    List<ProductoViewModel> productos = new();
+    ProductoViewModel productoEditar = new();
+    List<CategoriaProductoViewModel> categorias = new();
+    List<EstadoProductoViewModel> estados = new();
     bool mostrarModal = false;
 
     protected override async Task OnInitializedAsync()
@@ -224,13 +224,13 @@ else
 
     void MostrarModalNuevo()
     {
-        productoEditar = new Producto(); // nuevo
+        productoEditar = new ProductoViewModel(); // nuevo
         mostrarModal = true;
     }
 
-    void EditarProducto(Producto p)
+    void EditarProducto(ProductoViewModel p)
     {
-        productoEditar = new Producto
+        productoEditar = new ProductoViewModel
             {
                 Id = p.Id,
                 Nombre = p.Nombre,
@@ -294,11 +294,11 @@ else
         await JS.InvokeVoidAsync("initializeDataTable", "tablaProductos");
     }
     bool mostrarModalInsumos = false;
-    Producto productoSeleccionado;
-    List<Insumo> insumosDisponibles = new();
-    InsumoProducto nuevoInsumo = new();
+    ProductoViewModel productoSeleccionado;
+    List<InsumoViewModel> insumosDisponibles = new();
+    InsumoProductoViewModel nuevoInsumo = new();
 
-    async Task GestionarInsumos(Producto producto)
+    async Task GestionarInsumos(ProductoViewModel producto)
     {
         productoSeleccionado = producto;
 
@@ -308,7 +308,7 @@ else
         // Insumos ya asignados al producto
         productoSeleccionado.InsumosProducto = await ProductoService.GetInsumosAsignadosAsync(producto.Id);
 
-        nuevoInsumo = new InsumoProducto();
+        nuevoInsumo = new InsumoProductoViewModel();
         mostrarModalInsumos = true;
     }
 
@@ -317,7 +317,7 @@ else
     {
         mostrarModalInsumos = false;
         productoSeleccionado = null;
-        nuevoInsumo = new InsumoProducto();
+        nuevoInsumo = new InsumoProductoViewModel();
     }
 
     async Task AgregarInsumo()
@@ -327,7 +327,7 @@ else
             var insumo = insumosDisponibles.FirstOrDefault(i => i.Id == nuevoInsumo.InsumoId);
             if (insumo != null)
             {
-                productoSeleccionado.InsumosProducto ??= new List<InsumoProducto>();
+                productoSeleccionado.InsumosProducto ??= new List<InsumoProductoViewModel>();
                 var insumoExistente = productoSeleccionado.InsumosProducto
                     .FirstOrDefault(i => i.InsumoId == nuevoInsumo.InsumoId);
 
@@ -346,7 +346,7 @@ else
                 else
                 {
                     // Agrega a la lista local
-                    productoSeleccionado.InsumosProducto.Add(new InsumoProducto
+                    productoSeleccionado.InsumosProducto.Add(new InsumoProductoViewModel
                         {
                             InsumoId = nuevoInsumo.InsumoId,
                             NombreInsumo = insumo.Nombre,
@@ -361,23 +361,23 @@ else
             }
 
             // Limpia los campos del formulario
-            nuevoInsumo = new InsumoProducto();
+            nuevoInsumo = new InsumoProductoViewModel();
             CerrarModalInsumos();
         }
     }
 
 
 
-    void EditarInsumo(InsumoProducto insumo)
+    void EditarInsumo(InsumoProductoViewModel insumo)
     {
-        nuevoInsumo = new InsumoProducto
+        nuevoInsumo = new InsumoProductoViewModel
         {
             ProductoId = insumo.ProductoId,
             InsumoId = insumo.InsumoId,
             Cantidad = insumo.Cantidad
         };
     }
-    async Task EliminarInsumo(InsumoProducto insumo)
+    async Task EliminarInsumo(InsumoProductoViewModel insumo)
     {
         var exito = await ProductoService.EliminarInsumoProductoAsync(productoSeleccionado.Id, insumo.InsumoId);
 

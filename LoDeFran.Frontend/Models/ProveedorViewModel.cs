@@ -1,6 +1,6 @@
 ﻿namespace LoDeFran.Frontend.Models
 {
-    public class Proveedor
+    public class ProveedorViewModel
     {
         public int Id { get; set; }
 

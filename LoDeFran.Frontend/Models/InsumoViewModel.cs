@@ -1,6 +1,6 @@
 ﻿namespace LoDeFran.Frontend.Models
 {
-    public class Insumo
+    public class InsumoViewModel
     {
         public int Id { get; set; }
 

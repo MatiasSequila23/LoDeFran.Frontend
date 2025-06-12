@@ -13,23 +13,23 @@ namespace LoDeFran.Frontend.Services
             _http = http;
         }
 
-        public async Task<List<Insumo>> GetInsumosAsync()
+        public async Task<List<InsumoViewModel>> GetInsumosAsync()
         {
-            return await _http.GetFromJsonAsync<List<Insumo>>("Insumos") ?? new();
+            return await _http.GetFromJsonAsync<List<InsumoViewModel>>("Insumos") ?? new();
         }
 
-        public async Task<Insumo?> GetProductoByIdAsync(int id)
+        public async Task<InsumoViewModel?> GetProductoByIdAsync(int id)
         {
-            return await _http.GetFromJsonAsync<Insumo>($"Insumos/{id}");
+            return await _http.GetFromJsonAsync<InsumoViewModel>($"Insumos/{id}");
         }
 
-        public async Task<bool> CrearInsumoAsync(Insumo insumos)
+        public async Task<bool> CrearInsumoAsync(InsumoViewModel insumos)
         {
             var response = await _http.PostAsJsonAsync("Insumos", insumos);
             return response.IsSuccessStatusCode;
         }
 
-        public async Task<bool> ActualizarInsumoAsync(Insumo insumos)
+        public async Task<bool> ActualizarInsumoAsync(InsumoViewModel insumos)
         {
             var response = await _http.PutAsJsonAsync($"Insumos/{insumos.Id}", insumos);
             return response.IsSuccessStatusCode;
@@ -40,13 +40,13 @@ namespace LoDeFran.Frontend.Services
             var response = await _http.DeleteAsync($"Insumos/{id}");
             return response.IsSuccessStatusCode;
         }
-        public async Task<List<Proveedor>> GetProveedoresAsync()
+        public async Task<List<ProveedorViewModel>> GetProveedoresAsync()
         {
-            return await _http.GetFromJsonAsync<List<Proveedor>>("Proveedores") ?? new();
+            return await _http.GetFromJsonAsync<List<ProveedorViewModel>>("Proveedores") ?? new();
         }
-        public async Task<List<EstadoInsumo>> GetEstadosAsync()
+        public async Task<List<EstadoInsumoViewModel>> GetEstadosAsync()
         {
-            return await _http.GetFromJsonAsync<List<EstadoInsumo>>("EstadosInsumos") ?? new();
+            return await _http.GetFromJsonAsync<List<EstadoInsumoViewModel>>("EstadosInsumos") ?? new();
         }
         public async Task<List<UnidadMedidaViewModel>> GetUnidadesMedidaAsync()
         {

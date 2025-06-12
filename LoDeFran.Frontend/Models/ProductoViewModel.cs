@@ -1,6 +1,6 @@
 ﻿namespace LoDeFran.Frontend.Models
 {
-    public class Producto
+    public class ProductoViewModel
     {
         public int Id { get; set; }
         public string Nombre { get; set; }
@@ -15,6 +15,6 @@
         public int? InsumoId { get; set; }
         public string? InsumoNombre { get; set; }
         public bool TieneInsumos { get; set; }
-        public List<InsumoProducto>? InsumosProducto { get; set; }
+        public List<InsumoProductoViewModel>? InsumosProducto { get; set; }
     }
 }

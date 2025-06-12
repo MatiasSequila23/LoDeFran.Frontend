@@ -1,8 +1,8 @@
 ﻿namespace LoDeFran.Frontend.Models
 {
-    public class EstadoProducto
+    public class PisoViewModel
     {
-        public int Id { get; set; }
+        public int IdPiso { get; set; }
         public string Nombre { get; set; } = string.Empty;
     }
 }

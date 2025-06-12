@@ -10,23 +10,23 @@ namespace LoDeFran.Frontend.Services
         {
             _http = http;
         }
-        public async Task<List<EstadoInsumo>> GetEstadoInsumosAsync()
+        public async Task<List<EstadoInsumoViewModel>> GetEstadoInsumosAsync()
         {
-            return await _http.GetFromJsonAsync<List<EstadoInsumo>>("EstadosInsumos") ?? new();
+            return await _http.GetFromJsonAsync<List<EstadoInsumoViewModel>>("EstadosInsumos") ?? new();
         }
 
-        public async Task<EstadoInsumo?> GetEstadoInsumoByIdAsync(int id)
+        public async Task<EstadoInsumoViewModel?> GetEstadoInsumoByIdAsync(int id)
         {
-            return await _http.GetFromJsonAsync<EstadoInsumo>($"EstadosInsumos/{id}");
+            return await _http.GetFromJsonAsync<EstadoInsumoViewModel>($"EstadosInsumos/{id}");
         }
 
-        public async Task<bool> CrearEstadoInsumoAsync(EstadoInsumo estadoInsumo)
+        public async Task<bool> CrearEstadoInsumoAsync(EstadoInsumoViewModel estadoInsumo)
         {
             var response = await _http.PostAsJsonAsync("EstadosInsumos", estadoInsumo);
             return response.IsSuccessStatusCode;
         }
 
-        public async Task<bool> ActualizarEstadoInsumoAsync(EstadoInsumo estadoInsumo)
+        public async Task<bool> ActualizarEstadoInsumoAsync(EstadoInsumoViewModel estadoInsumo)
         {
             var response = await _http.PutAsJsonAsync($"EstadosInsumos/{estadoInsumo.Id}", estadoInsumo);
             return response.IsSuccessStatusCode;

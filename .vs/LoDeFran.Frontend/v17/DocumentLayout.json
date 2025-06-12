@@ -3,20 +3,24 @@
   "WorkspaceRootPath": "E:\\Sources\\LoDeFran.Frontend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|e:\\sources\\lodefran.frontend\\lodefran.frontend\\services\\productoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|solutionrelative:lodefran.frontend\\services\\productoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|e:\\sources\\lodefran.frontend\\lodefran.frontend\\pages\\gestionmesas\\serviciodemesa.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|solutionrelative:lodefran.frontend\\pages\\gestionmesas\\serviciodemesa.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|e:\\sources\\lodefran.frontend\\lodefran.frontend\\pages\\insumo\\insumos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|solutionrelative:lodefran.frontend\\pages\\insumo\\insumos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|e:\\sources\\lodefran.frontend\\lodefran.frontend\\models\\categoriaproductoviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|solutionrelative:lodefran.frontend\\models\\categoriaproductoviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|e:\\sources\\lodefran.frontend\\lodefran.frontend\\pages\\producto\\productos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|solutionrelative:lodefran.frontend\\pages\\producto\\productos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|e:\\sources\\lodefran.frontend\\lodefran.frontend\\services\\serviciodemesaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|solutionrelative:lodefran.frontend\\services\\serviciodemesaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|e:\\sources\\lodefran.frontend\\lodefran.frontend\\models\\producto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|solutionrelative:lodefran.frontend\\models\\producto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|e:\\sources\\lodefran.frontend\\lodefran.frontend\\models\\productoviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|solutionrelative:lodefran.frontend\\models\\productoviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|e:\\sources\\lodefran.frontend\\lodefran.frontend\\services\\pedidoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|solutionrelative:lodefran.frontend\\services\\pedidoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,58 +30,71 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Insumos.razor",
-              "DocumentMoniker": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Pages\\Insumo\\Insumos.razor",
-              "RelativeDocumentMoniker": "LoDeFran.Frontend\\Pages\\Insumo\\Insumos.razor",
-              "ToolTip": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Pages\\Insumo\\Insumos.razor",
-              "RelativeToolTip": "LoDeFran.Frontend\\Pages\\Insumo\\Insumos.razor",
-              "ViewState": "AgIAAMIAAAAAAAAAAAAuwM8AAAA1AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-30T02:27:49.879Z",
+              "Title": "CategoriaProductoViewModel.cs",
+              "DocumentMoniker": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Models\\CategoriaProductoViewModel.cs",
+              "RelativeDocumentMoniker": "LoDeFran.Frontend\\Models\\CategoriaProductoViewModel.cs",
+              "ToolTip": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Models\\CategoriaProductoViewModel.cs",
+              "RelativeToolTip": "LoDeFran.Frontend\\Models\\CategoriaProductoViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-12T02:17:24.999Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "Producto.cs",
-              "DocumentMoniker": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Models\\Producto.cs",
-              "RelativeDocumentMoniker": "LoDeFran.Frontend\\Models\\Producto.cs",
-              "ToolTip": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Models\\Producto.cs",
-              "RelativeToolTip": "LoDeFran.Frontend\\Models\\Producto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAqAAAAAAAAAA==",
+              "Title": "ProductoViewModel.cs",
+              "DocumentMoniker": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Models\\ProductoViewModel.cs",
+              "RelativeDocumentMoniker": "LoDeFran.Frontend\\Models\\ProductoViewModel.cs",
+              "ToolTip": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Models\\ProductoViewModel.cs",
+              "RelativeToolTip": "LoDeFran.Frontend\\Models\\ProductoViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-30T01:40:50.505Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "ProductoService.cs",
-              "DocumentMoniker": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Services\\ProductoService.cs",
-              "RelativeDocumentMoniker": "LoDeFran.Frontend\\Services\\ProductoService.cs",
-              "ToolTip": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Services\\ProductoService.cs",
-              "RelativeToolTip": "LoDeFran.Frontend\\Services\\ProductoService.cs",
-              "ViewState": "AgIAAEIAAAAAAAAAAAAtwEoAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-25T03:08:31.724Z",
+              "WhenOpened": "2025-06-12T02:14:33.482Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "Productos.razor",
-              "DocumentMoniker": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Pages\\Producto\\Productos.razor",
-              "RelativeDocumentMoniker": "LoDeFran.Frontend\\Pages\\Producto\\Productos.razor",
-              "ToolTip": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Pages\\Producto\\Productos.razor",
-              "RelativeToolTip": "LoDeFran.Frontend\\Pages\\Producto\\Productos.razor",
-              "ViewState": "AgIAAEwBAAAAAAAAAAAmwGwBAAAhAAAAAAAAAA==",
+              "Title": "ServicioDeMesaService.cs",
+              "DocumentMoniker": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Services\\ServicioDeMesaService.cs",
+              "RelativeDocumentMoniker": "LoDeFran.Frontend\\Services\\ServicioDeMesaService.cs",
+              "ToolTip": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Services\\ServicioDeMesaService.cs",
+              "RelativeToolTip": "LoDeFran.Frontend\\Services\\ServicioDeMesaService.cs",
+              "ViewState": "AgIAABcAAAAAAAAAAAAtwCYAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-11T16:34:34.862Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "PedidoService.cs",
+              "DocumentMoniker": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Services\\PedidoService.cs",
+              "RelativeDocumentMoniker": "LoDeFran.Frontend\\Services\\PedidoService.cs",
+              "ToolTip": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Services\\PedidoService.cs",
+              "RelativeToolTip": "LoDeFran.Frontend\\Services\\PedidoService.cs",
+              "ViewState": "AgIAACAAAAAAAAAAAAAgwDwAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-11T16:33:23.575Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ServicioDeMesa.razor",
+              "DocumentMoniker": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Pages\\GestionMesas\\ServicioDeMesa.razor",
+              "RelativeDocumentMoniker": "LoDeFran.Frontend\\Pages\\GestionMesas\\ServicioDeMesa.razor",
+              "ToolTip": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Pages\\GestionMesas\\ServicioDeMesa.razor",
+              "RelativeToolTip": "LoDeFran.Frontend\\Pages\\GestionMesas\\ServicioDeMesa.razor",
+              "ViewState": "AgIAAG4AAAAAAAAAAAAWwH4AAAA3AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-16T18:29:31.424Z",
+              "WhenOpened": "2025-06-05T02:53:43.462Z",
               "EditorCaption": ""
             }
           ]

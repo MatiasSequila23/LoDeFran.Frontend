@@ -12,23 +12,23 @@ namespace LoDeFran.Frontend.Services
             _http = http;
         }
 
-        public async Task<List<Proveedor>> GetProveedoresAsync()
+        public async Task<List<ProveedorViewModel>> GetProveedoresAsync()
         {
-            return await _http.GetFromJsonAsync<List<Proveedor>>("Proveedores") ?? new();
+            return await _http.GetFromJsonAsync<List<ProveedorViewModel>>("Proveedores") ?? new();
         }
 
-        public async Task<Proveedor?> GetProductoByIdAsync(int id)
+        public async Task<ProveedorViewModel?> GetProductoByIdAsync(int id)
         {
-            return await _http.GetFromJsonAsync<Proveedor>($"Proveedores/{id}");
+            return await _http.GetFromJsonAsync<ProveedorViewModel>($"Proveedores/{id}");
         }
 
-        public async Task<bool> CrearProveedorAsync(Proveedor Proveedores)
+        public async Task<bool> CrearProveedorAsync(ProveedorViewModel Proveedores)
         {
             var response = await _http.PostAsJsonAsync("Proveedores", Proveedores);
             return response.IsSuccessStatusCode;
         }
 
-        public async Task<bool> ActualizarProveedorAsync(Proveedor Proveedores)
+        public async Task<bool> ActualizarProveedorAsync(ProveedorViewModel Proveedores)
         {
             var response = await _http.PutAsJsonAsync($"Proveedores/{Proveedores.Id}", Proveedores);
             return response.IsSuccessStatusCode;

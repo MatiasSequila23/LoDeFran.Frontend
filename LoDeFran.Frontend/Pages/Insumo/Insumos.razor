@@ -128,10 +128,10 @@ else
 }
 
 @code {
-    List<Insumo> insumos = new();
-    Insumo insumoEditar = new();
-    List<Proveedor> proveedores = new();
-    List<EstadoInsumo> estados = new();
+    List<InsumoViewModel> insumos = new();
+    InsumoViewModel insumoEditar = new();
+    List<ProveedorViewModel> proveedores = new();
+    List<EstadoInsumoViewModel> estados = new();
     List<UnidadMedidaViewModel> unidadMedida = new();
     bool mostrarModal = false;
 
@@ -169,7 +169,7 @@ else
         mostrarModal = true;
     }
 
-    void Editar(Insumo insumo)
+    void Editar(InsumoViewModel insumo)
     {
         insumoEditar = new()
             {

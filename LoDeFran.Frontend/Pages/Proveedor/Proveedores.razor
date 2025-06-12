@@ -86,8 +86,8 @@ else
 }
 
 @code {
-    List<Models.Proveedor> proveedores = new();
-    Models.Proveedor proveedorEditar = new();
+    List<Models.ProveedorViewModel> proveedores = new();
+    Models.ProveedorViewModel proveedorEditar = new();
     bool mostrarModal = false;
 
     protected override async Task OnInitializedAsync()
@@ -104,13 +104,13 @@ else
 
     void MostrarModalNuevo()
     {
-        proveedorEditar = new Models.Proveedor();
+        proveedorEditar = new Models.ProveedorViewModel();
         mostrarModal = true;
     }
 
-    void EditarProveedor(Models.Proveedor p)
+    void EditarProveedor(Models.ProveedorViewModel p)
     {
-        proveedorEditar = new Models.Proveedor
+        proveedorEditar = new Models.ProveedorViewModel
             {
                 Id = p.Id,
                 Nombre = p.Nombre,
