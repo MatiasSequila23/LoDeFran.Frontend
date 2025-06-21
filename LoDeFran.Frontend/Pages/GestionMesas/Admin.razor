@@ -1,0 +1,37 @@
+﻿@page "/GestionMesas/admin"
+@inject Services.ServicioDeMesaService ServicioDeMesaService
+@using LoDeFran.Frontend.Models
+@using LoDeFran.Frontend.Services
+
+<h3>Panel de Administración</h3>
+
+<ul class="nav nav-tabs mt-4">
+    <li class="nav-item">
+        <button class="nav-link @(vistaActual == "mesas" ? "active" : "")" @onclick=@(() => vistaActual = "mesas")>Mesas</button>
+    </li>
+    <li class="nav-item">
+        <button class="nav-link @(vistaActual == "cocina" ? "active" : "")" @onclick=@(() => vistaActual = "cocina")>Cocina</button>
+    </li>
+    <li class="nav-item">
+        <button class="nav-link @(vistaActual == "caja" ? "active" : "")" @onclick=@(() => vistaActual = "caja")>Caja</button>
+    </li>
+</ul>
+
+<div class="mt-4">
+    @if (vistaActual == "mesas")
+    {
+        <MesasAdminComponent />
+    }
+    else if (vistaActual == "cocina")
+    {
+        <CocinaAdminComponent />
+    }
+    else if (vistaActual == "caja")
+    {
+        <CajaAdminComponent />
+    }
+</div>
+
+@code {
+    private string vistaActual = "mesas";
+}

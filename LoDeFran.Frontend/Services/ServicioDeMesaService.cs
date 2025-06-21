@@ -1,5 +1,8 @@
-﻿using System.Net.Http.Json;
+﻿using System.Net.Http;
+using System.Net.Http.Json;
+using System.Net.NetworkInformation;
 using LoDeFran.Frontend.Models;
+using static LoDeFran.Frontend.Services.Enums;
 namespace LoDeFran.Frontend.Services
 {
     public class ServicioDeMesaService
@@ -20,6 +23,14 @@ namespace LoDeFran.Frontend.Services
         {
             return await _http.GetFromJsonAsync<List<MesaViewModel>>($"Pisos/{pisoId}/mesas") ?? new();
         }
+        public async Task<List<MesaViewModel>> GetMesasAsync()
+        {
+            return await _http.GetFromJsonAsync<List<MesaViewModel>>("Mesas") ?? new();
+        }
+        public async Task<MesaViewModel?> GetMesasByIdAsync(int id)
+        {
+            return await _http.GetFromJsonAsync<MesaViewModel>($"Mesas/{id}");
+        }
         public async Task<PedidoViewModel> IniciarPedidoAsync(int idMesa)
         {
             var pedido = await _http.PostAsJsonAsync("Pedidos/iniciar", idMesa);
@@ -30,7 +41,7 @@ namespace LoDeFran.Frontend.Services
 
             throw new Exception("Error al iniciar pedido");
         }
-        public async Task CambiarEstadoPedidoAsync(int pedidoId, EstadoPedido nuevoEstado)
+        public async Task CambiarEstadoPedidoAsync(int pedidoId, Enums.EstadoPedido nuevoEstado)
         {
             var response = await _http.PutAsJsonAsync($"Pedidos/{pedidoId}/estado", nuevoEstado);
             response.EnsureSuccessStatusCode();
@@ -45,6 +56,18 @@ namespace LoDeFran.Frontend.Services
             var response = await _http.PostAsJsonAsync($"Pedidos/{pedidoId}/agregar-producto", productoId);
             response.EnsureSuccessStatusCode();
         }
+        public async Task AgregarProductoAlPedidoAsync(int idPedido, int idProducto, int cantidad)
+        {
+            var dto = new
+            {
+                ProductoId = idProducto,
+                Cantidad = cantidad
+            };
+
+            var response = await _http.PostAsJsonAsync($"Pedidos/{idPedido}/agregar-producto", dto);
+            response.EnsureSuccessStatusCode();
+        }
+
         public async Task<PedidoViewModel?> ObtenerPedidoPorIdAsync(int id)
         {
             return await _http.GetFromJsonAsync<PedidoViewModel>($"Pedidos/{id}");
@@ -52,7 +75,7 @@ namespace LoDeFran.Frontend.Services
         // DELETE: Eliminar un detalle por ID y Pedido
         public async Task<bool> DeleteAsync(int idPedido, int idDetalle)
         {
-            var response = await _http.DeleteAsync($"Pedidos/{idPedido}/detalle/{idDetalle}");
+            var response = await _http.DeleteAsync($"DetallesPedidos/Pedidos/{idPedido}/detalle/{idDetalle}");
             return response.IsSuccessStatusCode;
         }
         public async Task<PedidoViewModel?> ObtenerPedidoPorMesaIdAsync(int idMesa)
@@ -63,6 +86,26 @@ namespace LoDeFran.Frontend.Services
         public async Task<List<CategoriaProductoViewModel>> GetCategoriasProductosAsync()
         {
             return await _http.GetFromJsonAsync<List<CategoriaProductoViewModel>>("CategoriasProductos") ?? new();
+        }
+        public async Task ModificarCantidadProductoAsync(int idDetalle, int nuevaCantidad)
+        {
+            var response = await _http.PutAsJsonAsync($"Pedidos/detalle/{idDetalle}/cantidad", nuevaCantidad);
+            response.EnsureSuccessStatusCode();
+        }
+        public async Task<List<PedidoViewModel>?> ObtenerPedidoCocina()
+        {
+            var response = await _http.GetFromJsonAsync<List<PedidoViewModel>>($"Pedidos/cocina");
+            return response;
+        }
+        public async Task<List<PedidoViewModel>> GetPedidosPorEstadoAsync(int idEstado)
+        {
+            var response = await _http.GetFromJsonAsync<List<PedidoViewModel>>($"Pedidos/por-estado/{idEstado}");
+            return response ?? new();
+        }
+        public async Task CambiarEstadoMesaAsync(int id, Enums.EstadoMesa nuevoEstado)
+        {
+            var response = await _http.PutAsJsonAsync($"Mesas/{id}/estado", nuevoEstado);
+            response.EnsureSuccessStatusCode();
         }
     }
 }

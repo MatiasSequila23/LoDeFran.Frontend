@@ -11,6 +11,7 @@
         public int EstadoId { get; set; }
         public int? CategoriaId { get; set; }
         public int MesaId { get; set; }
+        public MesaViewModel? Mesa { get; set; }
         public EstadoPedidoViewModel Estado { get; set; }
         public List<DetallePedidoViewModel> DetallePedido { get; set; } = new List<DetallePedidoViewModel>();
     }

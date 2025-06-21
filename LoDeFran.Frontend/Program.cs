@@ -12,6 +12,7 @@ builder.Services.AddScoped<CategoriaProductoService>();
 builder.Services.AddScoped<DetallePedidoServicie>();
 builder.Services.AddScoped<EstadoInsumoService>();
 builder.Services.AddScoped<InsumoService>();
+builder.Services.AddScoped<MesaService>();
 builder.Services.AddScoped<PedidoService>();
 builder.Services.AddScoped<ProductoService>();
 builder.Services.AddScoped<ProveedorService>();

@@ -1,0 +1,64 @@
+﻿@page "/GestionMesas/pedidos-a-cobrar"
+@inject Services.ServicioDeMesaService ServicioDeMesaService
+@using LoDeFran.Frontend.Services
+@inject NavigationManager Nav
+@using LoDeFran.Frontend.Models
+@using System.Globalization
+
+<h3>Pedidos para Cobrar</h3>
+
+@if (PedidosACobrar == null)
+{
+    <p>Cargando pedidos...</p>
+}
+else if (!PedidosACobrar.Any())
+{
+    <p>No hay pedidos a cobrar.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Mesa</th>
+                <th>Importe Total</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var pedido in PedidosACobrar)
+            {
+                <tr>
+                    <td>@pedido.Mesa.Numero</td>
+                    <td>@(pedido.Total.HasValue ? pedido.Total.Value.ToString("C", new CultureInfo("es-AR")) : "-")</td>
+                    <td>
+                        <button class="btn btn-success btn-sm" @onclick="() => Cobrar(pedido.Id)">Cobrar</button>
+                        <button class="btn btn-secondary btn-sm" @onclick="() => CerrarMesa(pedido.Id)">Cerrar Mesa</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<PedidoViewModel>? PedidosACobrar;
+
+    protected override async Task OnInitializedAsync()
+    {
+        PedidosACobrar = await ServicioDeMesaService.GetPedidosPorEstadoAsync((int)Enums.EstadoPedido.A_Cobrar);
+    }
+
+    private async Task Cobrar(int idPedido)
+    {
+        await ServicioDeMesaService.CambiarEstadoPedidoAsync(idPedido, Enums.EstadoPedido.Cobrado);
+        PedidosACobrar = await ServicioDeMesaService.GetPedidosPorEstadoAsync((int)Enums.EstadoPedido.A_Cobrar);
+    }
+
+    private async Task CerrarMesa(int idPedido)
+    {
+        await ServicioDeMesaService.CambiarEstadoPedidoAsync(idPedido, Enums.EstadoPedido.Cerrado);
+        PedidosACobrar = await ServicioDeMesaService.GetPedidosPorEstadoAsync((int)Enums.EstadoPedido.A_Cobrar);
+    }
+    
+}

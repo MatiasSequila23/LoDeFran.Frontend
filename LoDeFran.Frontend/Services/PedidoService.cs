@@ -47,7 +47,7 @@ namespace LoDeFran.Frontend.Services
             return await response.Content.ReadFromJsonAsync<PedidoViewModel>();
         }
 
-        public async Task<bool> CambiarEstadoAsync(int id, EstadoPedido nuevoEstado)
+        public async Task<bool> CambiarEstadoAsync(int id, Enums.EstadoPedido nuevoEstado)
         {
             var response = await _http.PutAsJsonAsync($"{BaseUrl}/{id}/estado", nuevoEstado);
             return response.IsSuccessStatusCode;
@@ -66,12 +66,6 @@ namespace LoDeFran.Frontend.Services
 
     }
 
-    public enum EstadoPedido
-    {
-        Abierto = 1,
-        EnPreparacion = 2,
-        ListoParaEntregar = 3,
-        Entregado = 4,
-        Cancelado = 5
-    }
+    
+
 }

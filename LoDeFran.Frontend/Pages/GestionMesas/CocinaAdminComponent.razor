@@ -1,0 +1,71 @@
+﻿
+@inject Services.ServicioDeMesaService ServicioDeMesaService
+@inject NavigationManager Nav
+@using LoDeFran.Frontend.Models
+@using LoDeFran.Frontend.Services
+
+<h4>🧑‍🍳 Pedidos en Cocina</h4>
+<button class="btn btn-sm btn-secondary mb-3" @onclick="CargarPedidos">🔄 Actualizar</button>
+@if (Pedidos == null)
+{
+    <p>Cargando pedidos...</p>
+}
+else if (!Pedidos.Any())
+{
+    <p>No hay pedidos pendientes en cocina.</p>
+}
+else
+{
+   
+
+    @foreach (var pedido in Pedidos)
+    {
+        <div class="card mb-3">
+            <div class="card-header">
+                <strong>Mesa @pedido.Mesa?.Numero</strong> - Pedido #@pedido.Id
+                <span class="badge bg-secondary float-end">Estado: @((Enums.EstadoPedido)pedido.EstadoId)</span>
+            </div>
+            <div class="card-body">
+                <ul>
+                    @foreach (var item in pedido.DetallePedido)
+                    {
+                        <li>@item.Producto.Nombre x @item.Cantidad</li>
+                    }
+                </ul>
+
+                @if (pedido.EstadoId == (int)Enums.EstadoPedido.Abierto)
+                {
+                    <button class="btn btn-warning" @onclick="() => CambiarEstado(pedido.Id, Enums.EstadoPedido.EnPreparacion)">
+                        Iniciar Preparación
+                    </button>
+                }
+                else if (pedido.EstadoId == (int)Enums.EstadoPedido.EnPreparacion)
+                {
+                    <button class="btn btn-success" @onclick="() => CambiarEstado(pedido.Id, Enums.EstadoPedido.ListoParaEntregar)">
+                        Marcar como Listo para Entregar
+                    </button>
+                }
+            </div>
+        </div>
+    }
+}
+
+@code {
+    private List<PedidoViewModel>? Pedidos;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarPedidos();
+    }
+
+    private async Task CargarPedidos()
+    {
+        Pedidos = await ServicioDeMesaService.ObtenerPedidoCocina();
+    }
+
+    private async Task CambiarEstado(int idPedido, Enums.EstadoPedido nuevoEstado)
+    {
+        await ServicioDeMesaService.CambiarEstadoPedidoAsync(idPedido, nuevoEstado);
+        await CargarPedidos();
+    }
+}

@@ -1,0 +1,162 @@
+﻿@inject Services.ServicioDeMesaService ServicioDeMesaService
+@using LoDeFran.Frontend.Models
+@using LoDeFran.Frontend.Services
+
+<h4>Pedidos a Cobrar</h4>
+
+@if (Pedidos == null)
+{
+    <p>Cargando pedidos...</p>
+}
+else if (!Pedidos.Any())
+{
+    <div class="alert alert-info">No hay pedidos pendientes de cobro.</div>
+}
+else
+{
+    <table class="table table-bordered table-hover mt-3">
+        <thead>
+            <tr>
+                <th>Mesa</th>
+                <th>Fecha</th>
+                <th>Total</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var pedido in Pedidos)
+            {
+                <tr>
+                    <td>@pedido.Mesa?.Numero</td>
+                    <td>@pedido.FechaPedido?.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>
+                        $@pedido.DetallePedido.Sum(d => d.Cantidad * d.PrecioUnitario).ToString("0.00")
+                    </td>
+                    <td>
+                        <button class="btn btn-success btn-sm me-1" @onclick="() => AbrirModalCobro(pedido)">Cobrar</button>
+                        <button class="btn btn-primary btn-sm" @onclick="() => Imprimir(pedido)">Imprimir</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@if (PedidoSeleccionado != null)
+{
+    <div class="modal fade show d-block" style="z-index:1050; background-color: rgba(0,0,0,0.5);" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Cobrar - Mesa @PedidoSeleccionado.Mesa?.Numero</h5>
+                    <button class="btn-close" @onclick="CerrarModal"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Total:</strong> $@TotalPedido.ToString("0.00")</p>
+
+                    <div class="mb-3">
+                        <label>Método de pago</label>
+                        <select class="form-control" @bind="MetodoPagoSeleccionado">
+                            <option value="Efectivo">Efectivo</option>
+                            <option value="Debito">Débito</option>
+                            <option value="Credito">Crédito</option>
+                            <option value="Transferencia">Transferencia</option>
+                        </select>
+                    </div>
+
+                    @if (MetodoPagoSeleccionado == "Efectivo")
+                    {
+                        <div class="mb-3">
+                            <label>Monto recibido</label>
+                            <input class="form-control" type="number" @bind="MontoRecibido" />
+                            @if (MontoRecibido > 0)
+                            {
+                                <p class="mt-2 text-success"><strong>Vuelto:</strong> $@(MontoRecibido - TotalPedido):0.00</p>
+                            }
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="CerrarModal">Cancelar</button>
+                    <button class="btn btn-success" @onclick="ConfirmarCobro">Confirmar Cobro</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<PedidoViewModel>? Pedidos;
+    private PedidoViewModel? PedidoSeleccionado;
+    private string MetodoPagoSeleccionado = "Efectivo";
+    private decimal MontoRecibido = 0;
+    private decimal TotalPedido => PedidoSeleccionado?.DetallePedido.Sum(d => d.Cantidad * d.PrecioUnitario) ?? 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarPedidos();
+    }
+
+    private async Task CargarPedidos()
+    {
+        Pedidos?.Clear();
+        Pedidos = await ServicioDeMesaService.GetPedidosPorEstadoAsync((int)Enums.EstadoPedido.A_Cobrar);
+    }
+
+    private void AbrirModalCobro(PedidoViewModel pedido)
+    {
+        PedidoSeleccionado = pedido;
+        MetodoPagoSeleccionado = "Efectivo";
+        MontoRecibido = 0;
+    }
+
+    private void CerrarModal()
+    {
+        PedidoSeleccionado = null;
+        MontoRecibido = 0;
+    }
+
+    private async Task ConfirmarCobro()
+    {
+        if (PedidoSeleccionado == null)
+            return;
+
+        // Opcional: podrías guardar método de pago y monto recibido en otra tabla (Pagos)
+        await ServicioDeMesaService.CambiarEstadoPedidoAsync(PedidoSeleccionado.Id, Enums.EstadoPedido.Cobrado);
+        await ServicioDeMesaService.CambiarEstadoPedidoAsync(PedidoSeleccionado.Id, Enums.EstadoPedido.Cerrado);
+        await ServicioDeMesaService.CambiarEstadoMesaAsync(PedidoSeleccionado.MesaId, Enums.EstadoMesa.Disponible);
+
+        CerrarModal();
+        await CargarPedidos();
+    }
+    private string GenerarLineaVuelto(string total)
+    {
+        if (MetodoPagoSeleccionado != "Efectivo") return "";
+
+        decimal totalDecimal = 0;
+        decimal.TryParse(total, out totalDecimal);
+        var vuelto = MontoRecibido - totalDecimal;
+
+        return $"<p><strong>Recibido:</strong> ${MontoRecibido:0.00}</p><p><strong>Vuelto:</strong> ${vuelto:0.00}</p>";
+    }
+    private void Imprimir(PedidoViewModel pedido)
+    {
+        var total = pedido.DetallePedido.Sum(d => d.Cantidad * d.PrecioUnitario).ToString("0.00");
+        var detalle = string.Join("<br>", pedido.DetallePedido.Select(d => $"- {d.Producto?.Nombre} x{d.Cantidad} = ${d.Cantidad * d.PrecioUnitario:0.00}"));
+        var html = $@"  <html>
+            <head>
+                <title>Ticket Mesa {pedido.Mesa?.Numero}</title>
+                <style>
+                    body {{ font-family: Arial; padding: 20px; }}
+                    h2 {{ margin-bottom: 10px; }}
+                </style>
+            </head>
+            <body>
+                <h2>Ticket - Mesa {pedido.Mesa?.Numero}</h2>
+                <p><strong>Fecha:</strong> {pedido.FechaPedido?.ToLocalTime().ToString("dd/MM/yyyy HH:mm")}</p> <p>{detalle}</p><hr><p><strong>Total: ${total}</strong></p>{GenerarLineaVuelto(total)}<script>window.print();</script>   </body>  </html> ";
+
+        JS.InvokeVoidAsync("openTicketWindow", html);
+    }
+
+    [Inject] private IJSRuntime JS { get; set; } = default!;
+}

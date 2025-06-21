@@ -1,0 +1,157 @@
+﻿@page "/GestionMesas/pedido/{idPedido:int}"
+@inject Services.ServicioDeMesaService ServicioDeMesaService
+@inject IJSRuntime JS
+@using System.Globalization
+@using LoDeFran.Frontend.Models
+
+<h3>Pedido - Agregar Productos</h3>
+
+@if (PedidoActual?.Mesa != null)
+{
+    <h4>Mesa Nº @PedidoActual.Mesa.Numero</h4>
+}
+
+@if (PedidoActual == null)
+{
+    <p>Cargando pedido...</p>
+}
+else
+{
+    <div>
+        <ul class="nav nav-tabs mt-4" role="tablist">
+            @foreach (var categoriaId in ProductosPorCategoria.Keys)
+            {
+                var nombreCategoria = CategoriasDisponibles.FirstOrDefault(c => c.Id == categoriaId)?.Nombre ?? "Sin nombre";
+                <li class="nav-item">
+                    <a class="nav-link @(CategoriaSeleccionada == categoriaId ? "active" : "")"
+                       @onclick="() => CategoriaSeleccionada = categoriaId"
+                       href="javascript:void(0)">
+                        @nombreCategoria
+                    </a>
+                </li>
+            }
+        </ul>
+
+        @if (CategoriaSeleccionada.HasValue && ProductosPorCategoria.TryGetValue(CategoriaSeleccionada.Value, out var productos))
+        {
+            <div class="row mt-3">
+                @foreach (var producto in productos)
+                {
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <h6 class="card-title">@producto.Nombre</h6>
+                                <p class="card-text">@producto.Precio.ToString("C", new CultureInfo("es-AR"))</p>
+                                <button class="btn btn-sm btn-primary" @onclick="() => AgregarProducto(producto.Id)">
+                                    Agregar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Select por categoría -->
+            <div class="mt-3">
+                <label><strong>Agregar por lista - @CategoriasDisponibles.FirstOrDefault(c => c.Id == CategoriaSeleccionada)?.Nombre</strong></label>
+                <select class="form-select" @onchange="async e => await AgregarProductoDesdeSelect(int.Parse(e.Value.ToString()))">
+                    <option value="">-- Seleccionar producto --</option>
+                    @foreach (var producto in productos)
+                    {
+                        <option value="@producto.Id">@producto.Nombre (@producto.Precio.ToString("C", new CultureInfo("es-AR")))</option>
+                    }
+                </select>
+            </div>
+        }
+
+        @if (PedidoActual.DetallePedido.Any())
+        {
+            <h5 class="mt-4">Detalle del Pedido</h5>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio</th>
+                        <th>Total</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in PedidoActual.DetallePedido)
+                    {
+                        var precioTotal = item.PrecioUnitario * item.Cantidad;
+                        <tr>
+                            <td>@item.Producto.Nombre</td>
+                            <td>
+                                <input type="number" min="1" class="form-control form-control-sm"
+                                       value="@item.Cantidad"
+                                       @onchange="(e) => CambiarCantidad(item.Id, int.Parse(e.Value.ToString()))" />
+                            </td>
+                            <td>@item.PrecioUnitario.ToString("C", new CultureInfo("es-AR"))</td>
+                            <td>@precioTotal.ToString("C", new CultureInfo("es-AR"))</td>
+                            <td><button class="btn btn-sm btn-danger" @onclick="() => EliminarItem(item.Id)">Eliminar</button></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public int idPedido { get; set; }
+
+    private PedidoViewModel? PedidoActual;
+    private List<ProductoViewModel> ProductosDisponibles = new();
+    private List<CategoriaProductoViewModel> CategoriasDisponibles = new();
+    private int? CategoriaSeleccionada;
+
+    protected override async Task OnInitializedAsync()
+    {
+        PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorIdAsync(idPedido);
+        ProductosDisponibles = await ServicioDeMesaService.GetProductosAsync();
+        CategoriasDisponibles = await ServicioDeMesaService.GetCategoriasProductosAsync();
+
+        CategoriaSeleccionada = CategoriasDisponibles.FirstOrDefault()?.Id;
+    }
+
+    private async Task AgregarProducto(int idProducto)
+    {
+        // Cantidad por defecto 1 (desde tarjeta)
+        await ServicioDeMesaService.AgregarProductoAlPedidoAsync(idPedido, idProducto, 1);
+        PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorIdAsync(idPedido);
+    }
+
+    private async Task AgregarProductoDesdeSelect(int idProducto)
+    {
+        if (idProducto == 0)
+            return;
+
+        var cantidadStr = await JS.InvokeAsync<string>("prompt", "¿Cantidad a agregar?");
+        if (int.TryParse(cantidadStr, out int cantidad) && cantidad > 0)
+        {
+            await ServicioDeMesaService.AgregarProductoAlPedidoAsync(idPedido, idProducto, cantidad);
+            PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorIdAsync(idPedido);
+        }
+    }
+
+    private async Task EliminarItem(int idDetalle)
+    {
+        await ServicioDeMesaService.DeleteAsync(idPedido, idDetalle); // Debes implementar esto si no existe
+        PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorIdAsync(idPedido);
+    }
+
+    private async Task CambiarCantidad(int idDetalle, int nuevaCantidad)
+    {
+        await ServicioDeMesaService.ModificarCantidadProductoAsync(idDetalle, nuevaCantidad);
+        PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorIdAsync(idPedido);
+    }
+
+    private Dictionary<int, List<ProductoViewModel>> ProductosPorCategoria =>
+        ProductosDisponibles
+            .Where(p => p.CategoriaProductoId.HasValue)
+            .GroupBy(p => p.CategoriaProductoId.Value)
+            .OrderBy(g => g.Key)
+            .ToDictionary(g => g.Key, g => g.ToList());
+}

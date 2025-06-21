@@ -1,0 +1,75 @@
+﻿@page "/GestionMesas/mesa/{idMesa:int}"
+@inject Services.ServicioDeMesaService ServicioDeMesaService
+@inject NavigationManager Nav
+@using LoDeFran.Frontend.Models
+
+<h3>Detalle de Mesa</h3>
+
+@if (MesaSeleccionada == null)
+{
+    <p>Cargando mesa...</p>
+}
+else
+{
+    <div class="card mt-3">
+        <div class="card-body">
+            <h5>Mesa @MesaSeleccionada.Numero</h5>
+            <p>Estado: @MesaSeleccionada.EstadoNombre</p>
+
+            @if (PedidoIniciado)
+            {
+                <p class="text-success">✅ Pedido ya iniciado</p>
+                <button class="btn btn-success" @onclick='() => Nav.NavigateTo($"/GestionMesas/pedido/{PedidoActual.Id}")'>Ver Pedido</button>
+            }
+            else
+            {
+                <button class="btn btn-primary" @onclick="IniciarPedido">Iniciar Pedido</button>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(ErrorMensaje))
+            {
+                <div class="alert alert-danger mt-2">@ErrorMensaje</div>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public int idMesa { get; set; }
+
+    private MesaViewModel? MesaSeleccionada;
+    private PedidoViewModel? PedidoActual;
+    private bool PedidoIniciado = false;
+    private string? ErrorMensaje;
+
+    protected override async Task OnInitializedAsync()
+    {
+        MesaSeleccionada = await ServicioDeMesaService.GetMesasByIdAsync(idMesa); // si no existe este método, crealo
+
+        try
+        {
+            PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorMesaIdAsync(idMesa);
+            PedidoIniciado = true;
+        }
+        catch
+        {
+            PedidoActual = null;
+            PedidoIniciado = false;
+        }
+    }
+
+    private async Task IniciarPedido()
+    {
+        try
+        {
+            PedidoActual = await ServicioDeMesaService.IniciarPedidoAsync(idMesa);
+            PedidoIniciado = true;
+            ErrorMensaje = null;
+            Nav.NavigateTo($"/GestionMesas/pedido/{PedidoActual.Id}");
+        }
+        catch (Exception ex)
+        {
+            ErrorMensaje = $"Error: {ex.Message}";
+        }
+    }
+}

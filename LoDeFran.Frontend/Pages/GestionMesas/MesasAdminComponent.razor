@@ -1,0 +1,249 @@
+﻿@inject Services.ServicioDeMesaService ServicioDeMesaService
+@inject NavigationManager Nav
+@using LoDeFran.Frontend.Models
+@using LoDeFran.Frontend.Services
+
+<style>
+    .mesas-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .mesa-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 12px;
+        background-color: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        transition: all 0.2s ease-in-out;
+        position: relative;
+    }
+
+        .mesa-icon:hover {
+            transform: scale(1.05);
+            background-color: #e2e6ea;
+        }
+
+    .mesa-num {
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    .badge {
+        font-size: 10px;
+        padding: 2px 6px;
+    }
+
+    .mesas-grid button {
+        width: 120px;
+        height: 80px;
+        font-size: 14px;
+        text-align: center;
+    }
+
+    /* Modal styles */
+    .modal-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 1040;
+    }
+</style>
+
+<h3>Seleccionar Piso y Mesa</h3>
+
+@if (Pisos?.Any() == true)
+{
+    <div class="btn-group mt-3" role="group">
+        @foreach (var piso in Pisos)
+        {
+            <button class="btn btn-outline-primary @(PisoSeleccionado?.IdPiso == piso.IdPiso ? "active" : "")"
+                    @onclick="() => CambiarPiso(piso)">
+                @piso.Nombre
+            </button>
+        }
+        <button class="btn btn-secondary" @onclick="VerTodasLasMesas">Todas</button>
+    </div>
+
+    <div class="mesas-grid mt-3">
+        @foreach (var mesa in Mesas)
+        {
+            <button class="mesa-icon btn" @onclick='() => MostrarDetalleMesa(mesa)'>
+                <i class="fas fa-table fa-2x d-block"></i>
+                <span class="mesa-num">@mesa.Numero</span>
+                <span class="badge bg-@ObtenerClaseBadge(mesa.EstadoId) position-absolute top-0 start-100 translate-middle">@mesa.EstadoNombre</span>
+            </button>
+        }
+    </div>
+}
+else
+{
+    <p>Cargando pisos...</p>
+}
+
+@if (MesaSeleccionada != null)
+{
+    <div class="modal-backdrop" @onclick="CerrarModal"></div>
+    <div class="modal fade show d-block" tabindex="-1" style="z-index: 1050;" role="dialog" aria-modal="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detalle Mesa @MesaSeleccionada.Numero</h5>
+                    <button type="button" class="btn-close" aria-label="Close" @onclick="CerrarModal"></button>
+                </div>
+                <div class="modal-body">
+                    <h5 class="modal-title">Mesa @MesaSeleccionada.Numero</h5>
+                    <p><strong>Estado:</strong> @MesaSeleccionada.EstadoNombre</p>
+                    <p><strong>Estado Pedido:</strong> @PedidoActual?.EstadoId</p>
+
+                    <!-- Espacio para mostrar el nombre del mozo cuando esté disponible -->
+                    <p><strong>Mozo:</strong> (no asignado)</p>
+
+                    @if (PedidoIniciado)
+                    {
+                        <p class="text-success">✅ Pedido ya iniciado</p>
+                        <button class="btn btn-success" @onclick='() => Nav.NavigateTo($"/GestionMesas/pedido/{PedidoActual?.Id}")'>
+                            Ver Pedido
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-primary" @onclick="IniciarPedido">
+                            Iniciar Pedido
+                        </button>
+                    }
+                   
+                    @if (PedidoIniciado && EstadoPedidoActualId == (int)Enums.EstadoPedido.ListoParaEntregar)
+                    {
+                        <button class="btn btn-info " @onclick="() => CambiarEstado(PedidoActual.Id, Enums.EstadoPedido.Entregado)">
+                            Pedido Entregado
+                        </button>
+                    }
+                    @if (PedidoIniciado && EstadoPedidoActualId == (int)Enums.EstadoPedido.Entregado)
+                    {
+                        <button class="btn btn-warning " @onclick="() => CambiarEstado(PedidoActual.Id, Enums.EstadoPedido.A_Cobrar)">
+                            Generar Cuenta
+                        </button>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(ErrorMensaje))
+                    {
+                        <div class="alert alert-danger mt-2">@ErrorMensaje</div>
+                    }
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="CerrarModal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<PisoViewModel> Pisos = new();
+    private PisoViewModel? PisoSeleccionado;
+    private List<MesaViewModel> Mesas = new();
+    private MesaViewModel? MesaSeleccionada;
+    private PedidoViewModel? PedidoActual;
+    private bool PedidoIniciado = false;
+    private string? ErrorMensaje;
+    private int? EstadoPedidoActualId => PedidoActual?.EstadoId;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        Pisos = await ServicioDeMesaService.GetPisosAsync();
+        PisoSeleccionado = null;
+        Mesas.Clear();
+        Mesas = await ServicioDeMesaService.GetMesasAsync();
+    }
+
+    private async Task CambiarPiso(PisoViewModel piso)
+    {
+        PisoSeleccionado = piso;
+        Mesas = await ServicioDeMesaService.GetMesasPorPisoAsync(piso.IdPiso);
+
+    }
+
+    private async Task VerTodasLasMesas()
+    {
+        PisoSeleccionado = null;
+        Mesas.Clear();
+        Mesas = await ServicioDeMesaService.GetMesasAsync();
+    }
+
+    private async Task MostrarDetalleMesa(MesaViewModel mesa)
+    {
+        MesaSeleccionada = mesa;
+        ErrorMensaje = null;
+        PedidoIniciado = false;
+        PedidoActual = null;
+
+        try
+        {
+            PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorMesaIdAsync(mesa.Id);
+            PedidoIniciado = true;
+        }
+        catch
+        {
+            PedidoIniciado = false;
+            PedidoActual = null;
+        }
+    }
+    private async Task CambiarEstado(int idPedido, Enums.EstadoPedido nuevoEstado)
+    {
+        await ServicioDeMesaService.CambiarEstadoPedidoAsync(idPedido, nuevoEstado);
+        PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorIdAsync(PedidoActual.Id);
+        CerrarModal(); // opcional
+    }
+    private void CerrarModal()
+    {
+        MesaSeleccionada = null;
+        ErrorMensaje = null;
+        PedidoIniciado = false;
+        PedidoActual = null;
+    }
+
+    private async Task IniciarPedido()
+    {
+        if (MesaSeleccionada == null)
+            return;
+
+        try
+        {
+            PedidoActual = await ServicioDeMesaService.IniciarPedidoAsync(MesaSeleccionada.Id);
+            PedidoIniciado = true;
+            ErrorMensaje = null;
+            Nav.NavigateTo($"/GestionMesas/pedido/{PedidoActual.Id}");
+        }
+        catch (Exception ex)
+        {
+            ErrorMensaje = $"Error: {ex.Message}";
+        }
+    }
+   
+
+    private void VerPedido()
+    {
+        if (PedidoActual != null)
+            Nav.NavigateTo($"/GestionMesas/pedido/{PedidoActual.Id}");
+    }
+
+    private string ObtenerClaseBadge(int? estadoId) => estadoId switch
+    {
+        1 => "success",
+        2 => "warning",
+        3 => "danger",
+        _ => "secondary"
+    };
+
+
+}

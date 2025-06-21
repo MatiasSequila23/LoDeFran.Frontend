@@ -1,0 +1,24 @@
+﻿using LoDeFran.Frontend.Models;
+using System.Net.Http.Json;
+
+namespace LoDeFran.Frontend.Services
+{
+    public class MesaService
+    {
+        private readonly HttpClient _http;
+
+        public MesaService(HttpClient http)
+        {
+            _http = http;
+        }
+
+        public async Task<List<MesaViewModel>> GetMesasAsync()
+        {
+            return await _http.GetFromJsonAsync<List<MesaViewModel>>("Mesas") ?? new();
+        }
+        public async Task<MesaViewModel?> GetMesasByIdAsync(int id)
+        {
+            return await _http.GetFromJsonAsync<MesaViewModel>($"Mesas/{id}");
+        }
+    }
+}
