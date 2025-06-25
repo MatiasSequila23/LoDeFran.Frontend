@@ -15,6 +15,10 @@
     <li class="nav-item">
         <button class="nav-link @(vistaActual == "caja" ? "active" : "")" @onclick=@(() => vistaActual = "caja")>Caja</button>
     </li>
+    <li class="nav-item">
+        <button class="nav-link @(vistaActual == "sinMesa" ? "active" : "")" @onclick=@(() => vistaActual = "sinMesa")>Pedidos sin Mesa</button>
+    </li>
+
 </ul>
 
 <div class="mt-4">
@@ -30,6 +34,11 @@
     {
         <CajaAdminComponent />
     }
+    else if (vistaActual == "sinMesa")
+    {
+        <CrearPedidoSinMesaComponent />
+    }
+
 </div>
 
 @code {

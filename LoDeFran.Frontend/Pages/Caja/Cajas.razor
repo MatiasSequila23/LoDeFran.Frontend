@@ -1,0 +1,64 @@
+﻿@page "/caja/cajas"
+@inject Services.CajaService CajaService
+@inject IJSRuntime JS
+@using LoDeFran.Frontend.Models
+
+<h3>Gestión de Caja</h3>
+
+@if (CajaActual == null)
+{
+    <div class="mb-3">
+        <label>Monto Inicial:</label>
+        <input type="number" @bind="MontoInicial" class="form-control" />
+        <button class="btn btn-success mt-2" @onclick="AbrirCaja">Abrir Caja</button>
+    </div>
+}
+else if (CajaActual.Estado == "abierta")
+{
+    <div>
+        <p><strong>Usuario:</strong> @CajaActual.NombreUsuario</p>
+        <p><strong>Fecha Apertura:</strong> @CajaActual.FechaApertura.ToString("g")</p>
+        <p><strong>Monto Inicial:</strong> $@CajaActual.MontoInicial</p>
+
+        <button class="btn btn-danger mt-2" @onclick="CerrarCaja">Cerrar Caja</button>
+    </div>
+}
+else
+{
+    <div class="alert alert-info">No hay caja abierta.</div>
+}
+
+@code {
+    private CajaViewModel? CajaActual;
+    private decimal MontoInicial;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //var usuarioId = await Auth.GetUsuarioIdAsync();
+        var usuarioId = 1;
+        CajaActual = await CajaService.ObtenerCajaAbiertaPorUsuarioAsync(usuarioId);
+    }
+
+    private async Task AbrirCaja()
+    {
+        //var usuarioId = await Auth.GetUsuarioIdAsync();
+        var usuarioId = 1;
+
+        await CajaService.AbrirCajaAsync(new CajaViewModel
+            {
+                UsuarioId = usuarioId,
+                MontoInicial = MontoInicial
+            });
+
+        CajaActual = await CajaService.ObtenerCajaAbiertaPorUsuarioAsync(usuarioId);
+    }
+
+    private async Task CerrarCaja()
+    {
+        if (CajaActual != null)
+        {
+            await CajaService.CerrarCajaAsync(CajaActual.Id);
+            CajaActual = null;
+        }
+    }
+}

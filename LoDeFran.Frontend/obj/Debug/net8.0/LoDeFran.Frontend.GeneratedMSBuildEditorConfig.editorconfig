@@ -34,6 +34,14 @@ build_property._RazorSourceGeneratorDebug =
 build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/Caja/Cajas.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2FqYVxDYWphcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/Cliente/Clientes.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2xpZW50ZVxDbGllbnRlcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/Counter.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ291bnRlci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
@@ -48,6 +56,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/GestionMesas/CocinaAdminComponent.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcR2VzdGlvbk1lc2FzXENvY2luYUFkbWluQ29tcG9uZW50LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/GestionMesas/CrearPedidoSinMesaComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcR2VzdGlvbk1lc2FzXENyZWFyUGVkaWRvU2luTWVzYUNvbXBvbmVudC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/GestionMesas/DetalleMesa.razor]
@@ -80,6 +92,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/GestionMesas/ServicioDeMesa.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcR2VzdGlvbk1lc2FzXFNlcnZpY2lvRGVNZXNhLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/GestionMesas/TipoPedidoSelector.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcR2VzdGlvbk1lc2FzXFRpcG9QZWRpZG9TZWxlY3Rvci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/Home.razor]

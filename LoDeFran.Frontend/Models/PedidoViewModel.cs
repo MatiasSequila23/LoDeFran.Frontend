@@ -10,9 +10,13 @@
         public DateTime? FechaEntrega { get; set; }
         public int EstadoId { get; set; }
         public int? CategoriaId { get; set; }
-        public int MesaId { get; set; }
+        public int? MesaId { get; set; }
+        public int? TipoPedidoId { get; set; } // ← NUEVO
+        public string? TipoPedidoNombre { get; set; } // ← Opcional, si querés mostrar el nombre
         public MesaViewModel? Mesa { get; set; }
         public EstadoPedidoViewModel Estado { get; set; }
         public List<DetallePedidoViewModel> DetallePedido { get; set; } = new List<DetallePedidoViewModel>();
+        public string? Notas { get; set; }
+        public string? ClienteNombre { get; set; }
     }
 }

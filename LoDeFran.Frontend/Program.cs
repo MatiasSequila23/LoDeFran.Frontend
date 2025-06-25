@@ -8,7 +8,9 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:82/api/") });
+builder.Services.AddScoped<CajaService>();
 builder.Services.AddScoped<CategoriaProductoService>();
+builder.Services.AddScoped<ClienteService>();
 builder.Services.AddScoped<DetallePedidoServicie>();
 builder.Services.AddScoped<EstadoInsumoService>();
 builder.Services.AddScoped<InsumoService>();

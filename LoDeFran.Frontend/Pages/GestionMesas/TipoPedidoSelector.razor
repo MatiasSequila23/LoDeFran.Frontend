@@ -1,0 +1,31 @@
+﻿@using LoDeFran.Frontend.Models
+@inject Services.ServicioDeMesaService ServicioDeMesaService
+
+<select class="form-control" @bind="TipoSeleccionado">
+    <option disabled value="">Seleccione tipo de pedido</option>
+    @foreach (var tipo in TiposPedido)
+    {
+        <option value="@tipo.Id">@tipo.Nombre</option>
+    }
+</select>
+
+@code {
+    [Parameter]
+    public int TipoSeleccionado { get; set; }
+
+    [Parameter]
+    public EventCallback<int> TipoSeleccionadoChanged { get; set; }
+
+    private List<TipoPedidoViewModel> TiposPedido { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        TiposPedido = await ServicioDeMesaService.GetTiposPedidoAsync();
+    }
+
+    private async Task OnTipoChanged(ChangeEventArgs e)
+    {
+        TipoSeleccionado = int.Parse(e.Value?.ToString() ?? "0");
+        await TipoSeleccionadoChanged.InvokeAsync(TipoSeleccionado);
+    }
+}

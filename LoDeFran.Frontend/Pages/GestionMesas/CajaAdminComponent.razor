@@ -85,6 +85,8 @@ else
     </div>
 }
 
+
+
 @code {
     private List<PedidoViewModel>? Pedidos;
     private PedidoViewModel? PedidoSeleccionado;
@@ -126,8 +128,9 @@ else
         await ServicioDeMesaService.CambiarEstadoPedidoAsync(PedidoSeleccionado.Id, Enums.EstadoPedido.Cerrado);
         await ServicioDeMesaService.CambiarEstadoMesaAsync(PedidoSeleccionado.MesaId, Enums.EstadoMesa.Disponible);
 
-        CerrarModal();
+        
         await CargarPedidos();
+        CerrarModal();
     }
     private string GenerarLineaVuelto(string total)
     {

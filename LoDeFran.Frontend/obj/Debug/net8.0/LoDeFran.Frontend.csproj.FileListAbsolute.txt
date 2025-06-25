@@ -1030,13 +1030,6 @@ C:\SISTEMA LoDeFran\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\LoDeFra
 C:\SISTEMA LoDeFran\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\refint\LoDeFran.Frontend.dll
 C:\SISTEMA LoDeFran\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\LoDeFran.Frontend.pdb
 C:\SISTEMA LoDeFran\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\ref\LoDeFran.Frontend.dll
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\LoDeFran.Frontend.csproj.AssemblyReference.cache
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\LoDeFran.Frontend.GeneratedMSBuildEditorConfig.editorconfig
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\LoDeFran.Frontend.AssemblyInfoInputs.cache
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\LoDeFran.Frontend.AssemblyInfo.cs
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\LoDeFran.Frontend.csproj.CoreCompileInputs.cache
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\LoDeFran.Frontend.MvcApplicationPartsAssemblyInfo.cache
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\LoDeFran.Frontend.sourcelink.json
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Azure.Core.wasm
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Azure.Identity.wasm
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\blazor.boot.json
@@ -1981,6 +1974,13 @@ E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\dotnet.runtime.j
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\icudt_CJK.dat
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\icudt_EFIGS.dat
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\icudt_no_CJK.dat
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\LoDeFran.Frontend.csproj.AssemblyReference.cache
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\LoDeFran.Frontend.GeneratedMSBuildEditorConfig.editorconfig
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\LoDeFran.Frontend.AssemblyInfoInputs.cache
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\LoDeFran.Frontend.AssemblyInfo.cs
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\LoDeFran.Frontend.csproj.CoreCompileInputs.cache
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\LoDeFran.Frontend.MvcApplicationPartsAssemblyInfo.cache
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\LoDeFran.Frontend.sourcelink.json
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\webcil\Azure.Core.wasm
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\webcil\Azure.Identity.wasm
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\webcil\Humanizer.wasm
