@@ -1,0 +1,120 @@
+﻿@page "/calle/calles"
+@inject Services.CalleService CalleService
+
+@inject IJSRuntime JS
+
+@using LoDeFran.Frontend.Models
+
+<h3>Gestión de Calles</h3>
+
+<input @bind="nombreBusqueda" @bind:event="oninput" placeholder="Buscar calle..." class="form-control mb-2" />
+<button class="btn btn-primary me-2" @onclick="BuscarCalles">Buscar en Base</button>
+<button class="btn btn-secondary me-2" @onclick="BuscarEnExcel">Buscar en Excel</button>
+<button class="btn btn-success" @onclick="ImportarDesdeExcel">Importar desde Excel</button>
+
+@if (resultados?.Any() == true)
+{
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Código</th>
+                <th>NomOficial</th>
+                <th>AltIzqIni</th>
+                <th>AltIzqFin</th>
+                <th>AltDerIni</th>
+                <th>AltDerFin</th>
+                <th>NomAnter</th>
+                <th>NomMapa</th>
+                <th>TipoC</th>
+                <th>Bicisenda</th>
+                <th>RedJerarq</th>
+                <th>TipoFfcc</th>
+                <th>Comuna</th>
+                <th>ComPar</th>
+                <th>ComImpar</th>
+                <th>Barrio</th>
+                <th>BarrioPar</th>
+                <th>BarrioImp</th>
+                <th>Geometry</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var calle in resultados)
+            {
+                <tr>
+                    <td>@calle.Id</td>
+                    <td>@calle.Codigo</td>
+                    <td>@calle.NomOficial</td>
+                    <td>@calle.AltIzqIni</td>
+                    <td>@calle.AltIzqFin</td>
+                    <td>@calle.AltDerIni</td>
+                    <td>@calle.AltDerFin</td>
+                    <td>@calle.NomAnter</td>
+                    <td>@calle.NomMapa</td>
+                    <td>@calle.TipoC</td>
+                    <td>@calle.Bicisenda</td>
+                    <td>@calle.RedJerarq</td>
+                    <td>@calle.TipoFfcc</td>
+                    <td>@calle.Comuna</td>
+                    <td>@calle.ComPar</td>
+                    <td>@calle.ComImpar</td>
+                    <td>@calle.Barrio</td>
+                    <td>@calle.BarrioPar</td>
+                    <td>@calle.BarrioImp</td>
+                    <td>@calle.Geometry</td>
+                    <td>
+                        <button class="btn btn-success btn-sm" @onclick="() => GuardarCalle(calle)">Guardar</button>
+                        <button class="btn btn-danger btn-sm" @onclick="() => EliminarCalle(calle.Id)">Eliminar</button>
+                        <button class="btn btn-danger btn-sm" @onclick="() => EliminarSoloDelFront(calle.Id)">Quitar</button>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+
+@code {
+    private string nombreBusqueda = string.Empty;
+    private List<CalleViewModel> resultados = new();
+
+    private async Task BuscarCalles()
+    {
+        resultados = await CalleService.BuscarDesdeBase(nombreBusqueda);
+    }
+
+    private async Task BuscarEnExcel()
+    {
+        resultados = await CalleService.BuscarDesdeExcel(nombreBusqueda);
+    }
+
+    private async Task ImportarDesdeExcel()
+    {
+        await CalleService.ImportarDesdeExcel();
+        await BuscarCalles();
+    }
+
+    private async Task GuardarCalle(CalleViewModel calle)
+    {
+        await CalleService.GuardarDesdeExcel(calle);
+        await BuscarCalles();
+    }
+
+    private async Task EliminarCalle(int id)
+    {
+        await CalleService.EliminarCalle(id);
+        await BuscarCalles();
+    }
+    private void EliminarSoloDelFront(int id)
+    {
+        var item = resultados.FirstOrDefault(c => c.Id == id);
+        if (item != null)
+        {
+            resultados.Remove(item);
+        }
+    }
+
+}

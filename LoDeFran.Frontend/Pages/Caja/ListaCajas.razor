@@ -1,0 +1,62 @@
+﻿@page "/caja/listado"
+@inject Services.CajaService CajaService
+@inject NavigationManager Nav
+@using LoDeFran.Frontend.Models
+
+<h3>Listado de Cajas</h3>
+
+@if (Cajas == null)
+{
+    <p>Cargando cajas...</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Usuario</th>
+                <th>Fecha Apertura</th>
+                <th>Fecha Cierre</th>
+                <th>Estado</th>
+                <th>Monto Inicial</th>
+                <th>Monto Final</th>
+                <th>Diferencia</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var caja in Cajas)
+            {
+                <tr>
+                    <td>@caja.NombreUsuario</td>
+                    <td>@caja.FechaApertura.ToString("g")</td>
+                    <td>@(caja.FechaCierre?.ToString("g") ?? "-")</td>
+                    <td>@caja.Estado</td>
+                    <td>$@caja.MontoInicial</td>
+                    <td>@(caja.MontoFinal.HasValue ? $"${caja.MontoFinal}" : "-")</td>
+                    <td>@(caja.Diferencia.HasValue ? $"${caja.Diferencia}" : "-")</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary"
+                                @onclick="@(() => VerMovimientos(caja.Id))">
+                            Ver movimientos
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<CajaViewModel>? Cajas;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Cajas = await CajaService.ObtenerHistorialCajasAsync();
+    }
+
+    private void VerMovimientos(int cajaId)
+    {
+        Nav.NavigateTo($"/caja/movimientos-caja/{cajaId}");
+    }
+}

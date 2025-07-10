@@ -1,0 +1,182 @@
+﻿@page "/caja/movimientos-caja/{CajaId:int}"
+@inject IJSRuntime JS
+@inject Services.MovimientosCajaService MovimientosCajaService
+@inject Services.MetodoPagoService MetodoPagoService
+@inject Services.MotivoMovimientoService MotivoMovimientoService
+@using LoDeFran.Frontend.Models
+
+<h3>Movimientos de Caja - Caja @CajaId</h3>
+
+<button class="btn btn-primary mb-3" @onclick="NuevoMovimiento">Nuevo Movimiento</button>
+
+@if (Movimientos == null)
+{
+    <p>Cargando...</p>
+}
+else
+{
+    <table class="table table-bordered" id="tablaMovimientos">
+        <thead class="table-dark">
+            <tr>
+                <th>Fecha</th>
+                <th>Tipo</th>
+                <th>Motivo</th>
+                <th>Método Pago</th>
+                <th>Monto</th>
+                <th>Descripción</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var mov in Movimientos)
+            {
+                <tr>
+                    <td>@mov.FechaMovimiento.ToString("g")</td>
+                    <td>@mov.TipoMovimientoNombre</td>
+                    <td>@mov.MotivoNombre</td>
+                    <td>@mov.MetodoPagoNombre</td>
+                    <td>$@mov.Monto</td>
+                    <td>@mov.Descripcion</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning me-1" @onclick="() => EditarMovimiento(mov)">Editar</button>
+                        <button class="btn btn-sm btn-danger" @onclick="() => EliminarMovimiento(mov.Id)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<!-- Modal para crear/editar movimiento -->
+<div class="modal fade" id="modalMovimiento" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">@((Movimiento.Id == 0) ? "Nuevo Movimiento" : "Editar Movimiento")</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-2">
+                    <label>Fecha Movimiento</label>
+                    <input type="date" class="form-control" @bind="Movimiento.FechaMovimiento" />
+                </div>
+
+                <div class="mb-2">
+                    <label>Motivo Movimiento</label>
+                    <select class="form-control" @bind="Movimiento.MotivoMovimientoId">
+                        <option value="">-- Seleccionar --</option>
+                        @foreach (var motivo in Motivos)
+                        {
+                            <option value="@motivo.Id">@motivo.Nombre</option>
+                        }
+                    </select>
+
+                </div>
+
+                <div class="mb-2">
+                    <label>Método de Pago</label>
+                    <select class="form-control" @bind="Movimiento.MetodoPagoId">
+                        <option value="">-- Seleccionar --</option>
+                        @foreach (var metodo in MetodosPago)
+                        {
+                            <option value="@metodo.Id">@metodo.Nombre</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="mb-2">
+                    <label>Monto</label>
+                    <input type="number" step="0.01" class="form-control" @bind="Movimiento.Monto" />
+                </div>
+
+                <div class="mb-2">
+                    <label>Descripción</label>
+                    <textarea class="form-control" @bind="Movimiento.Descripcion"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-success" @onclick="GuardarMovimiento">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public int CajaId { get; set; }
+
+    private List<MovimientoCajaViewModel>? Movimientos;
+    private MovimientoCajaViewModel Movimiento = new() { CajaId = 0, FechaMovimiento = DateTime.Today };
+    private List<MetodoPagoViewModel> MetodosPago = new();
+    private List<MotivoMovimientoViewModel> Motivos = new();
+
+
+    private IEnumerable<string> TiposMovimientoUnicos =>
+        Motivos.Select(m => m.TipoMovimientoNombre).Distinct();
+
+    protected override async Task OnInitializedAsync()
+    {
+        MetodosPago = await MetodoPagoService.GetAllAsync();
+        Motivos = await MotivoMovimientoService.GetAllAsync();
+        await CargarMovimientos();
+    }
+
+    private async Task CargarMovimientos()
+    {
+        Movimientos = await MovimientosCajaService.GetPorCajaAsync(CajaId);
+        await JS.InvokeVoidAsync("initializeDataTable", "tablaMovimientos");
+    }
+
+    private void NuevoMovimiento()
+    {
+        Movimiento = new MovimientoCajaViewModel
+            {
+                CajaId = CajaId,
+                FechaMovimiento = DateTime.Now
+            };
+        JS.InvokeVoidAsync("mostrarModal", "#modalMovimiento");
+    }
+
+    private void EditarMovimiento(MovimientoCajaViewModel mov)
+    {
+        Movimiento = new MovimientoCajaViewModel
+            {
+                Id = mov.Id,
+                CajaId = mov.CajaId,
+                FechaMovimiento = mov.FechaMovimiento,
+                MotivoMovimientoId = mov.MotivoMovimientoId,
+                MetodoPagoId = mov.MetodoPagoId,
+                Monto = mov.Monto,
+                Descripcion = mov.Descripcion
+            };
+        JS.InvokeVoidAsync("mostrarModal", "#modalMovimiento");
+    }
+
+    private async Task GuardarMovimiento()
+    {
+        // 👇 Serializa el objeto Movimiento a JSON
+        var movimientoJson = System.Text.Json.JsonSerializer.Serialize(Movimiento);
+
+        // 👇 Mostralo en la consola del navegador
+        await JS.InvokeVoidAsync("console.log", movimientoJson);
+
+        // Luego guardás normalmente
+        if (Movimiento.Id == 0)
+            await MovimientosCajaService.CrearAsync(Movimiento);
+        else
+            await MovimientosCajaService.ActualizarAsync(Movimiento.Id, Movimiento);
+
+        await CargarMovimientos();
+        await JS.InvokeVoidAsync("cerrarModal", "#modalMovimiento");
+    }
+
+
+    private async Task EliminarMovimiento(int id)
+    {
+        if (await JS.InvokeAsync<bool>("confirm", "¿Confirma eliminar el movimiento?"))
+        {
+            await MovimientosCajaService.EliminarAsync(id);
+            await CargarMovimientos();
+        }
+    }
+}

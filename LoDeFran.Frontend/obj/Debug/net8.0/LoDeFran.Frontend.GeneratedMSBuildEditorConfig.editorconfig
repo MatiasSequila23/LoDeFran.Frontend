@@ -38,6 +38,22 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2FqYVxDYWphcy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
+[E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/Caja/ListaCajas.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2FqYVxMaXN0YUNhamFzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/Caja/Movimientos.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2FqYVxNb3ZpbWllbnRvcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/Caja/MovimientosCaja.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2FqYVxNb3ZpbWllbnRvc0NhamEucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/Calle/Calles.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2FsbGVcQ2FsbGVzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
 [E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/Cliente/Clientes.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2xpZW50ZVxDbGllbnRlcy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
@@ -108,6 +124,14 @@ build_metadata.AdditionalFiles.CssScope =
 
 [E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/Mesa/Mesas.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTWVzYVxNZXNhcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/Pedido/PedidoDelivery.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUGVkaWRvXFBlZGlkb0RlbGl2ZXJ5LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/Pedido/PedidoMostrador.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUGVkaWRvXFBlZGlkb01vc3RyYWRvci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/Producto/Productos.razor]

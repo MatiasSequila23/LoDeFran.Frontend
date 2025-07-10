@@ -1,0 +1,277 @@
+﻿@inject Services.ServicioDeMesaService ServicioDeMesaService
+@inject Services.ClienteService ClienteService
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+@implements IDisposable
+
+@using LoDeFran.Frontend.Models
+@using LoDeFran.Frontend.Services
+
+<h4>Crear Pedido Mostrador</h4>
+
+<div class="row">
+    <div class="col-md-6 mt-3">
+        <label>Buscar Cliente (teléfono, email, calle o altura)</label>
+        <input class="form-control" @bind="BusquedaCliente" @bind:event="oninput" placeholder="Ej: 123456789 o calle" />
+    </div>
+
+    @if (ClientesEncontrados.Any())
+    {
+            <div class="col-md-8 mt-3">
+                <label>Seleccionar Cliente</label>
+                <select id="selectClientes" class="form-control" @bind="ClienteSeleccionadoId" @onblur="desplegarSelectClientes">
+                    <option value="">-- Seleccionar Cliente --</option>
+                @foreach (var cliente in ClientesEncontrados)
+                {
+                            <option value="@cliente.Id">@cliente.Nombre @cliente.Apellido - @cliente.Telefono (@cliente.Calle @cliente.Altura, Piso @cliente.Piso)</option>
+                }
+                </select>
+            </div>
+    }
+
+    <div class="col-md-4 mt-4">
+        <label>&nbsp;</label>
+        <button class="btn btn-primary mb-3" @onclick="MostrarModalNuevo"><i class="fas fa-user-plus"></i> Nuevo Cliente</button>
+    </div>
+</div>
+
+<button class="btn btn-success mt-3" @onclick="CrearPedido">Crear Pedido</button>
+
+@if (mensajeExito is not null)
+{
+        <div class="alert alert-success mt-3">@mensajeExito</div>
+}
+
+<hr />
+
+<h4 class="mt-5">Pedidos Mostrador</h4>
+
+@if (Pedidos == null)
+{
+        <div class="text-center">
+            <div class="spinner-border text-secondary" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+        </div>
+}
+else if (!Pedidos.Any())
+{
+        <div class="alert alert-info">No hay pedidos mostrador registrados.</div>
+}
+else
+{
+    <table class="table table-striped table-bordered" id="tablaPedidos" @key="claveTabla">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Cliente</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var pedido in Pedidos)
+            {
+                        <tr>
+                            <td>@pedido.Id</td>
+                            <td>@pedido.ClienteNombre</td>
+                            <td>@pedido.FechaPedido?.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>@((Enums.EstadoPedido)pedido.EstadoId)</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-info me-1" @onclick="() => VerPedido(pedido.Id)">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-secondary me-1" @onclick="() => MostrarCliente(pedido.ClienteId)">
+                                    <i class="fas fa-user"></i>
+                                </button>
+
+                        @if (pedido.EstadoId == (int)Enums.EstadoPedido.ListoParaEntregar)
+                        {
+                                        <button class="btn btn-sm btn-info me-1" @onclick="() => CambiarEstado(pedido.Id, Enums.EstadoPedido.Entregado)">
+                                            Entregado
+                                        </button>
+                        }
+                        else if (pedido.EstadoId == (int)Enums.EstadoPedido.Entregado)
+                        {
+                                        <button class="btn btn-sm btn-warning me-1" @onclick="() => CambiarEstado(pedido.Id, Enums.EstadoPedido.A_Cobrar)">
+                                            Generar Cuenta
+                                        </button>
+                        }
+                            </td>
+                        </tr>
+            }
+            </tbody>
+        </table>
+}
+
+<!-- Modal Nuevo Cliente -->
+<div class="modal fade" id="modalNuevoCliente" tabindex="-1" aria-labelledby="modalNuevoClienteLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Agregar Nuevo Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <input class="form-control mb-2" placeholder="Nombre" @bind="NuevoCliente.Nombre" />
+                <input class="form-control mb-2" placeholder="Apellido" @bind="NuevoCliente.Apellido" />
+                <input class="form-control mb-2" placeholder="Teléfono" @bind="NuevoCliente.Telefono" />
+                <input class="form-control mb-2" placeholder="Email" @bind="NuevoCliente.Email" />
+                <select id="selectCalle" class="form-control mb-2" style="width: 100%"></select>
+                <input class="form-control mb-2" placeholder="Altura" @bind="NuevoCliente.Altura" />
+                <input class="form-control mb-2" placeholder="Piso" @bind="NuevoCliente.Piso" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" @onclick="GuardarNuevoCliente">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private PedidoViewModel nuevoPedido = new() { TipoPedidoId = 2 }; // 2 = Mostrador
+    private List<PedidoViewModel> Pedidos = new();
+    private string? mensajeExito;
+    private string _busquedaCliente = "";
+    Guid claveTabla = Guid.NewGuid();
+
+private string BusquedaCliente
+{
+    get => _busquedaCliente;
+    set
+    {
+        if (_busquedaCliente != value)
+        {
+            _busquedaCliente = value;
+            _ = BuscarClienteAutomaticamente();
+        }
+    }
+}
+
+    private List<ClienteViewModel> ClientesEncontrados = new();
+    private ClienteViewModel NuevoCliente = new();
+    private int? ClienteSeleccionadoId;
+    private ClienteViewModel? ClienteSeleccionado;
+    private DotNetObjectReference<PedidoMostrador>? _dotNetRef;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarPedidos();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _dotNetRef = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("registrarInstanciaBlazor", _dotNetRef);
+            await JS.InvokeVoidAsync("inicializarSelectCalle");
+        }
+    }
+
+    public void Dispose()
+    {
+        _dotNetRef?.Dispose();
+    }
+
+    [JSInvokable]
+    public Task SetCalleDesdeJS(string calle)
+    {
+        NuevoCliente.Calle = calle;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    private async Task BuscarClienteAutomaticamente()
+    {
+        if (BusquedaCliente.Trim().Length >= 3)
+        {
+            ClientesEncontrados = await ServicioDeMesaService.BuscarClientesAsync(BusquedaCliente.Trim());
+            StateHasChanged();
+        }
+        else
+        {
+            ClientesEncontrados.Clear();
+        }
+    }
+
+
+    private async void MostrarModalNuevo()
+    {
+        await JS.InvokeVoidAsync("mostrarModal", "#modalNuevoCliente");
+        await Task.Delay(300);
+        await JS.InvokeVoidAsync("inicializarSelectCalle");
+    }
+
+    private async Task GuardarNuevoCliente()
+    {
+        if (string.IsNullOrWhiteSpace(NuevoCliente.Nombre) || string.IsNullOrWhiteSpace(NuevoCliente.Telefono))
+            return;
+
+        var clienteCreado = await ClienteService.CrearClienteAsync(NuevoCliente);
+        ClienteSeleccionadoId = clienteCreado.Id;
+        await JS.InvokeVoidAsync("cerrarModal", "#modalNuevoCliente");
+
+        BusquedaCliente = $"{clienteCreado.Nombre} {clienteCreado.Apellido}";
+        ClientesEncontrados = new List<ClienteViewModel> { clienteCreado };
+        NuevoCliente = new();
+    }
+
+    private async Task CrearPedido()
+    {
+        try
+        {
+            int clienteId = ClienteSeleccionadoId ?? 0;
+            var pedido = await ServicioDeMesaService.CrearPedidoPorClienteAsync(clienteId, 2); // 2 = Mostrador
+            Nav.NavigateTo($"/GestionMesas/pedido/{pedido.Id}");
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync("console.error", $"Error al crear pedido: {ex.Message}");
+        }
+    }
+
+    private async Task CargarPedidos()
+    {
+        await JS.InvokeVoidAsync("destroyDataTable", "tablaPedidos");
+        await JS.InvokeVoidAsync("destroyDataTable", "tablaCaja");
+
+        Pedidos = (await ServicioDeMesaService.PedidosFueraDeSalon())
+            .Where(p => p.TipoPedidoNombre?.ToLower().Contains("mostrador") == true)
+            .ToList();
+
+        claveTabla = Guid.NewGuid(); // 🔁 Forzamos recreación del DOM
+
+        await InvokeAsync(StateHasChanged);
+
+
+        await JS.InvokeVoidAsync("initializeDataTable", "tablaPedidos");
+    }
+
+    private void VerPedido(int id) => Nav.NavigateTo($"/GestionMesas/pedido/{id}");
+
+    private async Task CambiarEstado(int pedidoId, Enums.EstadoPedido nuevoEstado)
+    {
+        await ServicioDeMesaService.CambiarEstadoPedidoAsync(pedidoId, nuevoEstado);
+        await CargarPedidos();
+    }
+
+    private async Task MostrarCliente(int? clienteId)
+    {
+        if (clienteId == null) return;
+        ClienteSeleccionado = await ClienteService.GetClienteAsync(clienteId.Value);
+        await JS.InvokeVoidAsync("mostrarModal", "#modalCliente");
+    }
+
+    private async Task ImprimirCliente()
+    {
+        await JS.InvokeVoidAsync("imprimirModal", "#modalCliente");
+    }
+
+    private void desplegarSelectClientes()
+    {
+        JS.InvokeVoidAsync("expandSelect", "selectClientes");
+    }
+}

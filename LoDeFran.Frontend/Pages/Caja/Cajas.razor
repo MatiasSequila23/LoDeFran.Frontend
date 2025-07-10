@@ -1,6 +1,7 @@
 ﻿@page "/caja/cajas"
 @inject Services.CajaService CajaService
 @inject IJSRuntime JS
+@inject NavigationManager Nav
 @using LoDeFran.Frontend.Models
 
 <h3>Gestión de Caja</h3>
@@ -20,7 +21,30 @@ else if (CajaActual.Estado == "abierta")
         <p><strong>Fecha Apertura:</strong> @CajaActual.FechaApertura.ToString("g")</p>
         <p><strong>Monto Inicial:</strong> $@CajaActual.MontoInicial</p>
 
+        <hr />
+
+        <h5>Resumen de Caja (solo efectivo)</h5>
+        <p>Ingresos en efectivo: $@EfectivoIngresos</p>
+        <p>Egresos en efectivo: $@EfectivoEgresos</p>
+        <p>Total teórico en efectivo: <strong>$@TotalEnCaja</strong></p>
+
+        <div class="mb-3">
+            <label>Ingresar monto contado:</label>
+            <input type="number" class="form-control" @bind="MontoFinalIngresado" />
+        </div>
+
+        <p class="@DiferenciaCss">Diferencia: $@DiferenciaStr</p>
+
         <button class="btn btn-danger mt-2" @onclick="CerrarCaja">Cerrar Caja</button>
+        <button class="btn btn-outline-primary mt-2 ms-2" @onclick="IrAMovimientosCaja">
+            Ver Movimientos de Caja
+        </button>
+        <button class="btn btn-outline-primary mt-2 ms-2" @onclick="IrAlistadoCajas">
+            Ver historico
+        </button>
+        <button class="btn btn-outline-primary mt-2 ms-2" @onclick="IrAlistadoMovi">
+            Movimientos
+        </button>
     </div>
 }
 else
@@ -31,19 +55,41 @@ else
 @code {
     private CajaViewModel? CajaActual;
     private decimal MontoInicial;
+    private decimal MontoFinalIngresado;
+    private decimal EfectivoIngresos;
+    private decimal EfectivoEgresos;
+    private decimal TotalEnCaja;
+
+    private string DiferenciaCss => Diferencia == 0 ? "text-success" : "text-danger";
+    private decimal Diferencia => MontoFinalIngresado - TotalEnCaja;
+    private string DiferenciaStr => Diferencia.ToString("N2");
 
     protected override async Task OnInitializedAsync()
     {
-        //var usuarioId = await Auth.GetUsuarioIdAsync();
-        var usuarioId = 1;
+        var usuarioId = 1; // simulado o usar await Auth.GetUsuarioIdAsync()
         CajaActual = await CajaService.ObtenerCajaAbiertaPorUsuarioAsync(usuarioId);
+        var movimientoJson = System.Text.Json.JsonSerializer.Serialize(CajaActual);
+
+        // 👇 Mostralo en la consola del navegador
+        await JS.InvokeVoidAsync("console.log", movimientoJson);
+        if (CajaActual != null)
+        {
+            // Calcular solo efectivo
+            EfectivoIngresos = CajaActual.Movimientos
+                .Where(m => m.TipoMovimientoNombre?.ToLower() == "ingreso" && m.MetodoPagoId == 1)
+                .Sum(m => m.Monto);
+
+            EfectivoEgresos = CajaActual.Movimientos
+                .Where(m => m.TipoMovimientoNombre?.ToLower() == "egreso" && m.MetodoPagoId == 1)
+                .Sum(m => m.Monto);
+
+            TotalEnCaja = CajaActual.MontoInicial + EfectivoIngresos - EfectivoEgresos;
+        }
     }
 
     private async Task AbrirCaja()
     {
-        //var usuarioId = await Auth.GetUsuarioIdAsync();
         var usuarioId = 1;
-
         await CajaService.AbrirCajaAsync(new CajaViewModel
             {
                 UsuarioId = usuarioId,
@@ -57,8 +103,30 @@ else
     {
         if (CajaActual != null)
         {
-            await CajaService.CerrarCajaAsync(CajaActual.Id);
+            await CajaService.CerrarCajaAsync(CajaActual.Id, MontoFinalIngresado);
             CajaActual = null;
+        }
+    }
+
+    private void IrAMovimientosCaja()
+    {
+        if (CajaActual != null)
+        {
+            Nav.NavigateTo($"/caja/movimientos-caja/{CajaActual.Id}");
+        }
+    }
+    private void IrAlistadoCajas()
+    {
+        if (CajaActual != null)
+        {
+            Nav.NavigateTo($"/caja/listado");
+        }
+    }
+    private void IrAlistadoMovi()
+    {
+        if (CajaActual != null)
+        {
+            Nav.NavigateTo($"/caja/movimientos");
         }
     }
 }

@@ -1,8 +1,10 @@
 ﻿
 @inject Services.ServicioDeMesaService ServicioDeMesaService
 @inject NavigationManager Nav
+@inject IJSRuntime JS
 @using LoDeFran.Frontend.Models
 @using LoDeFran.Frontend.Services
+
 
 <h4>🧑‍🍳 Pedidos en Cocina</h4>
 <button class="btn btn-sm btn-secondary mb-3" @onclick="CargarPedidos">🔄 Actualizar</button>
@@ -22,7 +24,17 @@ else
     {
         <div class="card mb-3">
             <div class="card-header">
-                <strong>Mesa @pedido.Mesa?.Numero</strong> - Pedido #@pedido.Id
+                <strong>
+                    @if (pedido.TipoPedidoNombre?.ToLower() == "mesa")
+                    {
+                        <text>Mesa @pedido.Mesa?.Numero</text>
+                    }
+                    else
+                    {
+                        <text>@pedido.TipoPedidoNombre</text>
+                    }
+                </strong> - Pedido #@pedido.Id
+
                 <span class="badge bg-secondary float-end">Estado: @((Enums.EstadoPedido)pedido.EstadoId)</span>
             </div>
             <div class="card-body">
@@ -48,6 +60,7 @@ else
             </div>
         </div>
     }
+
 }
 
 @code {
@@ -55,6 +68,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        await JS.InvokeVoidAsync("destroyDataTable", "tablaPedidos");
+        await JS.InvokeVoidAsync("destroyDataTable", "tablaCaja");
         await CargarPedidos();
     }
 

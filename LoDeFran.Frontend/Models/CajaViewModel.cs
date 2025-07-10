@@ -18,6 +18,8 @@
 
         public string Estado { get; set; } = null!;
 
+        public decimal? Diferencia { get; set; }
+
         public List<MovimientoCajaViewModel> Movimientos { get; set; } = new();
     }
 }

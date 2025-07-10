@@ -97,6 +97,7 @@ else
 
     async Task CargarProveedores()
     {
+        await JS.InvokeVoidAsync("destroyDataTable", "tablaClientes");
         proveedores = await ProveedorService.GetProveedoresAsync();
         StateHasChanged();
         await JS.InvokeVoidAsync("initializeDataTable", "tablaProveedores");

@@ -59,6 +59,10 @@
               "target": "Package",
               "version": "[8.0.15, )"
             },
+            "Microsoft.AspNetCore.WebUtilities": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
               "version": "[9.0.5, )"
@@ -80,6 +84,10 @@
               "target": "Package",
               "version": "[8.0.15, )",
               "autoReferenced": true
+            },
+            "Syncfusion.Blazor": {
+              "target": "Package",
+              "version": "[30.1.38, )"
             }
           },
           "imports": [

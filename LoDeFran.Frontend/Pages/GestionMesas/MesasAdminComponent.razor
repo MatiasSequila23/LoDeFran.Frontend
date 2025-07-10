@@ -1,5 +1,6 @@
 ﻿@inject Services.ServicioDeMesaService ServicioDeMesaService
 @inject NavigationManager Nav
+@inject IJSRuntime JS
 @using LoDeFran.Frontend.Models
 @using LoDeFran.Frontend.Services
 
@@ -160,12 +161,19 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        await clearDataTable();
         Pisos = await ServicioDeMesaService.GetPisosAsync();
         PisoSeleccionado = null;
         Mesas.Clear();
         Mesas = await ServicioDeMesaService.GetMesasAsync();
-    }
+        
 
+    }
+    private async Task clearDataTable()
+    {
+        await JS.InvokeVoidAsync("destroyDataTable", "tablaPedidos");
+        await JS.InvokeVoidAsync("destroyDataTable", "tablaCaja");
+    }
     private async Task CambiarPiso(PisoViewModel piso)
     {
         PisoSeleccionado = piso;

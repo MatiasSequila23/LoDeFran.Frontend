@@ -1,4 +1,7 @@
 ﻿@inject Services.ServicioDeMesaService ServicioDeMesaService
+@inject Services.MetodoPagoService MetodoPagoService
+@inject Services.CajaService CajaService
+@inject Services.MovimientosCajaService MovimientosCajaService
 @using LoDeFran.Frontend.Models
 @using LoDeFran.Frontend.Services
 
@@ -14,7 +17,7 @@ else if (!Pedidos.Any())
 }
 else
 {
-    <table class="table table-bordered table-hover mt-3">
+    <table class="table table-bordered table-hover mt-3" id="tablaCaja" @key="claveTabla">
         <thead>
             <tr>
                 <th>Mesa</th>
@@ -55,16 +58,19 @@ else
                     <p><strong>Total:</strong> $@TotalPedido.ToString("0.00")</p>
 
                     <div class="mb-3">
+                        <p><strong>Caja:</strong> @($"{CajaActual?.NombreUsuario} - {CajaActual?.FechaApertura:g}")</p>
+                    </div>
+                    <div class="mb-3">
                         <label>Método de pago</label>
                         <select class="form-control" @bind="MetodoPagoSeleccionado">
-                            <option value="Efectivo">Efectivo</option>
-                            <option value="Debito">Débito</option>
-                            <option value="Credito">Crédito</option>
-                            <option value="Transferencia">Transferencia</option>
+                            @foreach (var metodo in MetodosPago)
+                            {
+                                <option value="@metodo.Id">@metodo.Nombre</option>
+                            }
                         </select>
                     </div>
 
-                    @if (MetodoPagoSeleccionado == "Efectivo")
+                    @if (MetodoPagoSeleccionado == 1)
                     {
                         <div class="mb-3">
                             <label>Monto recibido</label>
@@ -88,27 +94,46 @@ else
 
 
 @code {
+    private CajaViewModel? CajaActual;
     private List<PedidoViewModel>? Pedidos;
     private PedidoViewModel? PedidoSeleccionado;
-    private string MetodoPagoSeleccionado = "Efectivo";
+    private List<MetodoPagoViewModel> MetodosPago = new();
+    private MovimientoCajaViewModel? nuevoMovimiento;
+    Guid claveTabla = Guid.NewGuid();
+
+    private int MetodoPagoSeleccionado = 1;
     private decimal MontoRecibido = 0;
     private decimal TotalPedido => PedidoSeleccionado?.DetallePedido.Sum(d => d.Cantidad * d.PrecioUnitario) ?? 0;
 
     protected override async Task OnInitializedAsync()
     {
+        await JS.InvokeVoidAsync("destroyDataTable", "tablaPedidos");
+        MetodosPago = await MetodoPagoService.GetAllAsync();
+        var usuarioId = 1; // simulado o usar await Auth.GetUsuarioIdAsync()
+        CajaActual = await CajaService.ObtenerCajaAbiertaPorUsuarioAsync(usuarioId);
         await CargarPedidos();
     }
 
     private async Task CargarPedidos()
     {
+        
         Pedidos?.Clear();
         Pedidos = await ServicioDeMesaService.GetPedidosPorEstadoAsync((int)Enums.EstadoPedido.A_Cobrar);
+
+        claveTabla = Guid.NewGuid(); // 🔁 Forzamos recreación del DOM
+
+        await InvokeAsync(StateHasChanged);
+
+
+        //await JS.InvokeVoidAsync("initializeDataTable", "tablaCaja");
     }
+
+
 
     private void AbrirModalCobro(PedidoViewModel pedido)
     {
         PedidoSeleccionado = pedido;
-        MetodoPagoSeleccionado = "Efectivo";
+        MetodoPagoSeleccionado = 1;
         MontoRecibido = 0;
     }
 
@@ -127,14 +152,14 @@ else
         await ServicioDeMesaService.CambiarEstadoPedidoAsync(PedidoSeleccionado.Id, Enums.EstadoPedido.Cobrado);
         await ServicioDeMesaService.CambiarEstadoPedidoAsync(PedidoSeleccionado.Id, Enums.EstadoPedido.Cerrado);
         await ServicioDeMesaService.CambiarEstadoMesaAsync(PedidoSeleccionado.MesaId, Enums.EstadoMesa.Disponible);
-
-        
+        crearMovimiento();
+        await MovimientosCajaService.CrearAsync(nuevoMovimiento);    
         await CargarPedidos();
         CerrarModal();
     }
     private string GenerarLineaVuelto(string total)
     {
-        if (MetodoPagoSeleccionado != "Efectivo") return "";
+        if (MetodoPagoSeleccionado != 1) return "";
 
         decimal totalDecimal = 0;
         decimal.TryParse(total, out totalDecimal);
@@ -160,6 +185,17 @@ else
 
         JS.InvokeVoidAsync("openTicketWindow", html);
     }
-
+    private void crearMovimiento()
+    {
+        nuevoMovimiento = new MovimientoCajaViewModel
+        {
+            CajaId = CajaActual.Id,
+            FechaMovimiento = DateTime.Now,
+            MotivoMovimientoId = 1,
+            MetodoPagoId = MetodoPagoSeleccionado,
+            Monto = TotalPedido,
+            Descripcion = "pedidos" // cambiar cuando separe si es delivery etc...
+        };
+    }
     [Inject] private IJSRuntime JS { get; set; } = default!;
 }

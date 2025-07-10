@@ -1,15 +1,13 @@
 ﻿@page "/cliente/clientes"
-
 @inject Services.ClienteService ClienteService
 @inject IJSRuntime JS
-
 @using LoDeFran.Frontend.Models
 
 <h3 class="mt-4 mb-4">Gestión de Clientes</h3>
 
 <button class="btn btn-primary mb-3" @onclick="MostrarModalNuevo"><i class="fas fa-user-plus"></i> Nuevo Cliente</button>
 
-@if (clientes is null)
+@if (!clientesCargados)
 {
     <div class="text-center">
         <div class="spinner-border text-info" role="status">
@@ -19,7 +17,8 @@
 }
 else
 {
-    <table class="table table-striped table-hover" id="tablaClientes">
+    @* En tu HTML *@
+    <table class="table table-striped table-hover" id="tablaClientes" @key="claveTabla">
         <thead class="table-dark">
             <tr>
                 <th>Nombre</th>
@@ -53,60 +52,38 @@ else
     </table>
 }
 
-@if (mostrarModal)
-{
-    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">@((clienteEditar.Id == 0) ? "Agregar Cliente" : "Editar Cliente")</h5>
-                    <button type="button" class="btn-close" @onclick="CerrarModal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6 mb-2">
-                            <label>Nombre</label>
-                            <input class="form-control" @bind="clienteEditar.Nombre" />
-                        </div>
-                        <div class="col-md-6 mb-2">
-                            <label>Apellido</label>
-                            <input class="form-control" @bind="clienteEditar.Apellido" />
-                        </div>
-                        <div class="col-md-6 mb-2">
-                            <label>Teléfono</label>
-                            <input class="form-control" @bind="clienteEditar.Telefono" />
-                        </div>
-                        <div class="col-md-6 mb-2">
-                            <label>Email</label>
-                            <input class="form-control" @bind="clienteEditar.Email" />
-                        </div>
-                        <div class="col-md-4 mb-2">
-                            <label>Calle</label>
-                            <input class="form-control" @bind="clienteEditar.Calle" />
-                        </div>
-                        <div class="col-md-4 mb-2">
-                            <label>Altura</label>
-                            <input class="form-control" @bind="clienteEditar.Altura" />
-                        </div>
-                        <div class="col-md-4 mb-2">
-                            <label>Piso</label>
-                            <input class="form-control" @bind="clienteEditar.Piso" />
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" @onclick="CerrarModal">Cancelar</button>
-                    <button class="btn btn-primary" @onclick="Guardar">Guardar</button>
-                </div>
+<!-- Modal Nuevo Cliente -->
+<div class="modal fade" id="modalNuevoCliente" tabindex="-1" aria-labelledby="modalNuevoClienteLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalNuevoClienteLabel">@((clienteEditar.Id == 0) ? "Agregar Cliente" : "Editar Cliente")</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <input class="form-control mb-2" placeholder="Nombre" @bind="clienteEditar.Nombre" />
+                <input class="form-control mb-2" placeholder="Apellido" @bind="clienteEditar.Apellido" />
+                <input class="form-control mb-2" placeholder="Teléfono" @bind="clienteEditar.Telefono" />
+                <input class="form-control mb-2" placeholder="Email" @bind="clienteEditar.Email" />
+
+                <select id="selectCalle" class="form-control mb-2" style="width: 100%"></select>
+
+                <input class="form-control mb-2" placeholder="Altura" @bind="clienteEditar.Altura" />
+                <input class="form-control mb-2" placeholder="Piso" @bind="clienteEditar.Piso" />
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-primary" @onclick="Guardar">Guardar</button>
             </div>
         </div>
     </div>
-}
+</div>
 
 @code {
+    Guid claveTabla = Guid.NewGuid();
     List<ClienteViewModel> clientes = new();
     ClienteViewModel clienteEditar = new();
-    bool mostrarModal = false;
+    bool clientesCargados = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -115,18 +92,29 @@ else
 
     async Task CargarClientes()
     {
+        clientesCargados = false;
+
+        await JS.InvokeVoidAsync("destroyDataTable", "tablaClientes");
+
         clientes = await ClienteService.GetClientesAsync();
-        StateHasChanged();
+        clientesCargados = true;
+
+        claveTabla = Guid.NewGuid(); // 🔁 Forzamos recreación del DOM
+
+        await InvokeAsync(StateHasChanged);
+
         await JS.InvokeVoidAsync("initializeDataTable", "tablaClientes");
     }
 
-    void MostrarModalNuevo()
+    async Task MostrarModalNuevo()
     {
         clienteEditar = new();
-        mostrarModal = true;
+        await JS.InvokeVoidAsync("mostrarModal", "#modalNuevoCliente");
+        await Task.Delay(300);
+        await JS.InvokeVoidAsync("inicializarSelectCalle");
     }
 
-    void Editar(ClienteViewModel cliente)
+    async Task Editar(ClienteViewModel cliente)
     {
         clienteEditar = new()
             {
@@ -141,12 +129,10 @@ else
                 PuntosFidelidad = cliente.PuntosFidelidad,
                 FechaCreacion = cliente.FechaCreacion
             };
-        mostrarModal = true;
-    }
 
-    void CerrarModal()
-    {
-        mostrarModal = false;
+        await JS.InvokeVoidAsync("mostrarModal", "#modalNuevoCliente");
+        await Task.Delay(300);
+        await JS.InvokeVoidAsync("inicializarSelectCalle");
     }
 
     async Task Guardar()
@@ -158,7 +144,7 @@ else
             else
                 await ClienteService.EditarClienteAsync(clienteEditar.Id, clienteEditar);
 
-            mostrarModal = false;
+            await JS.InvokeVoidAsync("cerrarModal", "#modalNuevoCliente");
             await CargarClientes();
         }
         catch (Exception ex)
@@ -174,6 +160,15 @@ else
         {
             await ClienteService.EliminarClienteAsync(id);
             await CargarClientes();
+        }
+    }
+
+    [JSInvokable]
+    public void SetCalleDesdeJS(string calleId)
+    {
+        if (int.TryParse(calleId, out var id))
+        {
+            clienteEditar.CalleId = id;
         }
     }
 }

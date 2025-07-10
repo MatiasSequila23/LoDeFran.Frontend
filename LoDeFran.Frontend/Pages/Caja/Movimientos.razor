@@ -1,0 +1,126 @@
+﻿@page "/caja/movimientos"
+@inject Services.CajaService CajaService
+@inject Services.MetodoPagoService MetodoPagoService
+@inject Services.MovimientosCajaService MovimientosCajaService
+@inject Services.MotivoMovimientoService MotivoMovimientoService
+@inject IJSRuntime JS
+@using LoDeFran.Frontend.Models
+
+<h3>Movimientos de Caja</h3>
+
+<!-- Filtros -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <label>Caja</label>
+        <select class="form-control" @bind="FiltroCajaId">
+            <option value="">-- Todas --</option>
+            @foreach (var caja in Cajas)
+            {
+                <option value="@caja.Id">@($"{caja.NombreUsuario} - {caja.FechaApertura:g}")</option>
+            }
+        </select>
+    </div>
+
+    <div class="col-md-4">
+        <label>Método de Pago</label>
+        <select class="form-control" @bind="FiltroMetodoPagoId">
+            <option value="">-- Todos --</option>
+            @foreach (var metodo in MetodosPago)
+            {
+                <option value="@metodo.Id">@metodo.Nombre</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-4">
+        <label>Motivo</label>
+        <select class="form-control" @bind="FiltroMotivoId">
+            <option value="">-- Todos --</option>
+            @foreach (var motivo in Motivos)
+            {
+                <option value="@motivo.Id">@motivo.Nombre</option>
+            }
+        </select>
+    </div>
+
+</div>
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <label>Desde</label>
+        <input type="date" class="form-control" @bind="FiltroDesde" />
+    </div>
+
+    <div class="col-md-6">
+        <label>Hasta</label>
+        <input type="date" class="form-control" @bind="FiltroHasta" />
+    </div>
+</div>
+
+<button class="btn btn-primary mb-3" @onclick="FiltrarMovimientos">Filtrar</button>
+
+@if (Movimientosc == null)
+{
+    <p>Cargando movimientos...</p>
+}
+else if (!Movimientosc.Any())
+{
+    <p>No se encontraron movimientos con los filtros seleccionados.</p>
+}
+else
+{
+    <table class="table table-bordered" id="tablaMovimientos">
+        <thead class="table-dark">
+            <tr>
+                <th>Fecha</th>
+                <th>Caja</th>
+                <th>Tipo</th>
+                <th>Motivo</th>
+                <th>Método Pago</th>
+                <th>Monto</th>
+                <th>Descripción</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var mov in Movimientosc)
+            {
+                <tr>
+                    <td>@mov.FechaMovimiento.ToString("dd/MM/yyyy")</td>
+                    <td>@mov.CajaId</td>
+                    <td>@mov.TipoMovimientoNombre</td>
+                    <td>@mov.MotivoNombre</td>
+                    <td>@mov.MetodoPagoNombre</td>
+                    <td>$@mov.Monto</td>
+                    <td>@mov.Descripcion</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<MovimientoCajaViewModel>? Movimientosc;
+    private List<CajaViewModel> Cajas = new();
+    private List<MetodoPagoViewModel> MetodosPago = new();
+    private List<MotivoMovimientoViewModel> Motivos = new();
+
+    private int? FiltroMotivoId;
+    private int? FiltroCajaId;
+    private int? FiltroMetodoPagoId;
+    private DateTime? FiltroDesde;
+    private DateTime? FiltroHasta;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Cajas = await CajaService.ObtenerHistorialCajasAsync();
+        MetodosPago = await MetodoPagoService.GetAllAsync();
+        Motivos = await MotivoMovimientoService.GetAllAsync();
+        //await FiltrarMovimientos();
+    }
+
+    private async Task FiltrarMovimientos()
+    {
+        Movimientosc = await MovimientosCajaService.GetFiltradosAsync(
+            FiltroCajaId, FiltroMetodoPagoId, FiltroMotivoId, FiltroDesde, FiltroHasta
+        );
+        await JS.InvokeVoidAsync("initDataTableConBotones", "tablaMovimientos");
+    }
+}
