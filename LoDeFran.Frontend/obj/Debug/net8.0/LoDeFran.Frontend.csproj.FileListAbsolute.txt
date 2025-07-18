@@ -1030,6 +1030,7 @@ C:\SISTEMA LoDeFran\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\LoDeFra
 C:\SISTEMA LoDeFran\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\refint\LoDeFran.Frontend.dll
 C:\SISTEMA LoDeFran\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\LoDeFran.Frontend.pdb
 C:\SISTEMA LoDeFran\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\ref\LoDeFran.Frontend.dll
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\ab146i1x9g.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Azure.Core.wasm
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Azure.Identity.wasm
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\blazor.boot.json
@@ -1140,6 +1141,7 @@ E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framewo
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Mono.TextTemplating.wasm
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\mscorlib.wasm
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\netstandard.wasm
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Newtonsoft.Json.wasm
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\pl\Microsoft.CodeAnalysis.CSharp.resources.wasm
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\pl\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.wasm
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\pl\Microsoft.CodeAnalysis.resources.wasm
@@ -1155,6 +1157,10 @@ E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framewo
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\ru\Microsoft.CodeAnalysis.resources.wasm
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\ru\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.wasm
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\ru\Microsoft.CodeAnalysis.Workspaces.resources.wasm
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Syncfusion.Blazor.wasm
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Syncfusion.ExcelExport.Net.wasm
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Syncfusion.Licensing.wasm
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Syncfusion.PdfExport.Net.wasm
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\System.AppContext.wasm
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\System.Buffers.wasm
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\System.ClientModel.wasm
@@ -1410,6 +1416,7 @@ E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framewo
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\cs\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.wasm.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\System.Diagnostics.Tools.wasm.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Microsoft.EntityFrameworkCore.Abstractions.wasm.gz
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Newtonsoft.Json.wasm.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\System.Xml.wasm.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Microsoft.AspNetCore.Components.WebAssembly.wasm.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\ru\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.wasm.gz
@@ -1482,11 +1489,13 @@ E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framewo
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\System.Net.Security.wasm.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\System.Runtime.InteropServices.wasm.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\mscorlib.wasm.gz
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Syncfusion.PdfExport.Net.wasm.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\System.Private.Xml.Linq.wasm.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Microsoft.Extensions.Primitives.wasm.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\System.Runtime.CompilerServices.VisualC.wasm.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\blazor.boot.json.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Microsoft.Win32.Primitives.wasm.gz
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Syncfusion.Licensing.wasm.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\System.ClientModel.wasm.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Microsoft.Extensions.Configuration.Json.wasm.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\System.Xml.XPath.wasm.gz
@@ -1532,6 +1541,7 @@ E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framewo
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\System.Reflection.Emit.ILGeneration.wasm.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\ko\Microsoft.CodeAnalysis.resources.wasm.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\System.IO.FileSystem.AccessControl.wasm.gz
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Syncfusion.ExcelExport.Net.wasm.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\dotnet.runtime.8.0.15.k7afsjb2hr.js.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\System.Security.Claims.wasm.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\System.Text.Encoding.wasm.gz
@@ -1639,6 +1649,7 @@ E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framewo
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\System.Runtime.Handles.wasm.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\System.Data.DataSetExtensions.wasm.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Microsoft.Net.Http.Headers.wasm.gz
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Syncfusion.Blazor.wasm.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\System.Security.Principal.wasm.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Microsoft.VisualBasic.Core.wasm.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\System.Threading.Timer.wasm.gz
@@ -1722,6 +1733,11 @@ E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\Microsoft.Net.Ht
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\Microsoft.SqlServer.Server.dll
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\Microsoft.Win32.SystemEvents.dll
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\Mono.TextTemplating.dll
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\Newtonsoft.Json.dll
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\Syncfusion.Blazor.dll
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\Syncfusion.ExcelExport.Net.dll
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\Syncfusion.Licensing.dll
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\Syncfusion.PdfExport.Net.dll
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\System.ClientModel.dll
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\System.CodeDom.dll
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\System.Composition.AttributedModel.dll
@@ -2042,6 +2058,11 @@ E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\webcil\Microsoft
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\webcil\Microsoft.SqlServer.Server.wasm
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\webcil\Microsoft.Win32.SystemEvents.wasm
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\webcil\Mono.TextTemplating.wasm
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\webcil\Newtonsoft.Json.wasm
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\webcil\Syncfusion.Blazor.wasm
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\webcil\Syncfusion.ExcelExport.Net.wasm
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\webcil\Syncfusion.Licensing.wasm
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\webcil\Syncfusion.PdfExport.Net.wasm
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\webcil\System.ClientModel.wasm
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\webcil\System.CodeDom.wasm
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\webcil\System.Composition.AttributedModel.wasm
@@ -2361,6 +2382,11 @@ E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\wuq4x
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\jnpsojs3kz.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\yjmf5xbsbs.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\zagjmaw0uv.gz
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\71r1y33dyo.gz
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\wzyd3qvlto.gz
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\k5z4edmcpe.gz
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\fx5uj4eusu.gz
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\fam8ssiovm.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\fxuuz0lgzy.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\tspeoax6no.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\08r5nocz2k.gz
@@ -2531,7 +2557,6 @@ E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\ul4td
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\s4hu96r6s2.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\oss4acf1j3.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\fjw6itnaz0.gz
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\ab146i1x9g.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\3a01foe6s8.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\joq2fx25dx.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\8ea6vz7dgd.gz
@@ -2627,28 +2652,3 @@ E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\LoDeFran.Fronten
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\refint\LoDeFran.Frontend.dll
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\LoDeFran.Frontend.pdb
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\ref\LoDeFran.Frontend.dll
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Newtonsoft.Json.wasm
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Syncfusion.Blazor.wasm
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Syncfusion.ExcelExport.Net.wasm
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Syncfusion.Licensing.wasm
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Syncfusion.PdfExport.Net.wasm
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Newtonsoft.Json.wasm.gz
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Syncfusion.PdfExport.Net.wasm.gz
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Syncfusion.Licensing.wasm.gz
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Syncfusion.ExcelExport.Net.wasm.gz
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Syncfusion.Blazor.wasm.gz
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\Newtonsoft.Json.dll
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\Syncfusion.Blazor.dll
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\Syncfusion.ExcelExport.Net.dll
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\Syncfusion.Licensing.dll
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\Syncfusion.PdfExport.Net.dll
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\webcil\Newtonsoft.Json.wasm
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\webcil\Syncfusion.Blazor.wasm
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\webcil\Syncfusion.ExcelExport.Net.wasm
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\webcil\Syncfusion.Licensing.wasm
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\webcil\Syncfusion.PdfExport.Net.wasm
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\71r1y33dyo.gz
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\wzyd3qvlto.gz
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\k5z4edmcpe.gz
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\fx5uj4eusu.gz
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\fam8ssiovm.gz
