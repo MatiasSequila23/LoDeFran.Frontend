@@ -167,22 +167,25 @@
 
 @if (CajaActual == null)
 {
-    <div class="card mx-auto" style="max-width: 400px;">
+    <div class="card mx-auto mt-5" style="max-width: 400px;">
         <div class="card-body">
+            <h5 class="card-title text-center mb-3">Apertura de Caja</h5>
             <label class="form-label">Monto Inicial:</label>
-            <input type="number" @bind="MontoInicial" class="form-control mb-3" />
-            <button class="btn btn-success w-100" @onclick="AbrirCaja">Abrir Caja</button>
+            <input type="number" @bind="MontoInicial" class="form-control mb-3" placeholder="Ingrese monto inicial" />
+            <button class="btn btn-success w-100" @onclick="AbrirCaja">
+                <i class="material-icons">lock_open</i> Abrir Caja
+            </button>
         </div>
     </div>
 }
 else if (CajaActual.Estado == "abierta")
 {
-    <div class="row g-3">
-        <!-- Card: Caja Abierta -->
+    <div class="row mt-4 g-4">
+        <!-- Caja Abierta -->
         <div class="col-12 col-lg-4">
-            <div class="card h-100">
-                <div class="card-header bg-primary text-white">
-                    Caja Abierta
+            <div class="card h-100 shadow">
+                <div class="card-header bg-gradient-primary text-white">
+                    <h6 class="mb-0">Caja Abierta</h6>
                 </div>
                 <div class="card-body">
                     <p><strong>Usuario:</strong> @CajaActual.NombreUsuario</p>
@@ -192,11 +195,11 @@ else if (CajaActual.Estado == "abierta")
             </div>
         </div>
 
-        <!-- Card: Resumen de Caja -->
+        <!-- Resumen de Caja -->
         <div class="col-12 col-lg-4">
-            <div class="card h-100">
-                <div class="card-header bg-info text-white">
-                    Resumen de Caja (Efectivo)
+            <div class="card h-100 shadow">
+                <div class="card-header bg-gradient-info text-white">
+                    <h6 class="mb-0">Resumen (Efectivo)</h6>
                 </div>
                 <div class="card-body">
                     <p>Ingresos: <strong class="text-success">$@EfectivoIngresos</strong></p>
@@ -206,51 +209,57 @@ else if (CajaActual.Estado == "abierta")
             </div>
         </div>
 
-        <!-- Card: Conteo Final -->
+        <!-- Conteo Final -->
         <div class="col-12 col-lg-4">
-            <div class="card h-100">
-                <div class="card-header bg-warning text-dark">
-                    Conteo Final
+            <div class="card h-100 shadow">
+                <div class="card-header bg-gradient-warning text-dark">
+                    <h6 class="mb-0">Conteo Final</h6>
                 </div>
                 <div class="card-body">
                     <label class="form-label">Monto contado:</label>
-                    <input type="number" class="form-control mb-2" @bind="MontoFinalIngresado" />
+                    <input type="number" class="form-control mb-2" @bind="MontoFinalIngresado" placeholder="Ej: 1500" />
                     <p class="@DiferenciaCss"><strong>Diferencia:</strong> $@DiferenciaStr</p>
                 </div>
             </div>
         </div>
 
-        <!-- Botones -->
+        <!-- Botones de Acción -->
         <div class="col-12">
-            <div class="row mt-3 g-2 justify-content-center">
-                <div class="col-12 col-md-auto">
-                    <button class="btn btn-danger w-100" @onclick="CerrarCaja">
-                        <i class="fas fa-lock"></i> Cerrar Caja
-                    </button>
-                </div>
-                <div class="col-12 col-md-auto">
-                    <button class="btn btn-outline-primary border-primary w-100" @onclick="IrAMovimientosCaja">
+            <div class="d-flex flex-wrap gap-3 justify-content-center mt-3">
+                <button class="btn btn-danger" @onclick="CerrarCaja">
+                    <span class="d-flex align-items-center gap-2">
+                        <i class="material-icons">lock</i>
+                        Cerrar Caja
+                    </span>
+                </button>
+                <button class="btn btn-outline-primary" @onclick="IrAMovimientosCaja">
+                    <span class="d-flex align-items-center gap-2">
+                        <i class="material-icons">list</i>
                         Movimientos de esta Caja
-                    </button>
-                </div>
-                <div class="col-12 col-md-auto">
-                    <button class="btn btn-link w-100" @onclick="IrAlistadoCajas">
+                    </span>
+                </button>
+                <button class="btn btn-outline-dark" @onclick="IrAlistadoCajas">
+                    <span class="d-flex align-items-center gap-2">
+                        <i class="material-icons">history</i>
                         Historial de Cajas
-                    </button>
-                </div>
-                <div class="col-12 col-md-auto">
-                    <button class="btn btn-outline-dark border-dark  w-100" @onclick="IrAlistadoMovi">
+                    </span>
+                </button>
+                <button class="btn btn-outline-secondary" @onclick="IrAlistadoMovi">
+                    <span class="d-flex align-items-center gap-2">
+                        <i class="material-icons">swap_horiz</i>
                         Todos los Movimientos
-                    </button>
-                </div>
+                    </span>
+                </button>
             </div>
         </div>
+
     </div>
 }
 else
 {
-    <div class="alert alert-info text-center">No hay caja abierta.</div>
+    <div class="alert alert-info text-center mt-4">No hay caja abierta.</div>
 }
+
 
 
 @code {
