@@ -1,9 +1,11 @@
-﻿
+﻿@inject Services.PedidoService PedidoService
 @inject Services.ServicioDeMesaService ServicioDeMesaService
+@inject Services.DetallePedidoServicie DetallePedidoServicie
 @inject NavigationManager Nav
 @inject IJSRuntime JS
 @using LoDeFran.Frontend.Models
 @using LoDeFran.Frontend.Services
+@using LoDeFran.Frontend.Utlis
 
 
 <h3 class="text-center d-flex justify-content-center align-items-center gap-2 ">
@@ -152,15 +154,34 @@ else
                     {
                         <li>@item.Producto.Nombre x @item.Cantidad</li>
                     }
+
+
+					@foreach (var item in pedido.PedidoCombos)
+					{
+						foreach(var prod in item.Items)
+						{
+							<li>
+								@prod.NombreProducto
+								@if (!string.IsNullOrWhiteSpace(item.Nombre))
+								{
+									<span class="text-muted">(de combo @item.Nombre)</span>
+								}
+								x @prod.Cantidad
+							</li>
+						}
+						
+					}
                 </ul>
 
-                @if (pedido.EstadoId == (int)Enums.EstadoPedido.Abierto)
+
+              @*   @if (pedido.EstadoId == (int)Enums.EstadoPedido.Abierto)
                 {
                     <button class="btn btn-warning" @onclick="() => CambiarEstado(pedido.Id, Enums.EstadoPedido.EnPreparacion)">
                         Iniciar Preparación
                     </button>
                 }
-                else if (pedido.EstadoId == (int)Enums.EstadoPedido.EnPreparacion)
+                else  *@
+				@if (pedido.EstadoId == (int)Enums.EstadoPedido.EnPreparacion)
                 {
                     <button class="btn btn-success" @onclick="() => CambiarEstado(pedido.Id, Enums.EstadoPedido.ListoParaEntregar)">
                         Marcar como Listo para Entregar
@@ -173,23 +194,33 @@ else
 }
 
 @code {
-    private List<PedidoViewModel>? Pedidos;
+	private List<PedidoViewModel>? Pedidos;
 
-    protected override async Task OnInitializedAsync()
-    {
-        await JS.InvokeVoidAsync("destroyDataTable", "tablaPedidos");
-        await JS.InvokeVoidAsync("destroyDataTable", "tablaCaja");
-        await CargarPedidos();
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		await JS.InvokeVoidAsync("destroyDataTable", "tablaPedidos");
+		await JS.InvokeVoidAsync("destroyDataTable", "tablaCaja");
+		await CargarPedidos();
+	}
 
-    private async Task CargarPedidos()
-    {
-        Pedidos = await ServicioDeMesaService.ObtenerPedidoCocina();
-    }
+	private async Task CargarPedidos()
+	{
+		Pedidos = await ServicioDeMesaService.ObtenerPedidoCocina();
+	}
 
-    private async Task CambiarEstado(int idPedido, Enums.EstadoPedido nuevoEstado)
-    {
-        await ServicioDeMesaService.CambiarEstadoPedidoAsync(idPedido, nuevoEstado);
+	private async Task CambiarEstado(int idPedido, Enums.EstadoPedido nuevoEstado)
+	{
+		await ServicioDeMesaService.CambiarEstadoPedidoAsync(idPedido, nuevoEstado);
+
+		var pedidoSel = Pedidos.Where(z => z.Id == idPedido).FirstOrDefault();
+
+		foreach(var det in pedidoSel.DetallePedido)
+		{
+			if (det.EstadoCocinaId == (int)Enums.EstadoDetallePedidoCocina.EnPreparacion) // O según el nombre real en BD
+			{
+				await DetallePedidoServicie.ActualizarEstadoCocinaAsync(det.Id, (int)Enums.EstadoDetallePedidoCocina.Preparado); 
+			}
+		}
         await CargarPedidos();
     }
 }

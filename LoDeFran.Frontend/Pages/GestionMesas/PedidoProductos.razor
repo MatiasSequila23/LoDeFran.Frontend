@@ -1,76 +1,31 @@
 ﻿@page "/GestionMesas/pedido/{idPedido:int}"
 @inject Services.ServicioDeMesaService ServicioDeMesaService
+@inject Services.ComboService ComboService
+@inject Services.PedidoService PedidoService
+@inject Services.PromocionService PromocionService
+@inject Services.DetallePedidoServicie DetallePedidoServicie
+
 @inject IJSRuntime JS
 @using System.Globalization
 @using LoDeFran.Frontend.Models
+@using LoDeFran.Frontend.Utlis
+<style>
+    .card.stock-disponible {
+        background-color: #e9f9e9; /* verde pastel */
+    }
 
-<h3 class="text-center d-flex justify-content-center align-items-center gap-2 ">
-    Pedido - Agregar Productos <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                    width="102" height="76" viewBox="0 0 540.476 520.476" xml:space="preserve">
-<path style="fill:#6C384A;" d="M179.787,177.816V52.465c0-16.03-13.408-29.068-29.89-29.068s-29.891,13.038-29.891,29.068v125.35
-	c-32.18,11.823-55.139,42.144-55.139,77.609v230.715c0,9.955,8.276,18.024,18.485,18.024h133.091
-	c10.209,0,18.484-8.07,18.484-18.024V255.424C234.926,219.959,211.967,189.639,179.787,177.816z" />
-<path style="opacity:0.1;enable-background:new    ;" d="M120.004,96.131v81.685c-32.98,12.119-55.139,43.306-55.139,77.609v230.715
-	c0,9.939,8.292,18.024,18.485,18.024h3.633c5.771,0,10.449-4.679,10.449-10.449V276.959c0-31.976,19.249-61.454,49.04-75.097
-	c3.716-1.701,6.098-5.414,6.098-9.5V96.131H120.004z" />
-<rect x="64.867" y="279.96" style="fill:#EFDFBB;" width="170.057" height="121.072" />
-<path style="fill:#ACEBE9;" d="M356.525,409.725c-49.962,0-90.609-40.647-90.609-90.609c0-19.368,6.37-38.589,17.935-54.117
-	c1.727-2.319,4.448-3.684,7.338-3.684h130.672c2.891,0,5.611,1.367,7.338,3.684c11.565,15.528,17.935,34.749,17.935,54.117
-	C447.135,369.079,406.487,409.725,356.525,409.725z" />
-<path style="opacity:0.1;enable-background:new    ;" d="M298.389,319.116c0-19.368,6.37-38.589,17.935-54.117
-	c1.727-2.319,4.448-3.684,7.338-3.684h-32.473c-2.891,0-5.611,1.367-7.338,3.684c-11.565,15.528-17.935,34.749-17.935,54.117
-	c0,49.962,40.647,90.609,90.609,90.609c5.541,0,10.967-0.502,16.237-1.46C330.521,400.592,298.389,363.537,298.389,319.116z" />
-<path style="fill:#6C384A;" d="M356.525,388.309c-30.898,0-58.283-20.745-66.599-50.451c-0.44-1.574-0.119-3.263,0.868-4.565
-	c0.988-1.302,2.528-2.068,4.163-2.068h123.135c1.634,0,3.174,0.765,4.163,2.068c0.987,1.302,1.309,2.992,0.868,4.565
-	C414.809,367.564,387.423,388.309,356.525,388.309z" />
-<path style="fill:#FFE060;" d="M179.787,99.388c0,5.617-4.957,10.17-11.071,10.17h-37.64c-6.116,0-11.072-4.553-11.072-10.17v-81.38
-	c0-5.616,4.956-10.171,11.072-10.171h37.64c6.114,0,11.071,4.555,11.071,10.171V99.388z" />
-<path style="opacity:0.1;enable-background:new    ;" d="M152.555,99.388v-81.38c0-5.616,4.956-10.171,11.072-10.171h-32.551
-	c-6.116,0-11.072,4.555-11.072,10.171v81.38c0,5.617,4.956,10.17,11.072,10.17h32.551
-	C157.511,109.559,152.555,105.005,152.555,99.388z" />
-<path style="fill:#ACEBE9;" d="M316.448,504.163c-1.904,0-3.667-1.012-4.625-2.657c-0.96-1.646-0.973-3.678-0.034-5.334
-	c4.728-8.349,22.706-13.96,44.736-13.96c22.031,0,40.008,5.611,44.736,13.96c0.937,1.657,0.926,3.689-0.034,5.334
-	c-0.958,1.645-2.721,2.657-4.625,2.657H316.448z" />
-<g>
-    <path style="fill:#FFFFFF;" d="M427.744,289.628c-9.662-4.003-12.907-7.246-16.909-16.91c-4.003,9.662-7.246,12.907-16.91,16.91
-		c9.662,4.001,12.907,7.246,16.91,16.909C414.838,296.873,418.082,293.629,427.744,289.628z" />
-    <circle style="fill:#FFFFFF;" cx="423.434" cy="312.299" r="7.46" />
-    <path style="fill:#FFFFFF;" d="M186.774,197.19c-4.636,11.195-8.396,14.955-19.59,19.592c11.195,4.637,14.954,8.396,19.59,19.591
-		c4.637-11.195,8.397-14.955,19.592-19.591C195.17,212.144,191.412,208.385,186.774,197.19z" />
-    <circle style="fill:#FFFFFF;" cx="207.653" cy="242.134" r="8.643" />
-</g>
-<path d="M187.624,172.52v-15.785c0-4.329-3.509-7.837-7.837-7.837c-4.328,0-7.837,3.508-7.837,7.837v26.55l5.135,1.887
-	c29.909,10.989,50.006,39.221,50.006,70.253v16.695H72.702v-16.695c0-31.031,20.095-59.265,50.005-70.253l5.135-1.887v-66.173
-	c1.053,0.174,2.13,0.283,3.235,0.283h37.64c1.104,0,2.181-0.109,3.234-0.283v4.097c0,4.329,3.509,7.837,7.837,7.837
-	c4.328,0,7.837-3.508,7.837-7.837v-103.2c0-9.93-8.482-18.008-18.907-18.008h-37.64c-10.426,0-18.908,8.078-18.908,18.008V172.52
-	c-33.2,14.486-55.139,47.142-55.139,82.904v230.715c0,14.26,11.808,25.861,26.322,25.861h133.091
-	c14.514,0,26.321-11.602,26.321-25.861V255.424C242.763,219.662,220.824,187.007,187.624,172.52z M171.95,99.388
-	c0,1.104-1.328,2.333-3.234,2.333h-37.64c-1.906,0-3.235-1.23-3.235-2.333V52.465v-8.159h43.754c0.12,0,0.237-0.013,0.355-0.019
-	v8.176V99.388z M131.075,15.673h37.64c1.906,0,3.234,1.231,3.234,2.334v10.644c-0.118-0.006-0.235-0.019-0.355-0.019H127.84V18.008
-	C127.841,16.904,129.169,15.673,131.075,15.673z M227.09,486.139c0,5.617-4.776,10.188-10.648,10.188H83.352
-	c-5.872,0-10.649-4.57-10.649-10.188V472.92h70.729c4.328,0,7.837-3.508,7.837-7.837c0-4.329-3.509-7.837-7.837-7.837H72.703v-48.38
-	h154.388v77.272H227.09z M227.09,393.193H72.702v-105.4H227.09V393.193z" />
-<path d="M116.439,326.531h68.508c4.328,0,7.837-3.508,7.837-7.837c0-4.329-3.509-7.837-7.837-7.837h-68.509
-	c-4.328,0-7.837,3.508-7.837,7.837C108.601,323.023,112.111,326.531,116.439,326.531z" />
-<path d="M172.192,344.294h-42.998c-4.328,0-7.837,3.508-7.837,7.837c0,4.329,3.509,7.837,7.837,7.837h42.998
-	c4.328,0,7.837-3.508,7.837-7.837C180.029,347.802,176.52,344.294,172.192,344.294z" />
-<path d="M164.554,472.92h18.778c4.328,0,7.837-3.508,7.837-7.837c0-4.329-3.509-7.837-7.837-7.837h-18.778
-	c-4.328,0-7.837,3.508-7.837,7.837C156.717,469.411,160.226,472.92,164.554,472.92z" />
-<path d="M454.972,319.116c0-21.045-6.92-41.927-19.487-58.8c-3.191-4.283-8.284-6.839-13.623-6.839h-19.575
-	c-4.328,0-7.837,3.508-7.837,7.837s3.509,7.837,7.837,7.837h19.575c0.413,0,0.807,0.197,1.053,0.529
-	c10.565,14.186,16.383,31.743,16.383,49.437c0,45.641-37.132,82.773-82.773,82.773s-82.773-37.132-82.773-82.773
-	c0-17.694,5.818-35.251,16.382-49.434c0.248-0.332,0.642-0.531,1.054-0.531h75.571c4.328,0,7.837-3.508,7.837-7.837
-	c0-4.329-3.509-7.837-7.837-7.837H291.19c-5.339,0-10.431,2.556-13.624,6.841c-12.566,16.871-19.486,37.753-19.486,58.797
-	c0,51.646,39.976,94.128,90.609,98.134v57.365c-18.06,1.106-37.188,6.162-43.721,17.696c-2.303,4.069-2.27,9.105,0.084,13.139
-	c2.353,4.04,6.72,6.549,11.396,6.549h80.155c4.676,0,9.043-2.509,11.394-6.545c2.356-4.038,2.389-9.075,0.085-13.146
-	c-6.531-11.531-25.659-16.589-43.719-17.694V417.25C414.996,413.244,454.972,370.762,454.972,319.116z M389.953,496.327h-66.854
-	c5.994-3.245,17.39-6.279,33.426-6.279C372.564,490.048,383.959,493.081,389.953,496.327z" />
-<path d="M284.552,328.557c-2.454,3.236-3.266,7.502-2.171,11.414c9.258,33.075,39.747,56.176,74.145,56.176
-	c34.397,0,64.887-23.1,74.145-56.176c1.094-3.912,0.283-8.178-2.173-11.415c-2.456-3.235-6.345-5.166-10.405-5.166H294.958
-	C290.897,323.389,287.008,325.321,284.552,328.557z M414.546,339.062c-8.411,24.549-31.788,41.41-58.02,41.41
-	c-26.232,0-49.61-16.862-58.02-41.41H414.546z" />
-</svg>
+    .card.stock-bajo {
+        background-color: #fffbe6; /* amarillo pastel */
+    }
 
+    .card.sin-stock {
+        background-color: #fdecea; /* rojo pastel */
+    }
+
+</style>
+<h3 class="text-center d-flex justify-content-center align-items-center gap-2">
+    Pedido - Agregar Productos
+    
 </h3>
 
 @if (PedidoActual?.Mesa != null)
@@ -84,6 +39,19 @@
 }
 else
 {
+
+
+    @if (PedidoActual != null)
+    {
+        <div class="mt-3">
+            <h6>Total sin descuento: @PedidoActual.TotalSinDescuento?.ToString("C", new CultureInfo("es-AR"))</h6>
+            <h6>Descuento: @PedidoActual.MontoDescuento?.ToString("C", new CultureInfo("es-AR"))</h6>
+            <h6>Total con descuento: @PedidoActual.Total?.ToString("C", new CultureInfo("es-AR"))</h6>        
+        </div>
+    }
+
+
+
     <div>
         <ul class="nav nav-tabs mt-4" role="tablist">
             @foreach (var categoriaId in ProductosPorCategoria.Keys)
@@ -105,20 +73,32 @@ else
                 @foreach (var producto in productos)
                 {
                     <div class="col-md-4 mb-3">
-                        <div class="card h-100">
+                        <div class="card h-100 @(ObtenerClaseStock(producto.Stock))">
+
                             <div class="card-body text-center">
                                 <h6 class="card-title">@producto.Nombre</h6>
                                 <p class="card-text">@producto.Precio.ToString("C", new CultureInfo("es-AR"))</p>
-                                <button class="btn btn-sm btn-primary" @onclick="() => AgregarProducto(producto.Id)">
-                                    Agregar
-                                </button>
+                                <p class="text-muted">Stock: @producto.Stock</p>
+
+                                @if (producto.Stock > 0)
+                                {
+                                    <button class="btn btn-sm btn-primary" @onclick="() => AgregarItem(producto)">
+                                        Agregar
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-sm btn-secondary" disabled>
+                                        Sin stock
+                                    </button>
+                                }
+
                             </div>
                         </div>
                     </div>
                 }
             </div>
 
-            <!-- Select por categoría -->
             <div class="mt-3">
                 <label><strong>Agregar por lista - @CategoriasDisponibles.FirstOrDefault(c => c.Id == CategoriaSeleccionada)?.Nombre</strong></label>
                 <select class="form-select" @onchange="async e => await AgregarProductoDesdeSelect(int.Parse(e.Value.ToString()))">
@@ -137,33 +117,110 @@ else
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Producto</th>
+                        <th>Producto / Combo</th>
                         <th>Cantidad</th>
-                        <th>Precio</th>
+                        <th>Precio Unitario</th>
                         <th>Total</th>
+                        <th>Comentario</th>
+                        <th>Estado Cocina</th>
+
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in PedidoActual.DetallePedido)
                     {
-                        var precioTotal = item.PrecioUnitario * item.Cantidad;
+                        var total = item.PrecioUnitario * item.Cantidad;
                         <tr>
                             <td>@item.Producto.Nombre</td>
-                            <td>
-                                <input type="number" min="1" class="form-control form-control-sm"
-                                       value="@item.Cantidad"
-                                       @onchange="(e) => CambiarCantidad(item.Id, int.Parse(e.Value.ToString()))" />
-                            </td>
+                            <td>@item.Cantidad</td>
                             <td>@item.PrecioUnitario.ToString("C", new CultureInfo("es-AR"))</td>
-                            <td>@precioTotal.ToString("C", new CultureInfo("es-AR"))</td>
-                            <td><button class="btn btn-sm btn-danger" @onclick="() => EliminarItem(item.Id)">Eliminar</button></td>
+                            <td>@total.ToString("C", new CultureInfo("es-AR"))</td>
+                            <td>
+                                <textarea type="text" class="form-control"
+                                       value="@item.Comentario"
+                                       @onchange="async e => await ActualizarComentario(item.Id, e.Value?.ToString())" />
+                            </td>
+                            <td>@item.EstadoCocinaNombre</td>
+
+                            <td>
+                                <button class="btn btn-sm btn-danger" @onclick="() => EliminarItem(item.Id)">Eliminar</button>
+                            </td>
+                        </tr>
+                    }
+
+                    @foreach (var combo in PedidoActual.PedidoCombos)
+                    {
+                        var total = combo.Precio * combo.Cantidad;
+                        <tr class="table-warning">
+                            <td>
+                                <strong>[Combo]</strong> @combo.Nombre
+                            </td>
+                            <td>@combo.Cantidad</td>
+                            <td>@combo.Precio.ToString("C", new CultureInfo("es-AR"))</td>
+                            <td>@total.ToString("C", new CultureInfo("es-AR"))</td>
+                            <td>
+                                <button class="btn btn-sm btn-info" @onclick="() => MostrarDetalleCombo(combo)">Ver productos</button>
+                            </td>
                         </tr>
                     }
                 </tbody>
             </table>
+            @if (PedidoActual.EstadoId == (int)Enums.EstadoPedido.Abierto && PedidoActual.DetallePedido.Count>0)
+            {
+                <button class="btn btn-success mt-3" @onclick="ConfirmarPedido">
+                    Confirmar pedido y enviar a cocina
+                </button>
+            }
+            
+
         }
+
     </div>
+
+    <!-- Modal para mostrar detalle del combo -->
+    @if (ComboDetalleVisible)
+    {
+        <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">@ComboDetalleSeleccionado?.Nombre</h5>
+                        <button type="button" class="btn-close" @onclick="CerrarModalDetalleCombo"></button>
+                    </div>
+                    <div class="modal-body">
+                        <ul>
+                            @foreach (var item in ComboDetalleSeleccionado?.Items ?? new List<PedidoComboItemViewModel>())
+                            {
+                                <li>@item.NombreProducto x @item.Cantidad</li>
+                            }
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" @onclick="CerrarModalDetalleCombo">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    @if (PromocionesDisponibles.Any())
+{
+    <div class="mt-4">
+        <label for="promoSelect"><strong>Promociones disponibles</strong></label>
+            <select id="promoSelect" class="form-select" value="@PromocionSeleccionadaId?.ToString()" @onchange="OnSeleccionarPromocion">
+                <option value="">-- Seleccione una promoción --</option>
+                @foreach (var promo in PromocionesDisponibles)
+                {
+                    <option value="@promo.Id">@promo.Nombre - @promo.ValorDescuento% (@promo.Descripcion)</option>
+                }
+            </select>
+
+
+    </div>
+}
+
+   
+
 }
 
 @code {
@@ -173,20 +230,54 @@ else
     private List<ProductoViewModel> ProductosDisponibles = new();
     private List<CategoriaProductoViewModel> CategoriasDisponibles = new();
     private int? CategoriaSeleccionada;
+    private bool ComboDetalleVisible = false;
+    private PedidoComboViewModel? ComboDetalleSeleccionado;
+
+    private List<PromocionViewModel> PromocionesDisponibles = new();
+    private int? PromocionSeleccionadaId;
+
 
     protected override async Task OnInitializedAsync()
     {
         PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorIdAsync(idPedido);
+        PromocionSeleccionadaId = PedidoActual?.PromocionId;
         ProductosDisponibles = await ServicioDeMesaService.GetProductosAsync();
         CategoriasDisponibles = await ServicioDeMesaService.GetCategoriasProductosAsync();
 
+        // Obtener combos y agregarlos como productos ficticios (categoría -1)
+        var combos = await ComboService.GetAllAsync();
+        foreach (var combo in combos)
+        {
+            ProductosDisponibles.Add(new ProductoViewModel
+                {
+                    Id = combo.Id,
+                    Nombre = $"[Combo] {combo.Nombre}",
+                    Precio = combo.Precio,
+                    CategoriaProductoId = -1,
+                    Stock = Convert.ToInt32(combo.Stock)
+                });
+        }
+
+        CategoriasDisponibles.Insert(0, new CategoriaProductoViewModel { Id = -1, Nombre = "Combos" });
+
         CategoriaSeleccionada = CategoriasDisponibles.FirstOrDefault()?.Id;
+
+        PromocionesDisponibles = await PromocionService.ObtenerPromocionesParaPedidoAsync(idPedido);
+
     }
 
-    private async Task AgregarProducto(int idProducto)
+    private async Task AgregarItem(ProductoViewModel producto)
     {
-        // Cantidad por defecto 1 (desde tarjeta)
-        await ServicioDeMesaService.AgregarProductoAlPedidoAsync(idPedido, idProducto, 1);
+        if (producto.CategoriaProductoId == -1)
+        {
+            await JS.InvokeVoidAsync("console.log", "Enviando combo:", idPedido, "prod:", producto);
+            await PedidoService.AgregarComboAlPedidoAsync(idPedido, producto.Id, 1);
+        }
+        else
+        {
+            await ServicioDeMesaService.AgregarProductoAlPedidoAsync(idPedido, producto.Id, 1);
+        }
+
         PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorIdAsync(idPedido);
     }
 
@@ -198,14 +289,26 @@ else
         var cantidadStr = await JS.InvokeAsync<string>("prompt", "¿Cantidad a agregar?");
         if (int.TryParse(cantidadStr, out int cantidad) && cantidad > 0)
         {
-            await ServicioDeMesaService.AgregarProductoAlPedidoAsync(idPedido, idProducto, cantidad);
-            PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorIdAsync(idPedido);
+            var producto = ProductosDisponibles.FirstOrDefault(p => p.Id == idProducto);
+            if (producto != null)
+            {
+                // Clon manual
+                var copia = new ProductoViewModel
+                    {
+                        Id = producto.Id,
+                        Nombre = producto.Nombre,
+                        Precio = producto.Precio,
+                        CategoriaProductoId = producto.CategoriaProductoId
+                    };
+
+                await AgregarItem(copia);
+            }
         }
     }
 
     private async Task EliminarItem(int idDetalle)
     {
-        await ServicioDeMesaService.DeleteAsync(idPedido, idDetalle); // Debes implementar esto si no existe
+        await ServicioDeMesaService.DeleteAsync(idPedido, idDetalle);
         PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorIdAsync(idPedido);
     }
 
@@ -214,11 +317,63 @@ else
         await ServicioDeMesaService.ModificarCantidadProductoAsync(idDetalle, nuevaCantidad);
         PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorIdAsync(idPedido);
     }
+    private void MostrarDetalleCombo(PedidoComboViewModel combo)
+    {
+        ComboDetalleSeleccionado = combo;
+        ComboDetalleVisible = true;
+    }
 
+    private void CerrarModalDetalleCombo()
+    {
+        ComboDetalleVisible = false;
+        ComboDetalleSeleccionado = null;
+    }
     private Dictionary<int, List<ProductoViewModel>> ProductosPorCategoria =>
         ProductosDisponibles
             .Where(p => p.CategoriaProductoId.HasValue)
             .GroupBy(p => p.CategoriaProductoId.Value)
             .OrderBy(g => g.Key)
             .ToDictionary(g => g.Key, g => g.ToList());
+
+
+    private async Task OnSeleccionarPromocion(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out int promoId))
+        {
+            PromocionSeleccionadaId = promoId;
+            await PromocionService.AsignarPromocionAlPedidoAsync(idPedido, promoId);
+            PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorIdAsync(idPedido);
+            StateHasChanged();
+        }
+    }
+    private string ObtenerClaseStock(int stock)
+    {
+        if (stock == 0)
+            return "sin-stock";
+        if (stock < 5)
+            return "stock-bajo";
+        return "stock-disponible";
+    }
+    private async Task ActualizarComentario(int idDetalle, string? comentario)
+    {
+        await DetallePedidoServicie.ModificarComentarioProductoAsync(idDetalle, comentario ?? "");
+        PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorIdAsync(idPedido);
+    }
+    private async Task ConfirmarPedido()
+    {
+        bool confirmacion = await JS.InvokeAsync<bool>("confirm", "¿Seguro que deseas confirmar y enviar el pedido a cocina?");
+        if (!confirmacion)
+            return;
+
+        foreach (var item in PedidoActual.DetallePedido)
+        {
+            if (item.EstadoCocinaId == (int)Enums.EstadoDetallePedidoCocina.Pendiente) // O según el nombre real en BD
+            {
+                await DetallePedidoServicie.ActualizarEstadoCocinaAsync(item.Id, (int)Enums.EstadoDetallePedidoCocina.EnPreparacion); // 2 = En cocina, por ejemplo
+            }
+        }
+        await PedidoService.CambiarEstadoAsync(idPedido, Utlis.Enums.EstadoPedido.EnPreparacion);
+        PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorIdAsync(idPedido);
+    }
+
 }

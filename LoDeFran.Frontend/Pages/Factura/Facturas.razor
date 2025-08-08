@@ -1,0 +1,131 @@
+﻿@page "/factura/facturas"
+@inject Services.FacturaService FacturaService
+@inject IJSRuntime JS
+
+@using LoDeFran.Frontend.Models
+
+<h3>Gestión de Facturas</h3>
+
+<div class="mb-3 row">
+    <div class="col-md-3">
+        <label>Número de Factura</label>
+        <input class="form-control" @bind="Filtro.NumeroFactura" placeholder="Ej: FAC-00000001" />
+    </div>
+    <div class="col-md-3">
+        <label>Estado</label>
+        <select class="form-control" @bind="Filtro.EstadoId">
+            <option value="">-- Todos --</option>
+            @foreach (var estado in Estados)
+            {
+                <option value="@estado.Id">@estado.Nombre</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label>Fecha Desde</label>
+        <input type="date" class="form-control" @bind="Filtro.FechaDesde" />
+    </div>
+    <div class="col-md-3">
+        <label>Fecha Hasta</label>
+        <input type="date" class="form-control" @bind="Filtro.FechaHasta" />
+    </div>
+</div>
+
+<button class="btn btn-primary mb-3" @onclick="BuscarFacturas">Buscar</button>
+<button class="btn btn-secondary mb-3 ms-2" @onclick="LimpiarFiltros">Limpiar</button>
+
+@if (FacturasVM == null)
+{
+    <p><em>Cargando facturas...</em></p>
+}
+else if (!FacturasVM.Any())
+{
+    <p>No se encontraron facturas.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Número</th>
+                <th>Estado</th>
+                <th>Fecha Emisión</th>
+                <th>Total</th>
+                <th>Cliente</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var factura in FacturasVM)
+            {
+                <tr>
+                    <td>@factura.NumeroFactura</td>
+                    <td>@factura.EstadoNombre</td>
+                    <td>@factura.FechaEmision?.ToString("dd/MM/yyyy")</td>
+                    <td>@factura.Total.ToString("C")</td>
+                    <td>@factura.ClienteNombre</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<FacturaViewModel> FacturasVM = new();
+    private List<EstadoDto> Estados = new();
+    private FacturaFiltroDto Filtro = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Aquí deberías obtener la lista de estados (puede ser otro endpoint o un servicio estático)
+        Estados = await ObtenerEstadosFacturaAsync();
+
+        await BuscarFacturas();
+    }
+
+    private async Task BuscarFacturas()
+    {
+        var todasFacturas = await FacturaService.GetAllAsync();
+
+        // Filtro manual en frontend (puedes adaptar para que la API filtre)
+        FacturasVM = todasFacturas.Where(f =>
+            (string.IsNullOrEmpty(Filtro.NumeroFactura) || (f.NumeroFactura?.Contains(Filtro.NumeroFactura, StringComparison.OrdinalIgnoreCase) ?? false)) &&
+            (!Filtro.EstadoId.HasValue || f.EstadoId == Filtro.EstadoId) &&
+            (!Filtro.FechaDesde.HasValue || (f.FechaEmision.HasValue && f.FechaEmision.Value.Date >= Filtro.FechaDesde.Value.Date)) &&
+            (!Filtro.FechaHasta.HasValue || (f.FechaEmision.HasValue && f.FechaEmision.Value.Date <= Filtro.FechaHasta.Value.Date))
+        ).ToList();
+    }
+
+    private void LimpiarFiltros()
+    {
+        Filtro = new();
+        _ = BuscarFacturas();
+    }
+
+    private Task<List<EstadoDto>> ObtenerEstadosFacturaAsync()
+    {
+        // Simulamos que traemos estados; reemplaza por llamada API o servicio real
+        return Task.FromResult(new List<EstadoDto>
+        {
+            new() { Id = 1, Nombre = "Emitida" },
+            new() { Id = 2, Nombre = "Pagada" },
+            new() { Id = 3, Nombre = "Cancelada" },
+        });
+    }
+
+
+    public class FacturaFiltroDto
+    {
+        public string? NumeroFactura { get; set; }
+        public int? EstadoId { get; set; }
+        public DateTime? FechaDesde { get; set; }
+        public DateTime? FechaHasta { get; set; }
+    }
+
+    public class EstadoDto
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set; } = "";
+    }
+}
+
+

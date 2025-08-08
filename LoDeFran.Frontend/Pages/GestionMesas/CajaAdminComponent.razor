@@ -2,11 +2,16 @@
 @inject Services.MetodoPagoService MetodoPagoService
 @inject Services.CajaService CajaService
 @inject Services.MovimientosCajaService MovimientosCajaService
+@inject Services.PromocionService PromocionService
+@inject Services.FacturaService FacturaService
 @using LoDeFran.Frontend.Models
 @using LoDeFran.Frontend.Services
+@using LoDeFran.Frontend.Utlis
+@using LoDeFran.Frontend.Utlis.Dto
+@using System.Globalization
 
 <h3 class="text-center d-flex justify-content-center align-items-center gap-2 ">
-    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+      <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
          width="102" height="76" viewBox="0 0 540.476 520.476" xml:space="preserve">
 <path style="fill:#F0C960;" d="M467.262,240.262l4-2h-440l-27.6,176h0.4h494h0.4L467.262,240.262z"/>
 <g>
@@ -127,7 +132,8 @@
 	C88.062,338.662,86.462,340.262,84.062,340.262z M68.062,332.262h12v-12h-12V332.262z"/>
 <path d="M84.062,380.262h-20c-2.4,0-4-1.6-4-4v-20c0-2.4,1.6-4,4-4h20c2.4,0,4,1.6,4,4v20
 	C88.062,378.662,86.462,380.262,84.062,380.262z M68.062,372.262h12v-12h-12V372.262z"/>
-</svg> Pedidos a Cobrar</h3>
+</svg>   
+Pedidos a Cobrar</h3>
 
 @if (Pedidos == null)
 {
@@ -144,7 +150,8 @@ else
             <tr>
                 <th>Mesa</th>
                 <th>Fecha</th>
-                <th>Total</th>
+                <th>Total sin descuento</th>
+                <th>Total con descuento</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -155,12 +162,22 @@ else
                     <td>@pedido.Mesa?.Numero</td>
                     <td>@pedido.FechaPedido?.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
                     <td>
-                        $@pedido.DetallePedido.Sum(d => d.Cantidad * d.PrecioUnitario).ToString("0.00")
+                        $@pedido.TotalSinDescuento?.ToString("C", new CultureInfo("es-AR"))
                     </td>
                     <td>
-                        <button class="btn btn-success btn-sm me-1" @onclick="() => AbrirModalCobro(pedido)">Cobrar</button>
-                        <button class="btn btn-primary btn-sm" @onclick="() => Imprimir(pedido)">Imprimir</button>
+                        $@pedido.Total?.ToString("C", new CultureInfo("es-AR"))
                     </td>
+
+                    <td>
+                        <button class="btn btn-success btn-sm me-1" @onclick="() => AbrirModalCobro(pedido)">Cobrar</button>
+                        <button class="btn btn-primary btn-sm me-1" @onclick="() => Imprimir(pedido)">Imprimir</button>
+                        <button class="btn btn-warning btn-sm" @onclick="() => AbrirModalPromocion(pedido)">Promo</button>
+                        @if (pedido.PromocionId != null)
+                        {
+                            
+                        }
+                    </td>
+
                 </tr>
             }
         </tbody>
@@ -213,15 +230,64 @@ else
     </div>
 }
 
+@if (MostrarModalPromocion && PedidoSeleccionadoParaPromocion != null)
+{
+    <div class="modal fade show d-block" style="z-index:1051; background-color: rgba(0,0,0,0.5);" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Promociones para Mesa @PedidoSeleccionadoParaPromocion.Mesa?.Numero</h5>
+                    <button class="btn-close" @onclick="CerrarModalPromocion"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-2">
+                        <button class="btn btn-danger  w-100 mb-2"
+                                @onclick="() => SeleccionarPromocion(new PromocionViewModel { Id = 9999 })">
+                            ❌ Sin promoción
+                        </button>
+
+                    </div>
+
+                    @if (PromocionesDisponibles?.Any() == true)
+                    {
+                        @foreach (var promo in PromocionesDisponibles)
+                        {
+                            bool esSeleccionada = PedidoSeleccionadoParaPromocion?.PromocionId == promo.Id;
+
+                            <button class="btn @(esSeleccionada ? "btn-primary" : "btn-outline-primary") w-100 mb-2"
+                                    @onclick="() => SeleccionarPromocion(promo)">
+                                @(esSeleccionada ? "✅ " : "")
+                                @promo.Nombre (@(promo.TipoDescuentoId == 1 ? $"{promo.ValorDescuento}%" : $"${promo.ValorDescuento}"))
+                            </button>
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">No hay promociones disponibles.</div>
+                    }
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="CerrarModalPromocion">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 
 @code {
     private CajaViewModel? CajaActual;
     private List<PedidoViewModel>? Pedidos;
     private PedidoViewModel? PedidoSeleccionado;
+    private PedidoViewModel? PedidoSeleccionadoParaPromocion;
+
     private List<MetodoPagoViewModel> MetodosPago = new();
     private MovimientoCajaViewModel? nuevoMovimiento;
     Guid claveTabla = Guid.NewGuid();
+    private bool MostrarModalPromocion = false;
+    private List<PromocionViewModel>? PromocionesDisponibles;
+    private List<PromocionViewModel>? PromocionSeleccionada;
 
     private int MetodoPagoSeleccionado = 1;
     private decimal MontoRecibido = 0;
@@ -238,11 +304,12 @@ else
 
     private async Task CargarPedidos()
     {
-        
+
         Pedidos?.Clear();
         Pedidos = await ServicioDeMesaService.GetPedidosPorEstadoAsync((int)Enums.EstadoPedido.A_Cobrar);
 
         claveTabla = Guid.NewGuid(); // 🔁 Forzamos recreación del DOM
+
 
         await InvokeAsync(StateHasChanged);
 
@@ -274,8 +341,27 @@ else
         await ServicioDeMesaService.CambiarEstadoPedidoAsync(PedidoSeleccionado.Id, Enums.EstadoPedido.Cobrado);
         await ServicioDeMesaService.CambiarEstadoPedidoAsync(PedidoSeleccionado.Id, Enums.EstadoPedido.Cerrado);
         await ServicioDeMesaService.CambiarEstadoMesaAsync(PedidoSeleccionado.MesaId, Enums.EstadoMesa.Disponible);
+
         crearMovimiento();
-        await MovimientosCajaService.CrearAsync(nuevoMovimiento);    
+        await MovimientosCajaService.CrearAsync(nuevoMovimiento);
+
+
+        var FacturaDto = new FacturaDto()
+        {           
+            PedidoId = PedidoSeleccionado.Id,
+            Total = Convert.ToDecimal(PedidoSeleccionado.TotalSinDescuento),
+            ClienteId = PedidoSeleccionado.ClienteId,
+            MetodoPagoId = MetodoPagoSeleccionado,
+            UsuarioId = CajaActual.UsuarioId,
+            DescuentoAplicado = PedidoSeleccionado.MontoDescuento,
+            Observaciones = "Factura",
+            TipoFactura = "C",
+            CuitCliente= "",
+            CajaId = CajaActual.Id
+        };
+
+        await FacturaService.CreateAsync(FacturaDto);
+
         await CargarPedidos();
         CerrarModal();
     }
@@ -318,6 +404,33 @@ else
             Monto = TotalPedido,
             Descripcion = "pedidos" // cambiar cuando separe si es delivery etc...
         };
+    }
+    private async Task AbrirModalPromocion(PedidoViewModel pedido)
+    {
+        PedidoSeleccionadoParaPromocion = pedido;
+
+        // Traé las promociones disponibles para ese pedido desde tu API
+        PromocionesDisponibles = await PromocionService.ObtenerPromocionesParaPedidoAsync(pedido.Id);
+
+        MostrarModalPromocion = true;
+    }
+
+    private void CerrarModalPromocion()
+    {
+        MostrarModalPromocion = false;
+        PedidoSeleccionadoParaPromocion = null;
+        PromocionesDisponibles = null;
+    }
+
+    private async Task SeleccionarPromocion(PromocionViewModel? promo)
+    {
+        if (PedidoSeleccionadoParaPromocion == null)
+            return;
+
+        await PromocionService.AsignarPromocionAlPedidoAsync(PedidoSeleccionadoParaPromocion.Id, promo.Id);
+        // Refrescar los pedidos para recalcular el total y cerrar modal
+        await CargarPedidos();
+        MostrarModalPromocion = false;
     }
     [Inject] private IJSRuntime JS { get; set; } = default!;
 }

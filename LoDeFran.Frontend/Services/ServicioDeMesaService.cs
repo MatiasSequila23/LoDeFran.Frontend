@@ -2,7 +2,8 @@
 using System.Net.Http.Json;
 using System.Net.NetworkInformation;
 using LoDeFran.Frontend.Models;
-using static LoDeFran.Frontend.Services.Enums;
+using LoDeFran.Frontend.Utlis.ClassAux;
+using LoDeFran.Frontend.Utlis;
 namespace LoDeFran.Frontend.Services
 {
     public class ServicioDeMesaService
@@ -43,10 +44,9 @@ namespace LoDeFran.Frontend.Services
             {
                 return await pedido.Content.ReadFromJsonAsync<PedidoViewModel>();
             }
-
             throw new Exception("Error al iniciar pedido");
         }
-        public async Task CambiarEstadoPedidoAsync(int pedidoId, Enums.EstadoPedido nuevoEstado)
+        public async Task CambiarEstadoPedidoAsync(int pedidoId,Enums.EstadoPedido nuevoEstado)
         {
             var response = await _http.PutAsJsonAsync($"Pedidos/{pedidoId}/estado", nuevoEstado);
             response.EnsureSuccessStatusCode();
@@ -69,7 +69,7 @@ namespace LoDeFran.Frontend.Services
                 Cantidad = cantidad
             };
 
-            var response = await _http.PostAsJsonAsync($"Pedidos/{idPedido}/agregar-producto", dto);
+            var response = await _http.PostAsJsonAsync($"DetallesPedidos/{idPedido}/agregar-producto", dto);
             response.EnsureSuccessStatusCode();
         }
 
@@ -94,7 +94,7 @@ namespace LoDeFran.Frontend.Services
         }
         public async Task ModificarCantidadProductoAsync(int idDetalle, int nuevaCantidad)
         {
-            var response = await _http.PutAsJsonAsync($"Pedidos/detalle/{idDetalle}/cantidad", nuevaCantidad);
+            var response = await _http.PutAsJsonAsync($"DetallesPedidos/detalle/{idDetalle}/cantidad", nuevaCantidad);
             response.EnsureSuccessStatusCode();
         }
         public async Task<List<PedidoViewModel>?> ObtenerPedidoCocina()
@@ -192,6 +192,20 @@ namespace LoDeFran.Frontend.Services
             var response = await _http.GetFromJsonAsync<List<PedidoViewModel>>($"Pedidos/no-salon");
             return response;
         }
+        public async Task<PedidoViewModel> CrearPedidoPorClienteMesaAsync(int clienteId, int tipoPedidoId, int mesaId )
+        {
+            var dtoPedidoMesa = new
+            {
+                ClienteId = clienteId,
+                TipoPedidoId = tipoPedidoId,
+                MesaId = mesaId
+            };
 
+            var response = await _http.PostAsJsonAsync("Pedidos/crear_pedido_por_cliente_Mesa", dtoPedidoMesa);
+            response.EnsureSuccessStatusCode();
+
+            return await response.Content.ReadFromJsonAsync<PedidoViewModel>()
+                   ?? throw new Exception("La API no devolvió un pedido válido.");
+        }
     }
 }

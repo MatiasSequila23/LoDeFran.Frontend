@@ -1,8 +1,16 @@
 ﻿@inject Services.ServicioDeMesaService ServicioDeMesaService
+@inject Services.ClienteService ClienteService  
+@inject Services.MesaService MesaService
+@inject Services.PedidoService PedidoService
+@inject Services.UsuarioService UsuarioService
+@inject Services.DetallePedidoServicie DetallePedidoServicie
+
 @inject NavigationManager Nav
 @inject IJSRuntime JS
 @using LoDeFran.Frontend.Models
 @using LoDeFran.Frontend.Services
+@using LoDeFran.Frontend.Utlis.ClassAux
+@using LoDeFran.Frontend.Utlis
 
 <h3 class="text-center d-flex justify-content-center align-items-center gap-2 mt-3">
     <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="90" height="90" viewBox="0 0 326.476 326.476" fill="currentColor" xml:space="preserve">
@@ -98,8 +106,8 @@ else
 @if (MesaSeleccionada != null)
 {
     <div class="modal-backdrop" @onclick="CerrarModal"></div>
-    <div class="modal fade show d-block" tabindex="-1" style="z-index: 1050;" role="dialog" aria-modal="true">
-        <div class="modal-dialog">
+    <div class="modal fade show d-block " tabindex="-1" style="z-index: 1050;" role="dialog" aria-modal="true">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content animated-modal">
                 <div class="modal-header border-0 pb-0">
                     <h5 class="modal-title"><i class="bi bi-grid-3x3-gap-fill me-2 text-primary"></i>Detalle Mesa @MesaSeleccionada.Numero</h5>
@@ -107,6 +115,34 @@ else
                 </div>
                 <div class="modal-body">
                     <div class="row g-3">
+                        <div class="col-12">
+                            <label>Seleccionar Mozo</label>
+                            <select id="selectClientes" class="form-control" @bind="MozoSeleccionadoId">
+                                <option value="">-- Seleccionar Mozo --</option>
+                                @foreach (var mozo in Mozos)
+                                {
+                                    <option value="@mozo.Id">@mozo.Nombre</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="col-12">
+                            <label>Buscar Cliente (teléfono, email, calle o altura)</label>
+                            <input class="form-control" @bind="BusquedaCliente" @bind:event="oninput" placeholder="Ej: 123456789 o calle" />
+                        </div>
+                        @if (ClientesEncontrados.Any())
+                        {
+                            <div class="col-12 mt-3">
+                                <label>Seleccionar Cliente</label>
+                                <select id="selectClientes" class="form-control" @bind="ClienteSeleccionadoId" @onblur="desplegarSelectClientes">
+                                    <option value="">-- Seleccionar Cliente --</option>
+                                    @foreach (var cliente in ClientesEncontrados)
+                                    {
+                                        <option value="@cliente.Id">@cliente.Nombre @cliente.Apellido - @cliente.Telefono (@cliente.Calle @cliente.Altura, Piso @cliente.Piso)</option>
+                                    }
+                                </select>
+                            </div>
+                        }
                         <div class="col-12">
                             <div class="text-center shadow-sm rounded bg-white h-100">
                                 <div class="h5 text-primary mb-1"><i class="bi bi-info-circle-fill me-2"></i>@MesaSeleccionada.EstadoNombre</div>
@@ -134,7 +170,7 @@ else
 
                         @if (EstadoPedidoActualId == (int)Enums.EstadoPedido.ListoParaEntregar)
                         {
-                            <button class="btn btn-info w-100 mb-2" @onclick="() => CambiarEstado(PedidoActual.Id, Enums.EstadoPedido.Entregado)"><i class="bi bi-box-arrow-in-down me-1"></i> Pedido Entregado</button>
+                            <button class="btn btn-info w-100 mb-2" @onclick="() => CambiarEstadoEntregado(PedidoActual.Id, Enums.EstadoPedido.Entregado)"><i class="bi bi-box-arrow-in-down me-1"></i> Pedido Entregado</button>
                         }
                         else if (EstadoPedidoActualId == (int)Enums.EstadoPedido.Entregado)
                         {
@@ -163,11 +199,44 @@ else
     private List<PisoViewModel> Pisos = new();
     private PisoViewModel? PisoSeleccionado;
     private List<MesaViewModel> Mesas = new();
+    private List<UsuarioViewModel> Mozos = new();
     private MesaViewModel? MesaSeleccionada;
     private PedidoViewModel? PedidoActual;
     private bool PedidoIniciado = false;
     private string? ErrorMensaje;
     private int? EstadoPedidoActualId => PedidoActual?.EstadoId;
+
+
+
+    private string _busquedaCliente = "";
+
+    private string BusquedaCliente
+    {
+        get => _busquedaCliente;
+        set
+        {
+            if (_busquedaCliente != value)
+            {
+                _busquedaCliente = value;
+                _ = BuscarClienteAutomaticamente();
+            }
+        }
+    }
+    private bool BuscoCliente = false;
+    private List<ClienteViewModel> ClientesEncontrados = new();
+    private int? ClienteSeleccionadoId;
+    private int? MozoSeleccionadoId;
+    private ClienteViewModel NuevoCliente = new();
+    private ClienteViewModel? ClienteSeleccionado;
+
+    private bool PuedeCrear =>
+        ClienteSeleccionadoId.HasValue ||
+        (!string.IsNullOrWhiteSpace(NuevoCliente.Nombre) &&
+         !string.IsNullOrWhiteSpace(NuevoCliente.Telefono) &&
+         !string.IsNullOrWhiteSpace(NuevoCliente.Calle) &&
+         !string.IsNullOrWhiteSpace(NuevoCliente.Altura));
+
+
 
 
     protected override async Task OnInitializedAsync()
@@ -177,7 +246,7 @@ else
         PisoSeleccionado = null;
         Mesas.Clear();
         Mesas = await ServicioDeMesaService.GetMesasAsync();
-        
+        Mozos = await UsuarioService.GetMozosAsync();
 
     }
     private async Task clearDataTable()
@@ -218,6 +287,19 @@ else
         }
     }
 
+    private async Task CambiarEstadoEntregado(int idPedido, Enums.EstadoPedido nuevoEstado)
+    {
+        await ServicioDeMesaService.CambiarEstadoPedidoAsync(idPedido, nuevoEstado);
+        PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorIdAsync(PedidoActual.Id);
+        foreach (var det in PedidoActual.DetallePedido)
+        {
+            if (det.EstadoCocinaId == (int)Enums.EstadoDetallePedidoCocina.Preparado) // O según el nombre real en BD
+            {
+                await DetallePedidoServicie.ActualizarEstadoCocinaAsync(det.Id, (int)Enums.EstadoDetallePedidoCocina.Entregado);
+            }
+        }
+        CerrarModal(); // opcional     
+    }
     private async Task CambiarEstado(int idPedido, Enums.EstadoPedido nuevoEstado)
     {
         await ServicioDeMesaService.CambiarEstadoPedidoAsync(idPedido, nuevoEstado);
@@ -240,7 +322,21 @@ else
 
         try
         {
-            PedidoActual = await ServicioDeMesaService.IniciarPedidoAsync(MesaSeleccionada.Id);
+            var pedido = new CrearPedidoRequest
+            {
+                ClienteId = ClienteSeleccionadoId,
+                TipoPedidoId = 1, // Mesa
+                MesaId = MesaSeleccionada.Id,    
+                UsuarioId = MozoSeleccionadoId             
+            };
+
+            //PedidoActual = await ServicioDeMesaService.IniciarPedidoAsync(MesaSeleccionada.Id);
+            //PedidoActual = await PedidoService.CreateAsync(pedido);
+            PedidoActual = await PedidoService.CrearPedidoGenericoAsync(pedido);
+            //await MesaService.CambiarEstadoMesaAsync(MesaSeleccionada.Id, Enums.EstadoMesa.Ocupada);
+
+
+            
             PedidoIniciado = true;
             ErrorMensaje = null;
             Nav.NavigateTo($"/GestionMesas/pedido/{PedidoActual.Id}");
@@ -281,4 +377,74 @@ else
         _ => "estado-gris"
     };
 
+
+
+
+    [JSInvokable]
+    public Task SetCalleDesdeJS(string calle)
+    {
+        NuevoCliente.Calle = calle;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+
+    private async Task BuscarClienteAutomaticamente()
+    {
+        if (BusquedaCliente.Trim().Length >= 3)
+        {
+            ClientesEncontrados = await ServicioDeMesaService.BuscarClientesAsync(BusquedaCliente.Trim());
+            BuscoCliente = true;
+            StateHasChanged();
+        }
+        else
+        {
+            ClientesEncontrados.Clear();
+            BuscoCliente = false;
+        }
+    }
+
+    private async Task GuardarNuevoCliente()
+    {
+        if (string.IsNullOrWhiteSpace(NuevoCliente.Nombre) || string.IsNullOrWhiteSpace(NuevoCliente.Telefono))
+            return;
+
+        var clienteCreado = await ClienteService.CrearClienteAsync(NuevoCliente);
+        ClienteSeleccionadoId = clienteCreado.Id;
+        await JS.InvokeVoidAsync("cerrarModal", "#modalNuevoCliente");
+
+        BusquedaCliente = $"{clienteCreado.Nombre} {clienteCreado.Apellido}";
+        ClientesEncontrados = new List<ClienteViewModel> { clienteCreado };
+
+        LimpiarNuevoCliente();
+    }
+
+    private async Task MostrarCliente(int? clienteId)
+    {
+        if (clienteId == null) return;
+        ClienteSeleccionado = await ClienteService.GetClienteAsync(clienteId.Value);
+        await JS.InvokeVoidAsync("mostrarModal", "#modalCliente");
+    }
+
+    private async Task ImprimirCliente()
+    {
+        await JS.InvokeVoidAsync("imprimirModal", "#modalCliente");
+        await JS.InvokeVoidAsync("inicializarSelectCalle");
+    }
+
+    private async void MostrarModalNuevo()
+    {
+        await JS.InvokeVoidAsync("mostrarModal", "#modalNuevoCliente");
+        await Task.Delay(300);
+        await JS.InvokeVoidAsync("inicializarSelectCalle");
+    }
+
+    private void desplegarSelectClientes()
+    {
+        JS.InvokeVoidAsync("expandSelect", "selectClientes");
+    }
+    private void LimpiarNuevoCliente()
+    {
+        NuevoCliente = new ClienteViewModel(); // Reinicia el objeto
+    }
 }

@@ -58,8 +58,20 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2xpZW50ZVxDbGllbnRlcy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
+[E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/Combo/Combos.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29tYm9cQ29tYm9zLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/Combo/GestionCombo.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29tYm9cR2VzdGlvbkNvbWJvLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
 [E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/Counter.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ291bnRlci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/Factura/Facturas.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRmFjdHVyYVxGYWN0dXJhcy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/GestionMesas/Admin.razor]
@@ -136,6 +148,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/Producto/Productos.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvZHVjdG9cUHJvZHVjdG9zLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/Promocion/Promociones.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvbW9jaW9uXFByb21vY2lvbmVzLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/Proveedor/Proveedores.razor]

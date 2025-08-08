@@ -1,4 +1,5 @@
 ﻿using LoDeFran.Frontend.Models;
+using LoDeFran.Frontend.Utlis;
 using System.Net.Http.Json;
 
 namespace LoDeFran.Frontend.Services
@@ -19,6 +20,11 @@ namespace LoDeFran.Frontend.Services
         public async Task<MesaViewModel?> GetMesasByIdAsync(int id)
         {
             return await _http.GetFromJsonAsync<MesaViewModel>($"Mesas/{id}");
+        }
+        public async Task CambiarEstadoMesaAsync(int? id, Enums.EstadoMesa nuevoEstado)
+        {
+            var response = await _http.PutAsJsonAsync($"Mesas/{id}/estado", nuevoEstado);
+            response.EnsureSuccessStatusCode();
         }
     }
 }

@@ -1,0 +1,106 @@
+﻿@page "/combo/combos"
+@inject Services.ComboService ComboService
+@inject NavigationManager Nav
+@using LoDeFran.Frontend.Models
+@using System.Globalization
+
+<h3>Listado de Combos</h3>
+
+<button class="btn btn-success mb-3" @onclick="MostrarModalNuevoCombo">Crear Combo</button>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var combo in CombosList)
+        {
+            <tr>
+                <td>@combo.Nombre</td>
+                <td>@combo.Descripcion</td>
+                <td>@combo.Precio.ToString("C", new CultureInfo("es-AR"))</td>
+                <td>@combo.Stock</td>
+                <td>@(combo.EstadoId == 1 ? "Activo" : "Inactivo")</td>
+                <td>
+                    <button class="btn btn-sm btn-secondary" @onclick="() => VerItems(combo.Id)">Ver Items</button>
+
+                    @if (combo.EstadoId == 1)
+                    {
+                        <button class="btn btn-sm btn-warning" @onclick="() => CambiarEstado(combo.Id, 2)">Desactivar</button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-sm btn-success" @onclick="() => CambiarEstado(combo.Id, 1)">Activar</button>
+                    }
+
+                    <button class="btn btn-sm btn-danger" @onclick="() => EliminarCombo(combo.Id)">Eliminar</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+<!-- Modal para nuevo combo -->
+@if (MostrarModal)
+{
+    <div class="modal fade show d-block" tabindex="-1" role="dialog" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content p-3">
+                <h5>Nuevo Combo</h5>
+                <InputText class="form-control mb-2" @bind-Value="NuevoCombo.Nombre" placeholder="Nombre" />
+                <InputTextArea class="form-control mb-2" @bind-Value="NuevoCombo.Descripcion" placeholder="Descripción" />
+                <InputNumber class="form-control mb-2" @bind-Value="NuevoCombo.Precio" placeholder="Precio" />
+
+                <button class="btn btn-success" @onclick="GuardarNuevoCombo">Guardar</button>
+                <button class="btn btn-secondary ms-2" @onclick="() => MostrarModal = false">Cancelar</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<ComboViewModel> CombosList = new();
+    private bool MostrarModal = false;
+    private ComboViewModel NuevoCombo = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        CombosList = await ComboService.GetAllAsync();
+    }
+
+    private void MostrarModalNuevoCombo()
+    {
+        NuevoCombo = new();
+        MostrarModal = true;
+    }
+
+    private async Task GuardarNuevoCombo()
+    {
+        var comboCreado = await ComboService.CreateAndReturnIdAsync(NuevoCombo);
+        MostrarModal = false;
+        Nav.NavigateTo($"/combo/gestioncombo/{comboCreado}");
+    }
+
+    private void VerItems(int id) => Nav.NavigateTo($"/combo/gestioncombo/{id}");
+
+    private async Task CambiarEstado(int id, int nuevoEstadoId)
+    {
+        await ComboService.CambiarEstadoAsync(id, nuevoEstadoId);
+        CombosList = await ComboService.GetAllAsync();
+    }
+
+
+    private async Task EliminarCombo(int id)
+    {
+        await ComboService.DeleteAsync(id);
+        CombosList = await ComboService.GetAllAsync();
+    }
+}

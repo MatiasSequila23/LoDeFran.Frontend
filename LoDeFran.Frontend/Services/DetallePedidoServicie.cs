@@ -47,5 +47,17 @@ namespace LoDeFran.Frontend.Services
             var response = await _http.DeleteAsync($"pedidos/{idPedido}/detalle/{idDetalle}");
             return response.IsSuccessStatusCode;
         }
+        // PUT: Actualizar solo el comentario de un detalle
+        public async Task<bool> ModificarComentarioProductoAsync(int idDetalle, string comentario)
+        {
+            var content = JsonContent.Create(comentario);
+            var response = await _http.PutAsync($"{BaseUrl}/comentario/{idDetalle}", content);
+            return response.IsSuccessStatusCode;
+        }
+        public async Task ActualizarEstadoCocinaAsync(int idDetalle, int nuevoEstadoId)
+        {
+            var response = await _http.PutAsJsonAsync($"DetallesPedidos/detalle/{idDetalle}/estado-cocina", nuevoEstadoId);
+            response.EnsureSuccessStatusCode();
+        }
     }
 }

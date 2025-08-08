@@ -1030,7 +1030,6 @@ C:\SISTEMA LoDeFran\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\LoDeFra
 C:\SISTEMA LoDeFran\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\refint\LoDeFran.Frontend.dll
 C:\SISTEMA LoDeFran\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\LoDeFran.Frontend.pdb
 C:\SISTEMA LoDeFran\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\ref\LoDeFran.Frontend.dll
-E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\ab146i1x9g.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Azure.Core.wasm
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\Azure.Identity.wasm
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\bin\Debug\net8.0\wwwroot\_framework\blazor.boot.json
@@ -2557,6 +2556,7 @@ E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\ul4td
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\s4hu96r6s2.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\oss4acf1j3.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\fjw6itnaz0.gz
+E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\ab146i1x9g.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\3a01foe6s8.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\joq2fx25dx.gz
 E:\Sources\LoDeFran.Frontend\LoDeFran.Frontend\obj\Debug\net8.0\compressed\8ea6vz7dgd.gz

@@ -2,6 +2,7 @@
 using LoDeFran.Frontend.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using LoDeFran.Frontend.Utlis;
 
 public class PedidoBase : ComponentBase
 {

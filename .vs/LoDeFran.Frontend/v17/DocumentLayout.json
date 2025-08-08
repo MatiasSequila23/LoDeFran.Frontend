@@ -1,71 +1,12 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "E:\\Sources\\LoDeFran.Frontend\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|e:\\sources\\lodefran.frontend\\lodefran.frontend\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|solutionrelative:lodefran.frontend\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|e:\\sources\\lodefran.frontend\\lodefran.frontend\\layout\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|solutionrelative:lodefran.frontend\\layout\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|e:\\sources\\lodefran.frontend\\lodefran.frontend\\wwwroot\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|solutionrelative:lodefran.frontend\\wwwroot\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": [
-        {
-          "DockedWidth": 200,
-          "SelectedChildIndex": 0,
-          "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "NavMenu.razor",
-              "DocumentMoniker": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Layout\\NavMenu.razor",
-              "RelativeDocumentMoniker": "LoDeFran.Frontend\\Layout\\NavMenu.razor",
-              "ToolTip": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Layout\\NavMenu.razor",
-              "RelativeToolTip": "LoDeFran.Frontend\\Layout\\NavMenu.razor",
-              "ViewState": "AgIAAC0AAAAAAAAAAAAqwEwAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-07-18T16:59:35.999Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "MainLayout.razor",
-              "DocumentMoniker": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Layout\\MainLayout.razor",
-              "RelativeDocumentMoniker": "LoDeFran.Frontend\\Layout\\MainLayout.razor",
-              "ToolTip": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Layout\\MainLayout.razor",
-              "RelativeToolTip": "LoDeFran.Frontend\\Layout\\MainLayout.razor",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-07-18T16:59:24.805Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "index.html",
-              "DocumentMoniker": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\index.html",
-              "RelativeDocumentMoniker": "LoDeFran.Frontend\\wwwroot\\index.html",
-              "ToolTip": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\index.html",
-              "RelativeToolTip": "LoDeFran.Frontend\\wwwroot\\index.html",
-              "ViewState": "AgIAACwAAAAAAAAAAAAswDkAAABPAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
-              "WhenOpened": "2025-07-18T16:58:19.446Z",
-              "EditorCaption": ""
-            }
-          ]
-        }
-      ]
+      "DocumentGroups": []
     }
   ]
 }

@@ -16,7 +16,7 @@ namespace LoDeFran.Frontend.Services
         {
             return await _http.GetFromJsonAsync<List<CategoriaProductoViewModel>>("CategoriasProductos") ?? new();
         }
-
+        
         public async Task<ProductoViewModel?> GetProductoByIdAsync(int id)
         {
             return await _http.GetFromJsonAsync<ProductoViewModel>($"Productos/{id}");
