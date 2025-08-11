@@ -369,7 +369,7 @@ else
                             (await ClienteService.CrearClienteAsync(NuevoCliente)).Id;
 
             var pedido = await ServicioDeMesaService.CrearPedidoPorClienteAsync(clienteId, 3);
-            Nav.NavigateTo($"/GestionMesas/pedido/{pedido.Id}");
+            Nav.NavigateTo($"/Pedido/PedidoBuilder/{pedido.Id}");
         }
         catch (Exception ex)
         {
@@ -391,7 +391,7 @@ else
         await JS.InvokeVoidAsync("initializeDataTable", "tablaPedidos");
     }
 
-    private void VerPedido(int id) => Nav.NavigateTo($"/GestionMesas/pedido/{id}");
+    private void VerPedido(int id) => Nav.NavigateTo($"/Pedido/PedidoBuilder/{id}");
 
     private async Task CambiarEstado(int pedidoId, Enums.EstadoPedido nuevoEstado)
     {

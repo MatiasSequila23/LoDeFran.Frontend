@@ -19,7 +19,7 @@ else
             @if (PedidoIniciado)
             {
                 <p class="text-success">✅ Pedido ya iniciado</p>
-                <button class="btn btn-success" @onclick='() => Nav.NavigateTo($"/GestionMesas/pedido/{PedidoActual.Id}")'>Ver Pedido</button>
+                <button class="btn btn-success" @onclick='() => Nav.NavigateTo($"/Pedido/PedidoBuilder/{PedidoActual.Id}")'>Ver Pedido</button>
             }
             else
             {
@@ -65,7 +65,7 @@ else
             PedidoActual = await ServicioDeMesaService.IniciarPedidoAsync(idMesa);
             PedidoIniciado = true;
             ErrorMensaje = null;
-            Nav.NavigateTo($"/GestionMesas/pedido/{PedidoActual.Id}");
+            Nav.NavigateTo($"/Pedido/PedidoBuilder/{PedidoActual.Id}");
         }
         catch (Exception ex)
         {

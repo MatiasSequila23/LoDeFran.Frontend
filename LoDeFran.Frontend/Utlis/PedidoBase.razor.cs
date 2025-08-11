@@ -59,7 +59,7 @@ public class PedidoBase : ComponentBase
                     <td>{pedido.FechaPedido?.ToString("dd/MM/yyyy HH:mm")}</td>
                     <td>{((Enums.EstadoPedido)pedido.EstadoId)}</td>
                     <td>
-                        <button class='btn btn-sm btn-outline-info me-1' onclick=""location.href='/GestionMesas/pedido/{pedido.Id}'"">
+                        <button class='btn btn-sm btn-outline-info me-1' onclick=""location.href='/Pedido/PedidoBuilder/{pedido.Id}'"">
                             <i class='fas fa-eye'></i>
                         </button>
                     </td>

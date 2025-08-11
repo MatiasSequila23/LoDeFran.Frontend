@@ -166,7 +166,7 @@ else
                     @if (PedidoIniciado)
                     {
                         <div class="alert alert-success text-center"><p><i class="bi bi-check-circle-fill"></i> Pedido ya iniciado</p></div>
-                        <button class="btn btn-success w-100 " @onclick='() => Nav.NavigateTo($"/GestionMesas/pedido/{PedidoActual?.Id}")'><i class="bi bi-eye me-1"></i> Ver Pedido</button>
+                        <button class="btn btn-success w-100 " @onclick='() => Nav.NavigateTo($"/Pedido/PedidoBuilder/{PedidoActual?.Id}")'><i class="bi bi-eye me-1"></i> Ver Pedido</button>
 
                         @if (EstadoPedidoActualId == (int)Enums.EstadoPedido.ListoParaEntregar)
                         {
@@ -339,7 +339,7 @@ else
             
             PedidoIniciado = true;
             ErrorMensaje = null;
-            Nav.NavigateTo($"/GestionMesas/pedido/{PedidoActual.Id}");
+            Nav.NavigateTo($"/Pedido/PedidoBuilder/{PedidoActual.Id}");
         }
         catch (Exception ex)
         {
@@ -350,7 +350,7 @@ else
     private void VerPedido()
     {
         if (PedidoActual != null)
-            Nav.NavigateTo($"/GestionMesas/pedido/{PedidoActual.Id}");
+            Nav.NavigateTo($"/Pedido/PedidoBuilder/{PedidoActual.Id}");
     }
 
     private string ObtenerClaseBadge(int? estadoId) => estadoId switch

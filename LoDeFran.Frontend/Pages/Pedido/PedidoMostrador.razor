@@ -282,7 +282,7 @@ private string BusquedaCliente
         {
             int clienteId = ClienteSeleccionadoId ?? 0;
             var pedido = await ServicioDeMesaService.CrearPedidoPorClienteAsync(clienteId, 2); // 2 = Mostrador
-            Nav.NavigateTo($"/GestionMesas/pedido/{pedido.Id}");
+            Nav.NavigateTo($"/Pedido/PedidoBuilder/{pedido.Id}");
         }
         catch (Exception ex)
         {
@@ -307,7 +307,7 @@ private string BusquedaCliente
         await JS.InvokeVoidAsync("initializeDataTable", "tablaPedidos");
     }
 
-    private void VerPedido(int id) => Nav.NavigateTo($"/GestionMesas/pedido/{id}");
+    private void VerPedido(int id) => Nav.NavigateTo($"/Pedido/PedidoBuilder/{id}");
 
     private async Task CambiarEstado(int pedidoId, Enums.EstadoPedido nuevoEstado)
     {

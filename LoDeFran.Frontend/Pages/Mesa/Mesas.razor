@@ -1,5 +1,450 @@
-﻿<h3>Mesas</h3>
+﻿@inject Services.ServicioDeMesaService ServicioDeMesaService
+@inject Services.ClienteService ClienteService
+@inject Services.MesaService MesaService
+@inject Services.PedidoService PedidoService
+@inject Services.UsuarioService UsuarioService
+@inject Services.DetallePedidoServicie DetallePedidoServicie
+
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+@using LoDeFran.Frontend.Models
+@using LoDeFran.Frontend.Services
+@using LoDeFran.Frontend.Utlis.ClassAux
+@using LoDeFran.Frontend.Utlis
+
+<h3 class="text-center d-flex justify-content-center align-items-center gap-2 mt-3">
+    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="90" height="90" viewBox="0 0 326.476 326.476" fill="currentColor" xml:space="preserve">
+<path style="fill:#C8546F;" d="M239.757,222.15V99.721H86.721V222.15c0,0,45.552-20.616,91.822,0S239.757,222.15,239.757,222.15z" />
+<g>
+    <rect x="5.101" y="171.14" style="fill:#FEB860;" width="61.21" height="15.304" />
+    <rect x="260.16" y="171.14" style="fill:#FEB860;" width="61.21" height="15.304" />
+</g>
+<g>
+    <rect x="300.97" y="74.22" style="fill:#9B4573;" width="15.304" height="40.809" />
+    <rect x="10.203" y="74.22" style="fill:#9B4573;" width="15.304" height="40.809" />
+</g>
+<g>
+    <path style="fill:#FEC986;" d="M122.429,99.721L122.429,99.721c-11.27,0-20.405-9.135-20.405-20.404l0,0h40.81l0,0
+		C142.834,90.586,133.698,99.721,122.429,99.721z" />
+    <path style="fill:#FEC986;" d="M204.048,99.721L204.048,99.721c-11.269,0-20.405-9.135-20.405-20.404l0,0h40.81l0,0
+		C224.453,90.586,215.317,99.721,204.048,99.721z" />
+</g>
+<g>
+    <rect x="102.02" y="115.13" style="fill:#1D1D1B;" width="66.32" height="9.994" />
+    <rect x="178.54" y="115.13" style="fill:#1D1D1B;" width="15.304" height="9.994" />
+    <path style="fill:#1D1D1B;" d="M321.271,247.262v-55.824h5.101v-25.298h-5.101V69.219h-25.298v50.804h15.304v46.119h-56.113v25.298
+		h5.101v55.824h-35.916v-11.795c13.488-2.497,19.058-9.838,19.454-10.385l0.951-1.312V94.724h-20.529
+		c2.307-3.013,3.956-6.554,4.729-10.41h5.701V74.32h-61.214v9.994h5.701c0.773,3.856,2.422,7.397,4.729,10.41h-41.266
+		c2.307-3.013,3.956-6.554,4.729-10.41h5.701V74.32H91.822v9.994h5.701c0.773,3.856,2.422,7.397,4.729,10.41H81.723V222.15
+		l0.005,7.724l7.047-3.168c0.146-0.066,5.142-2.26,13.352-4.424v24.981H66.212v-55.824h5.101v-25.298H15.199v-46.119h15.304V69.219
+		H5.205v96.923H0.104v25.298h5.101v55.824H0v9.994h326.476v-9.994L321.271,247.262L321.271,247.262z M305.968,110.028V79.213h5.31
+		v30.815H305.968z M15.2,79.213h5.31v30.815H15.2V79.213z M316.378,176.136v5.206h-5.101v0.104h-41.018v-0.104h-5.101v-5.206
+		H316.378z M270.259,191.439h41.018v55.824h-41.018V191.439z M189.477,84.314h29.143c-2.081,6.049-7.825,10.41-14.572,10.41
+		S191.557,90.363,189.477,84.314z M107.858,84.314h29.143c-2.081,6.049-7.824,10.41-14.571,10.41
+		C115.683,94.724,109.939,90.363,107.858,84.314z M91.718,104.718H234.76v115.466c-1.498,1.36-4.767,3.731-10.437,5.096
+		c-3.68,0.887-8.708,1.401-15.278,0.684v-34.422h-9.994v32.586c-1.696-0.427-3.465-0.926-5.309-1.506v-10.675h-9.994v7.001
+		c-1.04-0.433-2.093-0.883-3.172-1.363c-14.904-6.641-29.646-9.215-42.948-9.597v-11.344h-9.994v11.451
+		c-1.808,0.091-3.58,0.217-5.309,0.375v-22.029h-9.994v23.323c-8.659,1.449-15.765,3.493-20.613,5.134V104.718z M112.122,220.066
+		c16.807-3.04,40.618-3.942,64.386,6.649c15.706,6.998,28.147,9.474,37.846,9.573v10.976H112.122V220.066z M61.318,181.341h-5.101
+		v0.104H15.199v-0.104h-5.101v-5.206h51.22V181.341L61.318,181.341z M15.2,191.439h41.018v55.824H15.2V191.439z" />
+</g>
+</svg>
+    Seleccionar Piso y Mesa
+</h3>
+
+
+@if (Pisos?.Any() == true)
+{
+    <div class="row g-2 align-items-center mt-3 mb-2">
+        <div class="col-12 col-md">
+            <div class="btn-group w-100" role="group">
+                @foreach (var piso in Pisos)
+                {
+                    <button class="btn btn-default @(PisoSeleccionado?.IdPiso == piso.IdPiso ? "active" : "")" @onclick="() => CambiarPiso(piso)">@piso.Nombre</button>
+                }
+                <button class="btn btn-default" @onclick="VerTodasLasMesas">Todas</button>
+            </div>
+        </div>
+        <div class="col-12 col-md-auto">
+            <div class="d-flex flex-wrap justify-content-start gap-3 mt-2 mt-md-0">
+                <div class="d-flex align-items-center gap-1"><div class="color-circulo bg-success"></div><span>Libre</span></div>
+                <div class="d-flex align-items-center gap-1"><div class="color-circulo bg-warning"></div><span>Ocupada</span></div>
+                <div class="d-flex align-items-center gap-1"><div class="color-circulo bg-danger"></div><span>Reservada</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mesas-grid mt-3">
+        @foreach (var mesa in MesasVM)
+        {
+            <button class="mesa-icon btn" @onclick="() => MostrarDetalleMesa(mesa)">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44.999 44.999" width="40" height="40"
+                     class="mesa-svg @ObtenerClaseColorSvg(mesa.EstadoId)">
+                    <path d="M42.558,23.378l2.406-10.92c0.18-0.816-0.336-1.624-1.152-1.803c-0.816-0.182-1.623,0.335-1.802,1.151l-2.145,9.733
+                    h-9.647c-0.835,0-1.512,0.677-1.512,1.513c0,0.836,0.677,1.513,1.512,1.513h0.573l-3.258,7.713
+                    c-0.325,0.771,0.034,1.657,0.805,1.982c0.19,0.081,0.392,0.12,0.588,0.12c0.59,0,1.15-0.348,1.394-0.925l2.974-7.038l4.717,0.001
+                    l2.971,7.037c0.327,0.77,1.215,1.127,1.982,0.805c0.77-0.325,1.13-1.212,0.805-1.982l-3.257-7.713h0.573
+                    C41.791,24.564,42.403,24.072,42.558,23.378z" />
+                    <path d="M14.208,24.564h0.573c0.835,0,1.512-0.677,1.512-1.513c0-0.836-0.677-1.513-1.512-1.513H5.134L2.99,11.806
+                    C2.809,10.99,2,10.472,1.188,10.655c-0.815,0.179-1.332,0.987-1.152,1.803l2.406,10.92c0.153,0.693,0.767,1.187,1.477,1.187h0.573
+                    L1.234,32.28c-0.325,0.77,0.035,1.655,0.805,1.98c0.768,0.324,1.656-0.036,1.982-0.805l2.971-7.037l4.717-0.001l2.972,7.038
+                    c0.244,0.577,0.804,0.925,1.394,0.925c0.196,0,0.396-0.039,0.588-0.12c0.77-0.325,1.13-1.212,0.805-1.98L14.208,24.564z" />
+                    <path d="M24.862,31.353h-0.852V18.308h8.13c0.835,0,1.513-0.677,1.513-1.512s-0.678-1.513-1.513-1.513H12.856
+                    c-0.835,0-1.513,0.678-1.513,1.513c0,0.834,0.678,1.512,1.513,1.512h8.13v13.045h-0.852c-0.835,0-1.512,0.679-1.512,1.514
+                    s0.677,1.513,1.512,1.513h4.728c0.837,0,1.514-0.678,1.514-1.513S25.699,31.353,24.862,31.353z" />
+                </svg>
+                <span class="mesa-num">@mesa.Numero</span>
+            </button>
+        }
+    </div>
+}
+else
+{
+    <p>Cargando pisos...</p>
+}
+
+@if (MesaSeleccionada != null)
+{
+    <div class="modal-backdrop" @onclick="CerrarModal"></div>
+    <div class="modal fade show d-block " tabindex="-1" style="z-index: 1050;" role="dialog" aria-modal="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content animated-modal">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title"><i class="bi bi-grid-3x3-gap-fill me-2 text-primary"></i>Detalle Mesa @MesaSeleccionada.Numero</h5>
+                    <button type="button" class="btn-close" @onclick="CerrarModal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label>Seleccionar Mozo</label>
+                            <select id="selectClientes" class="form-control" @bind="MozoSeleccionadoId">
+                                <option value="">-- Seleccionar Mozo --</option>
+                                @foreach (var mozo in Mozos)
+                                {
+                                    <option value="@mozo.Id">@mozo.Nombre</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="col-12">
+                            <label>Buscar Cliente (teléfono, email, calle o altura)</label>
+                            <input class="form-control" @bind="BusquedaCliente" @bind:event="oninput" placeholder="Ej: 123456789 o calle" />
+                        </div>
+                        @if (ClientesEncontrados.Any())
+                        {
+                            <div class="col-12 mt-3">
+                                <label>Seleccionar Cliente</label>
+                                <select id="selectClientes" class="form-control" @bind="ClienteSeleccionadoId" @onblur="desplegarSelectClientes">
+                                    <option value="">-- Seleccionar Cliente --</option>
+                                    @foreach (var cliente in ClientesEncontrados)
+                                    {
+                                        <option value="@cliente.Id">@cliente.Nombre @cliente.Apellido - @cliente.Telefono (@cliente.Calle @cliente.Altura, Piso @cliente.Piso)</option>
+                                    }
+                                </select>
+                            </div>
+                        }
+                        <div class="col-12">
+                            <div class="text-center shadow-sm rounded bg-white h-100">
+                                <div class="h5 text-primary mb-1"><i class="bi bi-info-circle-fill me-2"></i>@MesaSeleccionada.EstadoNombre</div>
+                                <p class="fw-semibold mb-1">Estado actual de la mesa</p>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="text-center shadow-sm rounded bg-white h-100">
+                                <div class="h5 text-warning mb-1"><i class="bi bi-box-seam me-2"></i>@PedidoActual?.EstadoId</div>
+                                <p class="fw-semibold mb-1">Estado del pedido</p>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="text-center shadow-sm rounded bg-white h-100">
+                                <div class="h5 text-secondary mb-1"><i class="bi bi-person me-2"></i>(no asignado)</div>
+                                <p class="fw-semibold mb-1">Mozo asignado</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (PedidoIniciado)
+                    {
+                        <div class="alert alert-success text-center"><p><i class="bi bi-check-circle-fill"></i> Pedido ya iniciado</p></div>
+                        <button class="btn btn-success w-100 " @onclick='() => Nav.NavigateTo($"/Pedido/PedidoBuilder/{PedidoActual?.Id}")'><i class="bi bi-eye me-1"></i> Ver Pedido</button>
+
+                        @if (EstadoPedidoActualId == (int)Enums.EstadoPedido.ListoParaEntregar)
+                        {
+                            <button class="btn btn-info w-100 mb-2" @onclick="() => CambiarEstadoEntregado(PedidoActual.Id, Enums.EstadoPedido.Entregado)"><i class="bi bi-box-arrow-in-down me-1"></i> Pedido Entregado</button>
+                        }
+                        else if (EstadoPedidoActualId == (int)Enums.EstadoPedido.Entregado)
+                        {
+                            <button class="btn btn-warning w-100 mb-2" @onclick="() => CambiarEstado(PedidoActual.Id, Enums.EstadoPedido.A_Cobrar)"><i class="bi bi-cash-coin me-1"></i> Generar Cuenta</button>
+                        }
+                    }
+                    else
+                    {
+                        <button class="btn btn-primary w-100 mb-2" @onclick="IniciarPedido"><i class="bi bi-plus-circle me-1"></i> Iniciar Pedido</button>
+                    }
+
+                    @if (!string.IsNullOrWhiteSpace(ErrorMensaje))
+                    {
+                        <div class="alert alert-danger mt-2">@ErrorMensaje</div>
+                    }
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button class="btn btn-secondary w-100" @onclick="CerrarModal"><i class="bi bi-x-circle me-1"></i> Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 @code {
+    private List<PisoViewModel> Pisos = new();
+    private PisoViewModel? PisoSeleccionado;
+    private List<MesaViewModel> MesasVM = new();
+    private List<UsuarioViewModel> Mozos = new();
+    private MesaViewModel? MesaSeleccionada;
+    private PedidoViewModel? PedidoActual;
+    private bool PedidoIniciado = false;
+    private string? ErrorMensaje;
+    private int? EstadoPedidoActualId => PedidoActual?.EstadoId;
 
+
+
+    private string _busquedaCliente = "";
+
+    private string BusquedaCliente
+    {
+        get => _busquedaCliente;
+        set
+        {
+            if (_busquedaCliente != value)
+            {
+                _busquedaCliente = value;
+                _ = BuscarClienteAutomaticamente();
+            }
+        }
+    }
+    private bool BuscoCliente = false;
+    private List<ClienteViewModel> ClientesEncontrados = new();
+    private int? ClienteSeleccionadoId;
+    private int? MozoSeleccionadoId;
+    private ClienteViewModel NuevoCliente = new();
+    private ClienteViewModel? ClienteSeleccionado;
+
+    private bool PuedeCrear =>
+        ClienteSeleccionadoId.HasValue ||
+        (!string.IsNullOrWhiteSpace(NuevoCliente.Nombre) &&
+         !string.IsNullOrWhiteSpace(NuevoCliente.Telefono) &&
+         !string.IsNullOrWhiteSpace(NuevoCliente.Calle) &&
+         !string.IsNullOrWhiteSpace(NuevoCliente.Altura));
+
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await clearDataTable();
+        Pisos = await ServicioDeMesaService.GetPisosAsync();
+        PisoSeleccionado = null;
+        MesasVM.Clear();
+        MesasVM = await ServicioDeMesaService.GetMesasAsync();
+        Mozos = await UsuarioService.GetMozosAsync();
+
+    }
+    private async Task clearDataTable()
+    {
+        await JS.InvokeVoidAsync("destroyDataTable", "tablaPedidos");
+        await JS.InvokeVoidAsync("destroyDataTable", "tablaCaja");
+    }
+    private async Task CambiarPiso(PisoViewModel piso)
+    {
+        PisoSeleccionado = piso;
+        MesasVM = await ServicioDeMesaService.GetMesasPorPisoAsync(piso.IdPiso);
+
+    }
+
+    private async Task VerTodasLasMesas()
+    {
+        PisoSeleccionado = null;
+        MesasVM.Clear();
+        MesasVM = await ServicioDeMesaService.GetMesasAsync();
+    }
+
+    private async Task MostrarDetalleMesa(MesaViewModel mesa)
+    {
+        MesaSeleccionada = mesa;
+        ErrorMensaje = null;
+        PedidoIniciado = false;
+        PedidoActual = null;
+
+        try
+        {
+            PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorMesaIdAsync(mesa.Id);
+            PedidoIniciado = true;
+        }
+        catch
+        {
+            PedidoIniciado = false;
+            PedidoActual = null;
+        }
+    }
+
+    private async Task CambiarEstadoEntregado(int idPedido, Enums.EstadoPedido nuevoEstado)
+    {
+        await ServicioDeMesaService.CambiarEstadoPedidoAsync(idPedido, nuevoEstado);
+        PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorIdAsync(PedidoActual.Id);
+        foreach (var det in PedidoActual.DetallePedido)
+        {
+            if (det.EstadoCocinaId == (int)Enums.EstadoDetallePedidoCocina.Preparado) // O según el nombre real en BD
+            {
+                await DetallePedidoServicie.ActualizarEstadoCocinaAsync(det.Id, (int)Enums.EstadoDetallePedidoCocina.Entregado);
+            }
+        }
+        CerrarModal(); // opcional
+    }
+    private async Task CambiarEstado(int idPedido, Enums.EstadoPedido nuevoEstado)
+    {
+        await ServicioDeMesaService.CambiarEstadoPedidoAsync(idPedido, nuevoEstado);
+        PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorIdAsync(PedidoActual.Id);
+        CerrarModal(); // opcional
+    }
+
+    private void CerrarModal()
+    {
+        MesaSeleccionada = null;
+        ErrorMensaje = null;
+        PedidoIniciado = false;
+        PedidoActual = null;
+    }
+
+    private async Task IniciarPedido()
+    {
+        if (MesaSeleccionada == null)
+            return;
+
+        try
+        {
+            var pedido = new CrearPedidoRequest
+                {
+                    ClienteId = ClienteSeleccionadoId,
+                    TipoPedidoId = 1, // Mesa
+                    MesaId = MesaSeleccionada.Id,
+                    UsuarioId = MozoSeleccionadoId
+                };
+
+            //PedidoActual = await ServicioDeMesaService.IniciarPedidoAsync(MesaSeleccionada.Id);
+            //PedidoActual = await PedidoService.CreateAsync(pedido);
+            PedidoActual = await PedidoService.CrearPedidoGenericoAsync(pedido);
+            //await MesaService.CambiarEstadoMesaAsync(MesaSeleccionada.Id, Enums.EstadoMesa.Ocupada);
+
+
+
+            PedidoIniciado = true;
+            ErrorMensaje = null;
+            Nav.NavigateTo($"/Pedido/PedidoBuilder/{PedidoActual.Id}");
+        }
+        catch (Exception ex)
+        {
+            ErrorMensaje = $"Error: {ex.Message}";
+        }
+    }
+
+    private void VerPedido()
+    {
+        if (PedidoActual != null)
+            Nav.NavigateTo($"/Pedido/PedidoBuilder/{PedidoActual.Id}");
+    }
+
+    private string ObtenerClaseBadge(int? estadoId) => estadoId switch
+    {
+        1 => "success",
+        2 => "warning",
+        3 => "danger",
+        _ => "secondary"
+    };
+
+    private string ObtenerClaseColorSvg(int? estadoId) => estadoId switch
+    {
+        1 => "svg-verde",     // Disponible
+        2 => "svg-amarillo",  // Ocupada
+        3 => "svg-rojo",      // Reservada
+        _ => "svg-gris"
+    };
+
+    private string ObtenerClaseEstadoTexto(int? estadoId) => estadoId switch
+    {
+        1 => "estado-verde",     // Disponible
+        2 => "estado-amarillo",  // Ocupada
+        3 => "estado-rojo",      // Reservada
+        _ => "estado-gris"
+    };
+
+
+
+
+    [JSInvokable]
+    public Task SetCalleDesdeJS(string calle)
+    {
+        NuevoCliente.Calle = calle;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+
+    private async Task BuscarClienteAutomaticamente()
+    {
+        if (BusquedaCliente.Trim().Length >= 3)
+        {
+            ClientesEncontrados = await ServicioDeMesaService.BuscarClientesAsync(BusquedaCliente.Trim());
+            BuscoCliente = true;
+            StateHasChanged();
+        }
+        else
+        {
+            ClientesEncontrados.Clear();
+            BuscoCliente = false;
+        }
+    }
+
+    private async Task GuardarNuevoCliente()
+    {
+        if (string.IsNullOrWhiteSpace(NuevoCliente.Nombre) || string.IsNullOrWhiteSpace(NuevoCliente.Telefono))
+            return;
+
+        var clienteCreado = await ClienteService.CrearClienteAsync(NuevoCliente);
+        ClienteSeleccionadoId = clienteCreado.Id;
+        await JS.InvokeVoidAsync("cerrarModal", "#modalNuevoCliente");
+
+        BusquedaCliente = $"{clienteCreado.Nombre} {clienteCreado.Apellido}";
+        ClientesEncontrados = new List<ClienteViewModel> { clienteCreado };
+
+        LimpiarNuevoCliente();
+    }
+
+    private async Task MostrarCliente(int? clienteId)
+    {
+        if (clienteId == null) return;
+        ClienteSeleccionado = await ClienteService.GetClienteAsync(clienteId.Value);
+        await JS.InvokeVoidAsync("mostrarModal", "#modalCliente");
+    }
+
+    private async Task ImprimirCliente()
+    {
+        await JS.InvokeVoidAsync("imprimirModal", "#modalCliente");
+        await JS.InvokeVoidAsync("inicializarSelectCalle");
+    }
+
+    private async void MostrarModalNuevo()
+    {
+        await JS.InvokeVoidAsync("mostrarModal", "#modalNuevoCliente");
+        await Task.Delay(300);
+        await JS.InvokeVoidAsync("inicializarSelectCalle");
+    }
+
+    private void desplegarSelectClientes()
+    {
+        JS.InvokeVoidAsync("expandSelect", "selectClientes");
+    }
+    private void LimpiarNuevoCliente()
+    {
+        NuevoCliente = new ClienteViewModel(); // Reinicia el objeto
+    }
 }

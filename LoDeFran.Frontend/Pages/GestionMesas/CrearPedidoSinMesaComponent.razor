@@ -265,7 +265,7 @@ else
 
             await JS.InvokeVoidAsync("console.log", $"Pedido creado: ID = {pedido.Id}");
 
-            Nav.NavigateTo($"/GestionMesas/pedido/{pedido.Id}");
+            Nav.NavigateTo($"/Pedido/PedidoBuilder/{pedido.Id}");
         }
         catch (Exception ex)
         {
@@ -284,7 +284,7 @@ else
 
     private void VerPedido(int id)
     {
-        Nav.NavigateTo($"/GestionMesas/pedido/{id}");
+        Nav.NavigateTo($"/Pedido/PedidoBuilder/{id}");
     }
     private async Task CambiarEstado(int pedidoId, Enums.EstadoPedido nuevoEstado)
     {
