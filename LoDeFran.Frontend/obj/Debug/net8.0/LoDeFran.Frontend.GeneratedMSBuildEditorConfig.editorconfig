@@ -86,58 +86,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRmFjdHVyYVxGYWN0dXJhcy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/GestionMesas/Admin.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcR2VzdGlvbk1lc2FzXEFkbWluLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/GestionMesas/CajaAdminComponent.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcR2VzdGlvbk1lc2FzXENhamFBZG1pbkNvbXBvbmVudC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/GestionMesas/CocinaAdminComponent.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcR2VzdGlvbk1lc2FzXENvY2luYUFkbWluQ29tcG9uZW50LnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/GestionMesas/CrearPedidoSinMesaComponent.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcR2VzdGlvbk1lc2FzXENyZWFyUGVkaWRvU2luTWVzYUNvbXBvbmVudC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/GestionMesas/DetalleMesa.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcR2VzdGlvbk1lc2FzXERldGFsbGVNZXNhLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/GestionMesas/MesasAdminComponent.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcR2VzdGlvbk1lc2FzXE1lc2FzQWRtaW5Db21wb25lbnQucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/GestionMesas/MesaSelector.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcR2VzdGlvbk1lc2FzXE1lc2FTZWxlY3Rvci5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/GestionMesas/PedidoBuilder.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcR2VzdGlvbk1lc2FzXFBlZGlkb0J1aWxkZXIucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/GestionMesas/PedidoProductos.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcR2VzdGlvbk1lc2FzXFBlZGlkb1Byb2R1Y3Rvcy5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/GestionMesas/PedidosCobrar.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcR2VzdGlvbk1lc2FzXFBlZGlkb3NDb2JyYXIucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/GestionMesas/SeleccionMesa.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcR2VzdGlvbk1lc2FzXFNlbGVjY2lvbk1lc2EucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/GestionMesas/ServicioDeMesa.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcR2VzdGlvbk1lc2FzXFNlcnZpY2lvRGVNZXNhLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/GestionMesas/TipoPedidoSelector.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcR2VzdGlvbk1lc2FzXFRpcG9QZWRpZG9TZWxlY3Rvci5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
 [E:/Sources/LoDeFran.Frontend/LoDeFran.Frontend/Pages/Home.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9tZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
