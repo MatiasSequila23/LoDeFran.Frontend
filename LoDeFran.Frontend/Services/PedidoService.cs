@@ -105,6 +105,15 @@ namespace LoDeFran.Frontend.Services
             return await response.Content.ReadFromJsonAsync<PedidoViewModel>()
                    ?? throw new Exception("La API no devolvió un pedido válido.");
         }
+        public async Task ActualizarCombo(ActualizarComboRequest request)
+        {
+            var response = await _http.PutAsJsonAsync($"Pedidos/{request.PedidoId}/combo/{request.ComboId}", request);
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Error al actualizar combo: {error}");
+            }
+        }
         public class AgregarComboRequest
         {
             public int ComboId { get; set; }

@@ -1,12 +1,201 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "E:\\Sources\\LoDeFran.Frontend\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|e:\\sources\\lodefran.frontend\\lodefran.frontend\\pages\\caja\\cobranza.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|solutionrelative:lodefran.frontend\\pages\\caja\\cobranza.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|e:\\sources\\lodefran.frontend\\lodefran.frontend\\pages\\caja\\cajas.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|solutionrelative:lodefran.frontend\\pages\\caja\\cajas.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|e:\\sources\\lodefran.frontend\\lodefran.frontend\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|solutionrelative:lodefran.frontend\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|e:\\sources\\lodefran.frontend\\lodefran.frontend\\pages\\adminstracion\\admin.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|solutionrelative:lodefran.frontend\\pages\\adminstracion\\admin.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|e:\\sources\\lodefran.frontend\\lodefran.frontend\\pages\\pedido\\pedidobuildermesa.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|solutionrelative:lodefran.frontend\\pages\\pedido\\pedidobuildermesa.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|e:\\sources\\lodefran.frontend\\lodefran.frontend\\pages\\mesa\\mesas.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|solutionrelative:lodefran.frontend\\pages\\mesa\\mesas.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|e:\\sources\\lodefran.frontend\\lodefran.frontend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|solutionrelative:lodefran.frontend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|e:\\sources\\lodefran.frontend\\lodefran.frontend\\services\\pedidoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|solutionrelative:lodefran.frontend\\services\\pedidoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|e:\\sources\\lodefran.frontend\\lodefran.frontend\\services\\serviciodemesaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|solutionrelative:lodefran.frontend\\services\\serviciodemesaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|e:\\sources\\lodefran.frontend\\lodefran.frontend\\utlis\\classaux\\actualizarcomborequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|solutionrelative:lodefran.frontend\\utlis\\classaux\\actualizarcomborequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|e:\\sources\\lodefran.frontend\\lodefran.frontend\\pages\\pedido\\pedidobuilder.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CC9A76B4-417F-4D51-8A8E-AAD65E83FA4E}|LoDeFran.Frontend\\LoDeFran.Frontend.csproj|solutionrelative:lodefran.frontend\\pages\\pedido\\pedidobuilder.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Cobranza.razor",
+              "DocumentMoniker": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Pages\\Caja\\Cobranza.razor",
+              "RelativeDocumentMoniker": "LoDeFran.Frontend\\Pages\\Caja\\Cobranza.razor",
+              "ToolTip": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Pages\\Caja\\Cobranza.razor",
+              "RelativeToolTip": "LoDeFran.Frontend\\Pages\\Caja\\Cobranza.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-16T03:10:08.667Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Cajas.razor",
+              "DocumentMoniker": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Pages\\Caja\\Cajas.razor",
+              "RelativeDocumentMoniker": "LoDeFran.Frontend\\Pages\\Caja\\Cajas.razor",
+              "ToolTip": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Pages\\Caja\\Cajas.razor",
+              "RelativeToolTip": "LoDeFran.Frontend\\Pages\\Caja\\Cajas.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-16T03:09:56.505Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Admin.razor",
+              "DocumentMoniker": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Pages\\Adminstracion\\Admin.razor",
+              "RelativeDocumentMoniker": "LoDeFran.Frontend\\Pages\\Adminstracion\\Admin.razor",
+              "ToolTip": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Pages\\Adminstracion\\Admin.razor",
+              "RelativeToolTip": "LoDeFran.Frontend\\Pages\\Adminstracion\\Admin.razor",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-16T03:07:26.581Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "NavMenu.razor",
+              "DocumentMoniker": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Layout\\NavMenu.razor",
+              "RelativeDocumentMoniker": "LoDeFran.Frontend\\Layout\\NavMenu.razor",
+              "ToolTip": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Layout\\NavMenu.razor",
+              "RelativeToolTip": "LoDeFran.Frontend\\Layout\\NavMenu.razor",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAACYAAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-15T23:09:29.915Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Program.cs",
+              "DocumentMoniker": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Program.cs",
+              "RelativeDocumentMoniker": "LoDeFran.Frontend\\Program.cs",
+              "ToolTip": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Program.cs",
+              "RelativeToolTip": "LoDeFran.Frontend\\Program.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAAAAcAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-15T22:29:21.863Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "ActualizarComboRequest.cs",
+              "DocumentMoniker": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Utlis\\ClassAux\\ActualizarComboRequest.cs",
+              "RelativeDocumentMoniker": "LoDeFran.Frontend\\Utlis\\ClassAux\\ActualizarComboRequest.cs",
+              "ToolTip": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Utlis\\ClassAux\\ActualizarComboRequest.cs",
+              "RelativeToolTip": "LoDeFran.Frontend\\Utlis\\ClassAux\\ActualizarComboRequest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-15T18:29:08.705Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "ServicioDeMesaService.cs",
+              "DocumentMoniker": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Services\\ServicioDeMesaService.cs",
+              "RelativeDocumentMoniker": "LoDeFran.Frontend\\Services\\ServicioDeMesaService.cs",
+              "ToolTip": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Services\\ServicioDeMesaService.cs",
+              "RelativeToolTip": "LoDeFran.Frontend\\Services\\ServicioDeMesaService.cs",
+              "ViewState": "AgIAAE0AAAAAAAAAAAAnwFUAAABTAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-15T16:26:40.069Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "PedidoService.cs",
+              "DocumentMoniker": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Services\\PedidoService.cs",
+              "RelativeDocumentMoniker": "LoDeFran.Frontend\\Services\\PedidoService.cs",
+              "ToolTip": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Services\\PedidoService.cs",
+              "RelativeToolTip": "LoDeFran.Frontend\\Services\\PedidoService.cs",
+              "ViewState": "AgIAABIAAAAAAAAAAAAowG8AAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-15T16:26:14.514Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "PedidoBuilderMesa.razor",
+              "DocumentMoniker": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Pages\\Pedido\\PedidoBuilderMesa.razor",
+              "RelativeDocumentMoniker": "LoDeFran.Frontend\\Pages\\Pedido\\PedidoBuilderMesa.razor",
+              "ToolTip": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Pages\\Pedido\\PedidoBuilderMesa.razor",
+              "RelativeToolTip": "LoDeFran.Frontend\\Pages\\Pedido\\PedidoBuilderMesa.razor",
+              "ViewState": "AgIAAMUCAAAAAAAAAAAAAMcCAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-15T14:08:58.566Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Mesas.razor",
+              "DocumentMoniker": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Pages\\Mesa\\Mesas.razor",
+              "RelativeDocumentMoniker": "LoDeFran.Frontend\\Pages\\Mesa\\Mesas.razor",
+              "ToolTip": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Pages\\Mesa\\Mesas.razor",
+              "RelativeToolTip": "LoDeFran.Frontend\\Pages\\Mesa\\Mesas.razor",
+              "ViewState": "AgIAAAQCAAAAAAAAAAAAABYCAABLAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-13T14:24:36.269Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "PedidoBuilder.razor",
+              "DocumentMoniker": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Pages\\Pedido\\PedidoBuilder.razor",
+              "RelativeDocumentMoniker": "LoDeFran.Frontend\\Pages\\Pedido\\PedidoBuilder.razor",
+              "ToolTip": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\Pages\\Pedido\\PedidoBuilder.razor",
+              "RelativeToolTip": "LoDeFran.Frontend\\Pages\\Pedido\\PedidoBuilder.razor",
+              "ViewState": "AgIAADsAAAAAAAAAAAAlwFQAAABxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-13T14:15:13.871Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
