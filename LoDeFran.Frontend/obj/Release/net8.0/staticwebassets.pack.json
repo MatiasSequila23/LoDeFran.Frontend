@@ -253,6 +253,10 @@
       "PackagePath": "staticwebassets\\assets\\img\\office-dark.jpg"
     },
     {
+      "Id": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\assets\\img\\pizzas\\pizza-pepperoni.png",
+      "PackagePath": "staticwebassets\\assets\\img\\pizzas\\pizza-pepperoni.png"
+    },
+    {
       "Id": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\assets\\img\\product-12.jpg",
       "PackagePath": "staticwebassets\\assets\\img\\product-12.jpg"
     },
@@ -1305,6 +1309,10 @@
       "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css.map"
     },
     {
+      "Id": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\css\\imprimir.css",
+      "PackagePath": "staticwebassets\\css\\imprimir.css"
+    },
+    {
       "Id": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\favicon.png",
       "PackagePath": "staticwebassets\\favicon.png"
     },
@@ -1319,6 +1327,10 @@
     {
       "Id": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\js\\LoDeFran.Frontend.styles.js",
       "PackagePath": "staticwebassets\\js\\LoDeFran.Frontend.styles.js"
+    },
+    {
+      "Id": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\js\\Print.js",
+      "PackagePath": "staticwebassets\\js\\Print.js"
     },
     {
       "Id": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\sample-data\\weather.json",

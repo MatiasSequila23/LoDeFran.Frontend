@@ -1,6 +1,7 @@
 ﻿@page "/producto/productos"
 
 @inject Services.ProductoService ProductoService
+@inject Services.SubcategoriaProductoService SubcategoriaProductoService
 @* @inject Services.CategoriaProductoService CategoriaProductoService  *@
 @inject IJSRuntime JS
 
@@ -46,7 +47,12 @@
 </svg> Gestión de Productos
 </h3>
 
-<button class="btn btn-primary mb-3" @onclick="MostrarModalNuevo"><i class="fas fa-plus"></i> Nuevo Producto</button>
+<!-- Button trigger modal -->
+<button type="button" class="btn bg-gradient-primary" @onclick="MostrarModalNuevo" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    <i class="fas fa-plus"></i> Nuevo Producto
+</button>
+
+
 
 @if (productos == null)
 {
@@ -66,6 +72,7 @@ else
                 <th>Precio</th>
                 <th>Stock</th>
                 <th>Categoría</th>
+                <th>Sub categoría</th>
                 <th>Estado</th>
                 <th>Acciones</th>
             </tr>
@@ -79,10 +86,11 @@ else
                     <td>$@producto.Precio.ToString("N2")</td>
                     <td>@producto.Stock</td>
                     <td>@(producto.CategoriaProductoNombre ?? "Sin categoría")</td>
+                    <td>@(producto.SubcategoriaProductoNombre ?? "Sin sub categoría")</td>
                     <td>@(producto.EstadoNombre ?? "Sin estado")</td>
 
                     <td>
-                        <button class="btn btn-sm btn-outline-primary me-2" title="Editar" @onclick="() => EditarProducto(producto)">
+                        <button class="btn btn-sm btn-outline-primary me-2" title="Editar" @onclick="() => EditarProducto(producto)" data-bs-toggle="modal" data-bs-target="#exampleModal">
                             <i class="fas fa-edit"></i>
                         </button>
                         <button class="btn btn-sm btn-outline-danger" title="Eliminar" @onclick="() => EliminarProducto(producto.Id)">
@@ -174,67 +182,123 @@ else
 <!-- Modal -->
 @if (mostrarModal)
 {
-    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
-        <div class="modal-dialog">
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered  modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">@((productoEditar.Id == 0) ? "Agregar Producto" : "Editar Producto")</h5>
-                    <button type="button" class="btn-close" @onclick="CerrarModal"></button>
+                    <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-2">
-                        <label>Nombre</label>
-                        <input class="form-control" @bind="productoEditar.Nombre" />
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            <!-- Nombre -->
+                            <div class="input-group input-group-static mb-3">
+                                <label>Nombre:</label>
+                                <input type="text" class="form-control" @bind="productoEditar.Nombre"
+                                       placeholder="Nombre del producto" onfocus="focused(this)" onfocusout="defocused(this)">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <!-- Descripción -->
+                            <div class="input-group input-group-static mb-3">
+                                <label>Descripción:</label>
+                                <input class="form-control" @bind="productoEditar.Descripcion"
+                                          placeholder="Descripción del producto" onfocus="focused(this)" onfocusout="defocused(this)"></input>
+                            </div>
+                        </div>
                     </div>
-                    <div class="mb-2">
-                        <label>Descripción</label>
-                        <textarea class="form-control" @bind="productoEditar.Descripcion"></textarea>
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            <!-- Precio -->
+                            <div class="input-group input-group-static mb-3">
+                                <label>Precio:</label>
+                                <input type="number" class="form-control" @bind="productoEditar.Precio"
+                                       placeholder="Precio" onfocus="focused(this)" onfocusout="defocused(this)">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <!-- Stock -->
+                            <div class="input-group input-group-static mb-3">
+                                <label>Stock:</label>
+                                <input type="number" class="form-control" @bind="productoEditar.Stock"
+                                       placeholder="Stock" onfocus="focused(this)" onfocusout="defocused(this)">
+                            </div>
+                        </div>
                     </div>
-                    <div class="mb-2">
-                        <label>Precio</label>
-                        <input type="number" class="form-control" @bind="productoEditar.Precio" />
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            <!-- Categoría -->
+                            <div class="input-group input-group-static mb-3">
+                                <label>Categoría:</label>
+                                <select class="form-control" @bind="CategoriaSeleccionada" @bind:event="onchange"
+                                        onfocus="focused(this)" onfocusout="defocused(this)">
+                                    <option selected value="">-- Seleccionar --</option>
+                                    @foreach (var cat in categorias)
+                                    {
+                                        <option value="@cat.Id">@cat.Nombre</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <!-- Subcategoría -->
+                            <div class="input-group input-group-static mb-3">
+                                <label>Sub Categoría:</label>
+                                <select class="form-control" @bind="productoEditar.SubcategoriaProductoId"
+                                        onfocus="focused(this)" onfocusout="defocused(this)">
+                                    <option value="">-- Seleccionar --</option>
+                                    @foreach (var sub in subCategoriasFiltradas)
+                                    {
+                                        <option value="@sub.Id">@sub.Nombre</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
                     </div>
-                    <div class="mb-2">
-                        <label>Stock</label>
-                        <input type="number" class="form-control" @bind="productoEditar.Stock" />
-                    </div>
-                    <div class="mb-2">
-                        <label>Categoría</label>
-                        <select class="form-control" @bind="productoEditar.CategoriaProductoId">
-                            <option value="">-- Seleccionar --</option>
-                            @foreach (var cat in categorias)
-                            {
-                                <option value="@cat.Id">@cat.Nombre</option>
-                            }
-                        </select>
-                    </div>
-                    <div class="mb-2">
-                        <label>Estado</label>
-                        <select class="form-control" @bind="productoEditar.EstadoId">
-                            <option value="">-- Seleccionar --</option>
-                            @foreach (var estado in estados)
-                            {
-                                <option value="@estado.Id">@estado.Nombre</option>
-                            }
-                        </select>
-                    </div>
-                    <div class="mb-3 form-check form-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" id="tieneInsumosSwitch" @bind="productoEditar.TieneInsumos" />
-                        <label class="form-check-label" for="tieneInsumosSwitch">¿Tiene insumos?</label>
-                    </div>
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            <!-- Estado -->
+                            <div class="input-group input-group-static mb-3">
+                                <label>Estado:</label>
+                                <select class="form-control" @bind="productoEditar.EstadoId"
+                                        onfocus="focused(this)" onfocusout="defocused(this)">
+                                    <option value="">-- Seleccionar --</option>
+                                    @foreach (var estado in estados)
+                                    {
+                                        <option value="@estado.Id">@estado.Nombre</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <!-- Tiene insumos -->
+                            <div class="form-check form-switch mt-3">
+                                <input class="form-check-input" type="checkbox" role="switch" id="tieneInsumosSwitch"
+                                       @bind="productoEditar.TieneInsumos" />
+                                <label class="form-check-label" for="tieneInsumosSwitch">¿Tiene insumos?</label>
+                            </div>
+                        </div>
+                    </div>           
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" @onclick="CerrarModal">Cancelar</button>
-                    <button class="btn btn-primary" @onclick="GuardarProducto">Guardar</button>
+                    <button type="button" class="btn bg-gradient-secondary" @onclick="CerrarModal" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" @onclick="GuardarProducto" data-bs-dismiss="modal">Guardar</button>
                 </div>
             </div>
         </div>
     </div>
+
 }
 @code {
     List<ProductoViewModel> productos = new();
     ProductoViewModel productoEditar = new();
     List<CategoriaProductoViewModel> categorias = new();
+    List<SubcategoriaProductoViewModel> subCategorias = new();
     List<EstadoProductoViewModel> estados = new();
     bool mostrarModal = false;
 
@@ -243,6 +307,7 @@ else
         await CargarCategorias();
         await CargarEstados();
         await CargarProductos();
+        await CargarSubCategorias();
     }
 
     async Task CargarProductos()
@@ -254,6 +319,10 @@ else
     async Task CargarCategorias()
     {
         categorias = await ProductoService.GetCategoriasProductosAsync(); // asegurate que ProductoService tenga este método
+    }
+    async Task CargarSubCategorias()
+    {
+        subCategorias = await SubcategoriaProductoService.GetSubCategoriasProductosAsync(); // asegurate que ProductoService tenga este método
     }
     async Task CargarEstados()
     {
@@ -276,11 +345,19 @@ else
                 Precio = p.Precio,
                 Stock = p.Stock,
                 CategoriaProductoId = p.CategoriaProductoId,
+                SubcategoriaProductoId = p.SubcategoriaProductoId,
                 EstadoId = p.EstadoId,
-                TieneInsumos = p.TieneInsumos                
+                TieneInsumos = p.TieneInsumos
             };
+
+        // Filtra las subcategorías según la categoría actual
+        subCategoriasFiltradas = subCategorias
+            .Where(s => s.CategoriaId == productoEditar.CategoriaProductoId)
+            .ToList();
+
         mostrarModal = true;
     }
+
 
     void CerrarModal()
     {
@@ -428,6 +505,56 @@ else
         {
             // Manejar el caso en el que no se pudo eliminar
             Console.WriteLine("No se pudo eliminar el insumo.");
+        }
+    }
+
+    List<SubcategoriaProductoViewModel> subCategoriasFiltradas = new();
+
+    async Task CategoriaCambiada(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out int categoriaId))
+        {
+            // Filtra las subcategorías según la categoría seleccionada
+            subCategoriasFiltradas = subCategorias
+                .Where(s => s.CategoriaId == categoriaId)
+                .ToList();
+
+            // Si la subcategoría actual no pertenece a esta categoría, la limpiamos
+            if (!subCategoriasFiltradas.Any(s => s.Id == productoEditar.SubcategoriaProductoId))
+            {
+                productoEditar.SubcategoriaProductoId = 0;
+            }
+        }
+        else
+        {
+            subCategoriasFiltradas.Clear();
+            productoEditar.SubcategoriaProductoId = 0;
+        }
+    }
+    int? CategoriaSeleccionada
+    {
+        get => productoEditar.CategoriaProductoId ?? 0;
+        set
+        {
+            productoEditar.CategoriaProductoId = value;
+
+            // Filtra subcategorías solo si hay valor
+            if (value.HasValue)
+            {
+                subCategoriasFiltradas = subCategorias
+                    .Where(s => s.CategoriaId == value.Value)
+                    .ToList();
+
+                if (!subCategoriasFiltradas.Any(s => s.Id == productoEditar.SubcategoriaProductoId))
+                {
+                    productoEditar.SubcategoriaProductoId = 0;
+                }
+            }
+            else
+            {
+                subCategoriasFiltradas.Clear();
+                productoEditar.SubcategoriaProductoId = 0;
+            }
         }
     }
 

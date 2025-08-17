@@ -31,7 +31,8 @@
 
     <!-- ✅ DataTables CSS + Botones -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css" />.
+    
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -70,9 +71,12 @@
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
     <link href="_content/Syncfusion.Blazor/styles/bootstrap5.css" rel="stylesheet" />
     <script src="_content/Syncfusion.Blazor/scripts/sf-blazor.min.js"></script>
+    <!-- ✅ Tocket impresion -->
+    <script src="../js/Print.js"></script>
+    <link href="../css/imprimir.css" rel="stylesheet" />
     <!-- ✅ Funciones globales JS -->
-    <script>
 
+    <script>
         window.mostrarModal = (selector) => {
             var myModal = new bootstrap.Modal(document.querySelector(selector));
             myModal.show();
@@ -85,7 +89,6 @@
                 modalInstance.hide();
             }
         };
-
         window.initDataTableConBotones = (idTabla) => {
             const table = $('#' + idTabla).DataTable({
                 destroy: true,
@@ -114,7 +117,6 @@
                 select.size = select.options.length > 5 ? 5 : select.options.length; // mostrar hasta 5
             }
         };
-
         window.resetSelectSize = function (id) {
             const select = document.getElementById(id);
             if (select) {
@@ -151,7 +153,6 @@
                 });
             }, 500); // pequeño delay para que el DOM esté actualizado
         };
-
         window.registrarInstanciaBlazor = (dotNetHelper) => {
             window.dotNetBlazorHelper = dotNetHelper;
         };
@@ -191,8 +192,6 @@
                 }
             });
         };
-
-
         window.destroyDataTable = (idTabla) => {
             const selector = $('#' + idTabla);
             if ($.fn.DataTable.isDataTable(selector)) {
@@ -200,8 +199,6 @@
                 console.log("DataTable destruido:", idTabla);
             }
         };
-
-
         window.initializeDataTableCuandoTengaFilas = (idTabla) => {
             const tabla = document.getElementById(idTabla);
             if (!tabla) return;
@@ -234,6 +231,7 @@
             });
             console.log("Observando tbody hasta que se carguen filas...");
         };
+   
     </script>
 </body>
 

@@ -10,6 +10,8 @@
         public DateTime? FechaCreacion { get; set; }
         public int? CategoriaProductoId { get; set; }
         public string CategoriaProductoNombre { get; set; }
+        public int? SubcategoriaProductoId { get; set; }
+        public string? SubcategoriaProductoNombre { get; set; }
         public int? EstadoId { get; set; }
         public string EstadoNombre { get; set; }
         public int? InsumoId { get; set; }

@@ -44,6 +44,10 @@ namespace LoDeFran.Frontend.Services
         {
             return await _http.GetFromJsonAsync<List<CategoriaProductoViewModel>>("CategoriasProductos") ?? new();
         }
+        public async Task<List<CategoriaProductoViewModel>> GetSubCategoriasProductosAsync()
+        {
+            return await _http.GetFromJsonAsync<List<CategoriaProductoViewModel>>("CategoriasProductos") ?? new();
+        }
         public async Task<List<EstadoProductoViewModel>> GetEstadosProductosAsync()
         {
             return await _http.GetFromJsonAsync<List<EstadoProductoViewModel>>("EstadosProductos") ?? new();

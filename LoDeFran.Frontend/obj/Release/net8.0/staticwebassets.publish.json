@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "IoH3YuS3WCzf9aWKV2yBp4El/qOleJHBs7bCyQHDlxA=",
+  "Hash": "VqGwd6TZt+F1AFKp3aONnb6ewH9F9o+do5421HqqjoM=",
   "Source": "LoDeFran.Frontend",
   "BasePath": "/",
   "Mode": "Root",
@@ -11569,6 +11569,25 @@
       "OriginalItemSpec": "wwwroot\\assets\\img\\office-dark.jpg"
     },
     {
+      "Identity": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\assets\\img\\pizzas\\pizza-pepperoni.png",
+      "SourceId": "LoDeFran.Frontend",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\",
+      "BasePath": "/",
+      "RelativePath": "assets/img/pizzas/pizza-pepperoni.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\assets\\img\\pizzas\\pizza-pepperoni.png"
+    },
+    {
       "Identity": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\assets\\img\\product-12.jpg",
       "SourceId": "LoDeFran.Frontend",
       "SourceType": "Discovered",
@@ -16547,6 +16566,25 @@
       "OriginalItemSpec": "wwwroot\\css\\bootstrap\\bootstrap.min.css.map"
     },
     {
+      "Identity": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\css\\imprimir.css",
+      "SourceId": "LoDeFran.Frontend",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\",
+      "BasePath": "/",
+      "RelativePath": "css/imprimir.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\imprimir.css"
+    },
+    {
       "Identity": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\css\\PedidoMesa.css",
       "SourceId": "LoDeFran.Frontend",
       "SourceType": "Discovered",
@@ -16640,6 +16678,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\js\\LoDeFran.Frontend.styles.js"
+    },
+    {
+      "Identity": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\js\\Print.js",
+      "SourceId": "LoDeFran.Frontend",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\",
+      "BasePath": "/",
+      "RelativePath": "js/Print.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\Print.js"
     },
     {
       "Identity": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\sample-data\\weather.json",

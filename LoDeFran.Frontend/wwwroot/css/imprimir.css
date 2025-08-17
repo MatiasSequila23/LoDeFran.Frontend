@@ -1,0 +1,11 @@
+﻿
+@media print {
+    @page {
+        margin: 0; /* Chrome respeta esto parcialmente */
+    }
+
+    body {
+        margin: 0;
+    }
+}
+

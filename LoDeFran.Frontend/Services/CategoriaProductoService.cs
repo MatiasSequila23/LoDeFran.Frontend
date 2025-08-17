@@ -39,5 +39,10 @@ namespace LoDeFran.Frontend.Services
             var response = await _http.DeleteAsync($"Productos/{id}");
             return response.IsSuccessStatusCode;
         }
+
+        public async Task<List<CategoriaProductoViewModel>> GetMenuAsync()
+        {
+            return await _http.GetFromJsonAsync<List<CategoriaProductoViewModel>>($"CategoriasProductos/menu") ?? new();
+        }
     }
 }

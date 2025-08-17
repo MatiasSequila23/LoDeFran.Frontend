@@ -44,6 +44,7 @@ builder.Services.AddScoped<PromocionAplicacionService>();
 builder.Services.AddScoped<PromocionService>();
 builder.Services.AddScoped<ProveedorService>();
 builder.Services.AddScoped<ServicioDeMesaService>();
+builder.Services.AddScoped<SubcategoriaProductoService>();
 builder.Services.AddScoped<TipoDescuentoService>();
 builder.Services.AddScoped<UnidadMedidaService>();
 builder.Services.AddScoped<UsuarioService>();

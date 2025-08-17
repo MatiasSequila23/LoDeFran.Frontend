@@ -1,16 +1,11 @@
 ﻿@page "/mesa/mesas"
 @layout LayoutMesasSalon
-
 @inject Services.ServicioDeMesaService ServicioDeMesaService
 @inject Services.ClienteService ClienteService
 @inject Services.MesaService MesaService
 @inject Services.PedidoService PedidoService
 @inject Services.UsuarioService UsuarioService
 @inject Services.DetallePedidoServicie DetallePedidoServicie
-
-
-
-
 @inject NavigationManager Nav
 @inject IJSRuntime JS
 @using LoDeFran.Frontend.Models
@@ -349,9 +344,66 @@ else
                         }
                         else if (EstadoPedidoActualId == (int)Enums.EstadoPedido.Entregado)
                         {
-                            <button class="btn btn-warning w-100 mb-2" @onclick="() => CambiarEstado(PedidoActual.Id, Enums.EstadoPedido.A_Cobrar)">
+                            <button class="btn btn-warning w-100 mb-2" @onclick="() => GenererPreCuenta(PedidoActual.Id, Enums.EstadoPedido.A_Cobrar)">
                                 <i class="bi bi-cash-coin me-1"></i> Generar Cuenta
                             </button>
+
+
+                            <!-- Contenido oculto del ticket -->
+                            <div style="display:none">
+                                <div id="ticket-precuenta">
+                                    <h3>🧾 Cuenta</h3>
+                                    <p>
+                                        <strong>Pedido:</strong> #@PedidoActual.Id <br />
+
+                                        @* Solo salón muestra mesa y mozo *@
+                                        @if (PedidoActual.TipoPedidoId == 1 && PedidoActual.Mesa != null)
+                                        {
+                                            <span><strong>Mesa:</strong> @PedidoActual.Mesa.Numero</span>
+
+                                            <br />
+                                            <span><strong>Mozo:</strong> @PedidoActual.NombreMozo</span>
+
+                                            <br />
+                                        }
+
+                                        <span><strong>Hora:</strong> @PedidoActual.FechaPedido?.ToString("HH:mm")</span><br />
+                                    </p>
+
+                                    <hr />
+
+                                    <ul style="list-style-type:none; padding:0; margin:0;">
+                                        @foreach (var item in PedidoActual.DetallePedido)
+                                        {
+                                            <li style="margin-bottom:6px;">
+                                                <span>@item.Cantidad x @item.Producto.Nombre</span>
+                                                <span>$ @((item.PrecioUnitario * item.Cantidad).ToString("N2"))</span>
+                                            </li>
+                                        }
+
+                                        @if (PedidoActual.PedidoCombos.Any())
+                                        {
+                                            <li>
+                                                <strong>Combos:</strong>
+                                                <ul style="list-style-type:circle; padding-left:15px;">
+                                                    @foreach (var combo in PedidoActual.PedidoCombos)
+                                                    {
+                                                        <li>@combo.Nombre (x@combo.Cantidad) - 💲 @(combo.Precio.ToString("N2"))</li>
+                                                    }
+                                                </ul>
+                                            </li>
+                                        }
+                                    </ul>
+
+                                    <hr />
+                                    <h4>Total: $ @PedidoActual.Total</h4>
+                                </div>
+                            </div>
+
+                            <!-- Iframe oculto para impresión -->
+                            <div style="display:none">
+                                <iframe id="print-frame"></iframe>
+                            </div>
                         }
                     }
                     else
@@ -368,6 +420,9 @@ else
 
  
 }
+
+
+
 
 @code {
     private List<PisoViewModel> Pisos = new();
@@ -498,6 +553,15 @@ else
         await ServicioDeMesaService.CambiarEstadoPedidoAsync(idPedido, nuevoEstado);
         PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorIdAsync(PedidoActual.Id);
         CerrarModal(); // opcional
+    }
+    private async Task GenererPreCuenta(int idPedido, Enums.EstadoPedido nuevoEstado)
+    {
+        await ServicioDeMesaService.CambiarEstadoPedidoAsync(idPedido, nuevoEstado);
+        PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorIdAsync(PedidoActual.Id);
+        CerrarModal(); // opcional
+
+        var html = await JS.InvokeAsync<string>("eval", "document.getElementById('ticket-precuenta').outerHTML");
+        await JS.InvokeVoidAsync("printIframe", html);
     }
 
     private void CerrarModal()

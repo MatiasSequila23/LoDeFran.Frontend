@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "LoDeFran.Frontend",
   "resources": {
-    "hash": "sha256-aA94B44mwK8jsYsNQnpzcQThS5hJBKU0wdI+5Lmv1T8=",
+    "hash": "sha256-wqEAakUmhP8UxUmeVOYE9XImnmQb+aOSNso/Vn6/HqM=",
     "jsModuleNative": {
       "dotnet.native.8.0.15.0qjy47vhex.js": "sha256-ftpNqtARtVNE8ku5eB/jXoklb41UQ+EutUHfwmbNTBY="
     },
@@ -19,7 +19,7 @@
     "assembly": {
       "Azure.Core.wasm": "sha256-cUx0yT4TBboCr8yulFrimAvC9ecu4FtrhfEZ7T8ragU=",
       "Azure.Identity.wasm": "sha256-wxR1E0zJLWYxnckYUOXZsbZoUjCYCwgg3aYbYbCLaGo=",
-      "LoDeFran.Frontend.wasm": "sha256-B55al9g+MgbzxrM5JDDqnkryvLCzTyHH5iIQcZzhZMo=",
+      "LoDeFran.Frontend.wasm": "sha256-bTEnHRxD952PHHWW2DaPsQmqDlSB2ZCY+vF1JfomXdQ=",
       "Microsoft.AspNetCore.Components.Forms.wasm": "sha256-XiYcbYgDe7FI63UjglO32kgL/PPrr6N2VRqEDPZZ/2k=",
       "Microsoft.AspNetCore.Components.wasm": "sha256-GVpEachG0yjb/Ya7YfQarxx6izIZKJtGZpd33I3K3xM=",
       "Microsoft.AspNetCore.Components.Web.wasm": "sha256-b+SJFDmeZpd3Ox3UEqU3z+80FQREJ+q+6mr3ObW5sUs=",
