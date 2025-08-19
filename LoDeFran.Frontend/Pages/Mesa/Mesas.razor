@@ -347,17 +347,23 @@ else
                             <button class="btn btn-warning w-100 mb-2" @onclick="() => GenererPreCuenta(PedidoActual.Id, Enums.EstadoPedido.A_Cobrar)">
                                 <i class="bi bi-cash-coin me-1"></i> Generar Cuenta
                             </button>
-
-
                             <!-- Contenido oculto del ticket -->
                             <div style="display:none">
-                                <div id="ticket-precuenta">
-                                    <h3>🧾 Cuenta</h3>
-                                    <p>
-                                        <strong>Pedido:</strong> #@PedidoActual.Id <br />
+                                <div id="ticket-precuenta" style="font-family: monospace; width:260px;">
 
+                                    <!-- Nombre / Logo del local -->
+                                    <h3 style="text-align:center; margin:0;">🍴 Bar-Pizzería Lo De Fran</h3>
+                                    <p style="text-align:center; font-size:11px; margin:0;">
+                                        📞 Tel: 011-1234-5678<br />
+                                        📍 Potosi 3800
+                                    </p>
+
+                                    <h4 style="text-align:center; margin:4px 0;">🧾 Cuenta</h4>
+
+                                    <!-- Datos de pedido -->
+                                    <p style="margin:0; font-size:12px;">
                                         @* Solo salón muestra mesa y mozo *@
-                                        @if (PedidoActual.TipoPedidoId == 1 && PedidoActual.Mesa != null)
+                                        @if (PedidoActual?.TipoPedidoId == 1 && PedidoActual.Mesa != null)
                                         {
                                             <span><strong>Mesa:</strong> @PedidoActual.Mesa.Numero</span>
 
@@ -367,15 +373,16 @@ else
                                             <br />
                                         }
 
-                                        <span><strong>Hora:</strong> @PedidoActual.FechaPedido?.ToString("HH:mm")</span><br />
+                                        <span><strong>Fecha y hora:</strong> @PedidoActual?.FechaPedido?.ToString("dd/MM/yyyy HH:mm")</span><br />
                                     </p>
 
                                     <hr />
 
+                                    <!-- Detalle de productos y combos -->
                                     <ul style="list-style-type:none; padding:0; margin:0;">
                                         @foreach (var item in PedidoActual.DetallePedido)
                                         {
-                                            <li style="margin-bottom:6px;">
+                                            <li style="margin-bottom:6px; display:flex; justify-content:space-between;">
                                                 <span>@item.Cantidad x @item.Producto.Nombre</span>
                                                 <span>$ @((item.PrecioUnitario * item.Cantidad).ToString("N2"))</span>
                                             </li>
@@ -385,10 +392,13 @@ else
                                         {
                                             <li>
                                                 <strong>Combos:</strong>
-                                                <ul style="list-style-type:circle; padding-left:15px;">
+                                                <ul style="list-style-type:none; padding-left:10px; margin-top:4px;">
                                                     @foreach (var combo in PedidoActual.PedidoCombos)
                                                     {
-                                                        <li>@combo.Nombre (x@combo.Cantidad) - 💲 @(combo.Precio.ToString("N2"))</li>
+                                                        <li style="display:flex; justify-content:space-between;">
+                                                            <span>@combo.Cantidad x @combo.Nombre</span>
+                                                            <span>$ @(combo.Precio.ToString("N2"))</span>
+                                                        </li>
                                                     }
                                                 </ul>
                                             </li>
@@ -396,10 +406,35 @@ else
                                     </ul>
 
                                     <hr />
-                                    <h4>Total: $ @PedidoActual.Total</h4>
+
+                                    <!-- Totales -->
+                                    @{
+                                        var subtotal = PedidoActual.DetallePedido.Sum(x => x.Cantidad * x.PrecioUnitario) +
+                                        PedidoActual.PedidoCombos.Sum(c => c.Cantidad * c.Precio);
+                                        var descuento = PedidoActual.MontoDescuento;
+                                        var total = subtotal - (descuento ?? 0);
+                                    }
+
+                                    <p style="display:flex; justify-content:space-between; margin:2px 0;">
+                                        <strong>Subtotal:</strong> <span>$ @subtotal.ToString("N2")</span>
+                                    </p>
+                                    <p style="display:flex; justify-content:space-between; margin:2px 0;">
+                                        <strong>Descuento:</strong> <span>$ @(descuento?.ToString("N2") ?? "0,00")</span>
+                                    </p>
+                                    <p style="display:flex; justify-content:space-between; margin:4px 0; font-size:14px;">
+                                        <strong>Total:</strong> <span>$ @total.ToString("N2")</span>
+                                    </p>
+
+                                    <hr />
+
+                                    <!-- Leyenda y mensaje de cortesía -->
+                                    <p style="text-align:center; font-size:11px; margin-top:4px;">
+                                        Propina no incluida, se recomienda dejar 10%<br />
+                                        ¡Gracias por elegirnos!<br />
+                                        *** Documento no válido como factura ***
+                                    </p>
                                 </div>
                             </div>
-
                             <!-- Iframe oculto para impresión -->
                             <div style="display:none">
                                 <iframe id="print-frame"></iframe>
@@ -416,13 +451,8 @@ else
                 </div>
             </div>
         </div>
-    </div>
-
- 
+    </div> 
 }
-
-
-
 
 @code {
     private List<PisoViewModel> Pisos = new();
@@ -434,7 +464,7 @@ else
     private bool PedidoIniciado = false;
     private string? ErrorMensaje;
     private int? EstadoPedidoActualId => PedidoActual?.EstadoId;
-
+    private decimal descuento { get; set; } = 0m;
 
 
     private string _busquedaCliente = "";
