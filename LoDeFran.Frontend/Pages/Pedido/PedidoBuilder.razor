@@ -4,6 +4,7 @@
 @inject Services.PedidoService PedidoService
 @inject Services.PromocionService PromocionService
 @inject Services.DetallePedidoServicie DetallePedidoServicie
+@inject Services.ClienteService ClienteService
 
 @inject IJSRuntime JS
 @using System.Globalization
@@ -228,9 +229,106 @@ else
 
 
 }
+<div class="modal fade" id="modalAsignarCliente" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Asignar Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input class="form-control mb-2" placeholder="Buscar cliente (teléfono, email, calle...)" @bind="BusquedaCliente" @bind:event="oninput" />
+
+                @if (ClientesEncontrados.Any())
+                {
+                    <select class="form-select" @bind="ClienteSeleccionadoId">
+                        <option value="">-- Seleccionar cliente --</option>
+                        @foreach (var cliente in ClientesEncontrados)
+                        {
+                            <option value="@cliente.Id">@cliente.Nombre @cliente.Apellido - @cliente.Telefono</option>
+                        }
+                    </select>
+                }
+
+                <hr />
+                <h6>O crear nuevo cliente:</h6>
+                <input class="form-control mb-2" placeholder="Nombre" @bind="NuevoCliente.Nombre" />
+                <input class="form-control mb-2" placeholder="Apellido" @bind="NuevoCliente.Apellido" />
+                <input class="form-control mb-2" placeholder="Teléfono" @bind="NuevoCliente.Telefono" />
+                <input class="form-control mb-2" placeholder="Email" @bind="NuevoCliente.Email" />
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-success" @onclick="AsignarOCrearCliente">Guardar Cliente</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @code {
     [Parameter] public int idPedido { get; set; }
+
+    private PedidoViewModel nuevoPedido = new();
+    private List<PedidoViewModel> Pedidos = new();
+    private string? mensajeExito;
+    private string _busquedaCliente = "";
+    Guid claveTabla = Guid.NewGuid();
+
+    private string BusquedaCliente
+    {
+        get => _busquedaCliente;
+        set
+        {
+            if (_busquedaCliente != value)
+            {
+                _busquedaCliente = value;
+                _ = BuscarClienteAutomaticamente();
+            }
+        }
+    }
+    private async Task BuscarClienteAutomaticamente()
+    {
+        if (BusquedaCliente.Trim().Length >= 3)
+        {
+            ClientesEncontrados = await ServicioDeMesaService.BuscarClientesAsync(BusquedaCliente.Trim());
+            BuscoCliente = true;
+            StateHasChanged();
+        }
+        else
+        {
+            ClientesEncontrados.Clear();
+            BuscoCliente = false;
+        }
+    }
+    private async Task AsignarOCrearCliente()
+    {
+        int clienteId;
+
+        if (ClienteSeleccionadoId.HasValue)
+        {
+            clienteId = ClienteSeleccionadoId.Value;
+        }
+        else
+        {
+            var clienteCreado = await ClienteService.CrearClienteAsync(NuevoCliente);
+            clienteId = clienteCreado.Id;
+        }
+
+        // asignar cliente al pedido
+        await PedidoService.AsignarClienteAsync(idPedido, clienteId);
+
+        PedidoActual.ClienteId = clienteId;
+        ClienteSeleccionadoId = clienteId;
+
+        await JS.InvokeVoidAsync("cerrarModal", "#modalAsignarCliente");
+    }
+
+    private bool BuscoCliente = false;
+    private List<ClienteViewModel> ClientesEncontrados = new();
+    private int? ClienteSeleccionadoId;
+    private ClienteViewModel NuevoCliente = new();
+    private ClienteViewModel? ClienteSeleccionado;
+    private DotNetObjectReference<PedidoBuilder>? _dotNetRef;
 
     private PedidoViewModel? PedidoActual;
     private List<ProductoViewModel> ProductosDisponibles = new();
@@ -375,7 +473,11 @@ else
         bool confirmacion = await JS.InvokeAsync<bool>("confirm", "¿Seguro que deseas confirmar y enviar el pedido a cocina?");
         if (!confirmacion)
             return;
-
+        if (PedidoActual.ClienteId == null)
+        {
+            // mostrar modal para asignar o crear cliente
+            await JS.InvokeVoidAsync("mostrarModal", "#modalAsignarCliente");
+        }
         foreach (var item in PedidoActual.DetallePedido)
         {
             if (item.EstadoCocinaId == (int)Enums.EstadoDetallePedidoCocina.Pendiente) // O según el nombre real en BD

@@ -114,6 +114,13 @@ namespace LoDeFran.Frontend.Services
                 throw new Exception($"Error al actualizar combo: {error}");
             }
         }
+        public async Task AsignarClienteAsync(int pedidoId, int clienteId)
+        {
+            var dto = new { PedidoId = pedidoId, ClienteId = clienteId };
+            var response = await _http.PostAsJsonAsync("Pedidos/asignar_cliente", dto);
+            response.EnsureSuccessStatusCode();
+        }
+
         public class AgregarComboRequest
         {
             public int ComboId { get; set; }

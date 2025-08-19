@@ -173,20 +173,15 @@ namespace LoDeFran.Frontend.Services
 
             throw new Exception("Error al enviar clienteId.");
         }
-        public async Task<PedidoViewModel> CrearPedidoPorClienteAsync(int clienteId, int tipoPedidoId)
+        public async Task<PedidoViewModel> CrearPedidoPorClienteAsync(int? clienteId, int tipoPedidoId)
         {
-            var dto = new
-            {
-                ClienteId = clienteId,
-                TipoPedidoId = tipoPedidoId
-            };
-
+            var dto = new { ClienteId = clienteId, TipoPedidoId = tipoPedidoId };
             var response = await _http.PostAsJsonAsync("Pedidos/crear_pedido_por_cliente", dto);
             response.EnsureSuccessStatusCode();
-
             return await response.Content.ReadFromJsonAsync<PedidoViewModel>()
                    ?? throw new Exception("La API no devolvió un pedido válido.");
         }
+
         public async Task<List<PedidoViewModel>?> PedidosFueraDeSalon()
         {
             var response = await _http.GetFromJsonAsync<List<PedidoViewModel>>($"Pedidos/no-salon");
