@@ -1,4 +1,178 @@
 ﻿@page "/"
 
-<h3>Home</h3>
+<!-- Nucleo Icons -->
+<link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
+<link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
+<!-- CSS Files -->
+<link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
 
+<div class="container-fluid">
+    <!-- TARJETAS -->
+    <div class="row mt-2">
+        <div class="col">
+            <div class="row">
+                <!-- SALON -->
+                <div class="col-sm-3 mt-md-0 mt-5">
+                    <div class="card h-100">
+                        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                            <div class="bg-gradient-dark shadow-dark border-radius-lg py-2 pe-1 d-flex align-items-center text-center">
+                                <a href="mesa/mesasAdmin" class="mx-auto my-3">
+                                    <i class="material-symbols-rounded text-white text-xl mb-1">restaurant</i>
+                                    <h6 class="text-white font-weight-normal"> Salón </h6>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body text-center">
+                            <p class="mb-0 text-sm">Gestiona pedidos y reservas dentro del salón.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DELIVERY -->
+                <div class="col-sm-3 mt-md-0 mt-5">
+                    <div class="card h-100">
+                        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                            <div class="bg-gradient-primary shadow-primary border-radius-lg py-2 pe-1 d-flex align-items-center text-center">
+                                <a href="pedido/pedidodelivery" class="mx-auto my-3">
+                                    <i class="material-symbols-rounded text-white text-xl mb-1">local_shipping</i>
+                                    <h6 class="text-white font-weight-normal"> Delivery </h6>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body text-center">
+                            <p class="mb-0 text-sm">Administra pedidos para entrega a domicilio.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MOSTRADOR -->
+                <div class="col-sm-3 mt-md-0 mt-5">
+                    <div class="card h-100">
+                        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                            <div class="bg-gradient-success shadow-success border-radius-lg py-2 pe-1 d-flex align-items-center text-center">
+                                <a href="pedido/PedidoMostrador" class="mx-auto my-3">
+                                    <i class="material-symbols-rounded text-white text-xl mb-1">storefront</i>
+                                    <h6 class="text-white font-weight-normal"> Mostrador </h6>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body text-center">
+                            <p class="mb-0 text-sm">Controla pedidos para retiro en el local.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COCINA -->
+                <div class="col-sm-3 mt-md-0 mt-5">
+                    <div class="card h-100">
+                        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                            <div class="bg-gradient-danger shadow-danger border-radius-lg py-2 pe-1 d-flex align-items-center text-center">
+                                <a href="Cocina/Preparacion" class="mx-auto my-3">
+                                    <i class="material-symbols-rounded text-white text-xl mb-1">soup_kitchen</i>
+                                    <h6 class="text-white font-weight-normal"> Cocina </h6>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body text-center">
+                            <p class="mb-0 text-sm">Visualiza y organiza pedidos en preparación.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GRAFICOS -->
+    <div class="row">
+        <!-- Ventas semanales -->
+        <div class="col-lg-4 col-md-6 mt-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="mb-0">Ventas semanales por categoría</h6>
+                    <p class="text-sm">Comparación entre productos</p>
+                    <div class="chart">
+                        <canvas id="chart-bars" class="chart-canvas" height="170"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Evolución mensual -->
+        <div class="col-lg-4 col-md-6 mt-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="mb-0">Evolución mensual de ventas</h6>
+                    <p class="text-sm">Totales en pesos</p>
+                    <div class="chart">
+                        <canvas id="chart-line" class="chart-canvas" height="170"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Participación -->
+        <div class="col-lg-4 mt-4 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="mb-0">Participación por producto</h6>
+                    <p class="text-sm">Distribución porcentual</p>
+                    <div class="chart">
+                        <canvas id="chart-line-tasks" class="chart-canvas" height="170"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--   Core JS Files   -->
+<script src="../assets/js/plugins/chartjs.min.js"></script>
+
+<script>
+    // Ventas semanales por categoría
+    new Chart(document.getElementById("chart-bars"), {
+        type: "bar",
+        data: {
+            labels: ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"],
+            datasets: [
+                { label: "Pizzas", backgroundColor: "#e53935", data: [40, 35, 50, 65, 80, 120, 150] },
+                { label: "Cervezas", backgroundColor: "#1e88e5", data: [60, 55, 70, 90, 110, 200, 250] },
+                { label: "Hamburguesas", backgroundColor: "#43a047", data: [30, 25, 40, 55, 70, 100, 130] },
+                { label: "Café", backgroundColor: "#6d4c41", data: [50, 60, 55, 70, 65, 90, 110] },
+                { label: "Picadas", backgroundColor: "#fdd835", data: [10, 15, 20, 25, 30, 40, 50] }
+            ]
+        },
+        options: { responsive: true, plugins: { legend: { position: "bottom" } } }
+    });
+
+    // Evolución mensual
+    new Chart(document.getElementById("chart-line"), {
+        type: "line",
+        data: {
+            labels: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago"],
+            datasets: [{
+                label: "Ventas Totales ($)",
+                data: [1200, 1800, 1500, 2200, 2500, 2700, 3000, 3500],
+                borderColor: "#43A047",
+                backgroundColor: "rgba(67,160,71,0.2)",
+                borderWidth: 2,
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: { responsive: true, plugins: { legend: { display: true } } }
+    });
+
+    // Participación
+    new Chart(document.getElementById("chart-line-tasks"), {
+        type: "doughnut",
+        data: {
+            labels: ["Pizzas", "Cervezas", "Hamburguesas", "Café", "Picadas"],
+            datasets: [{
+                data: [35, 25, 20, 10, 10],
+                backgroundColor: ["#e53935", "#1e88e5", "#43a047", "#6d4c41", "#fdd835"]
+            }]
+        },
+        options: { responsive: true, plugins: { legend: { position: "bottom" } } }
+    });
+</script>

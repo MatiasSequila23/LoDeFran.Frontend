@@ -21,7 +21,7 @@
     <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
     <link rel="icon" type="image/png" href="../assets/img/favicon.png">
     <title>
-        Material Dashboard 3 by Creative Tim
+        Bar Pizzeria LoDeFran
     </title>
     <base href="/" />
 
@@ -31,7 +31,9 @@
 
     <!-- ✅ DataTables CSS + Botones -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css" />.
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css" />
+
+    <link href="../sweetalert2/sweetalert2.min.css" rel="stylesheet" />
     
 </head>
 
@@ -76,6 +78,8 @@
     <link href="../css/imprimir.css" rel="stylesheet" />
     <!-- ✅ Funciones globales JS -->
 
+    <script src="../sweetalert2/sweetalert2.all.min.js"></script>
+    <script src="../js/LoDeFran.js"></script>
     <script>
         window.mostrarModal = (selector) => {
             var myModal = new bootstrap.Modal(document.querySelector(selector));
@@ -231,7 +235,21 @@
             });
             console.log("Observando tbody hasta que se carguen filas...");
         };
-   
+        //document.addEventListener("DOMContentLoaded", () => {
+        //    const trigger = document.querySelector('[data-bs-target="#profileExamples"]');
+        //    const collapseEl = document.getElementById('profileExamples');
+
+        //    collapsed.addEventListener('shown.bs.collapse', () => {
+        //        trigger.classList.remove('collapsed');
+        //        trigger.setAttribute('aria-expanded', 'true');
+        //    });
+
+        //    collapsed.addEventListener('hidden.bs.collapse', () => {
+        //        trigger.classList.add('collapsed');
+        //        trigger.setAttribute('aria-expanded', 'false');
+        //    });
+        //});
+
     </script>
 </body>
 

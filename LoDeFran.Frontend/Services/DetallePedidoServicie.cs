@@ -65,5 +65,10 @@ namespace LoDeFran.Frontend.Services
             var response = await _http.PutAsync($"{BaseUrl}/comentarioCombo/{idDetalle}", content);
             return response.IsSuccessStatusCode;
         }
+        public async Task ModificarCantidadConfirmProductoAsync(int idDetalle, int nuevaCantidad)
+        {
+            var response = await _http.PutAsJsonAsync($"DetallesPedidos/detalle/{idDetalle}/cantidad-confirmada", nuevaCantidad);
+            response.EnsureSuccessStatusCode();
+        }
     }
 }

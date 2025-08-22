@@ -69,8 +69,20 @@
       "PackagePath": "staticwebassets\\assets\\fonts\\nucleo.woff2"
     },
     {
+      "Id": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\assets\\img\\Industrial-Bar-Counter.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\Industrial-Bar-Counter.jpg"
+    },
+    {
+      "Id": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\assets\\img\\aerea_obelisco.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\aerea_obelisco.jpg"
+    },
+    {
       "Id": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\assets\\img\\apple-icon.png",
       "PackagePath": "staticwebassets\\assets\\img\\apple-icon.png"
+    },
+    {
+      "Id": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\assets\\img\\baar.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\baar.jpg"
     },
     {
       "Id": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\assets\\img\\bg-pricing.jpg",
@@ -87,6 +99,10 @@
     {
       "Id": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\assets\\img\\bruce-mars.jpg",
       "PackagePath": "staticwebassets\\assets\\img\\bruce-mars.jpg"
+    },
+    {
+      "Id": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\assets\\img\\delivery-moto.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\delivery-moto.jpg"
     },
     {
       "Id": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\assets\\img\\down-arrow-dark.svg",
@@ -249,6 +265,10 @@
       "PackagePath": "staticwebassets\\assets\\img\\meeting.jpg"
     },
     {
+      "Id": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\assets\\img\\motorcycle-delivery.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\motorcycle-delivery.jpg"
+    },
+    {
       "Id": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\assets\\img\\office-dark.jpg",
       "PackagePath": "staticwebassets\\assets\\img\\office-dark.jpg"
     },
@@ -315,6 +335,10 @@
     {
       "Id": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\assets\\img\\small-logos\\logo-xd.svg",
       "PackagePath": "staticwebassets\\assets\\img\\small-logos\\logo-xd.svg"
+    },
+    {
+      "Id": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\assets\\img\\taps-bar.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\taps-bar.jpg"
     },
     {
       "Id": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\assets\\img\\team-1.jpg",
@@ -1329,12 +1353,24 @@
       "PackagePath": "staticwebassets\\js\\LoDeFran.Frontend.styles.js"
     },
     {
+      "Id": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\js\\LoDeFran.js",
+      "PackagePath": "staticwebassets\\js\\LoDeFran.js"
+    },
+    {
       "Id": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\js\\Print.js",
       "PackagePath": "staticwebassets\\js\\Print.js"
     },
     {
       "Id": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\sample-data\\weather.json",
       "PackagePath": "staticwebassets\\sample-data\\weather.json"
+    },
+    {
+      "Id": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\sweetalert2\\sweetalert2.all.min.js",
+      "PackagePath": "staticwebassets\\sweetalert2\\sweetalert2.all.min.js"
+    },
+    {
+      "Id": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\sweetalert2\\sweetalert2.min.css",
+      "PackagePath": "staticwebassets\\sweetalert2\\sweetalert2.min.css"
     },
     {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.LoDeFran.Frontend.Microsoft.AspNetCore.StaticWebAssets.props",
