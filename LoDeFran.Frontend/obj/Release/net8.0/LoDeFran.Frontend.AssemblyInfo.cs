@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LoDeFran.Frontend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5d14f3662aca111f2bf4844bbd6c533d944a8a28")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f5a154612eca8e95b49ff366d94d249a3decd394")]
 [assembly: System.Reflection.AssemblyProductAttribute("LoDeFran.Frontend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LoDeFran.Frontend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

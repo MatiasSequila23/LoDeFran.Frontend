@@ -14,52 +14,52 @@
 @using LoDeFran.Frontend.Utlis
 
 <style>
-   /* Círculo leyenda más grande */
-.color-circulo {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-}
+    /* Círculo leyenda más grande */
+    .color-circulo {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+    }
 
-/* Botones mesas */
-.mesa-icon {
-    border-radius: 0.5rem;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    cursor: pointer;
-    font-size: 1.25rem;
-    min-width: 90px;
-    min-height: 90px;
-    transition: background-color 0.3s ease;
-}
+    /* Botones mesas */
+    .mesa-icon {
+        border-radius: 0.5rem;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        cursor: pointer;
+        font-size: 1.25rem;
+        min-width: 90px;
+        min-height: 90px;
+        transition: background-color 0.3s ease;
+    }
 
-.mesa-icon:active {
-    background-color: #e2e6ea;
-}
+        .mesa-icon:active {
+            background-color: #e2e6ea;
+        }
 
-/* SVG colores */
-.mesa-svg.svg-verde {
-    fill: #28a745;
-}
+    /* SVG colores */
+    .mesa-svg.svg-verde {
+        fill: #28a745;
+    }
 
-.mesa-svg.svg-amarillo {
-    fill: #ffc107;
-}
+    .mesa-svg.svg-amarillo {
+        fill: #ffc107;
+    }
 
-.mesa-svg.svg-rojo {
-    fill: #dc3545;
-}
+    .mesa-svg.svg-rojo {
+        fill: #dc3545;
+    }
 
-.mesa-svg.svg-gris {
-    fill: #6c757d;
-}
+    .mesa-svg.svg-gris {
+        fill: #6c757d;
+    }
 
-/* Más espacio en botones de piso */
-.btn-group > button {
-    min-width: 80px;
-    min-height: 48px;
-    font-size: 1.2rem;
-}
+    /* Más espacio en botones de piso */
+    .btn-group > button {
+        min-width: 80px;
+        min-height: 48px;
+        font-size: 1.2rem;
+    }
 
     .btn-mesa-libre {
         background-color: #28a745; /* verde */
@@ -83,7 +83,7 @@
         fill: currentColor; /* para que tome el color de texto del botón */
     }
 
-/* Evitar hover innecesario */
+    /* Evitar hover innecesario */
 
 
 </style>
@@ -148,20 +148,20 @@
 
         </div>
         @* <div class="col-12 col-md-auto">
-            <div class="d-flex flex-wrap justify-content-start gap-4 mt-3 mt-md-0" style="font-size: 1.1rem;">
-                <div class="d-flex align-items-center gap-2">
-                    <div class="color-circulo bg-success"></div><span>Libre</span>
-                </div>
-                <div class="d-flex align-items-center gap-2">
-                    <div class="color-circulo bg-warning"></div><span>Ocupada</span>
-                </div>
-                <div class="d-flex align-items-center gap-2">
-                    <div class="color-circulo bg-danger"></div><span>Reservada</span>
-                </div>
-            </div>
+    <div class="d-flex flex-wrap justify-content-start gap-4 mt-3 mt-md-0" style="font-size: 1.1rem;">
+    <div class="d-flex align-items-center gap-2">
+    <div class="color-circulo bg-success"></div><span>Libre</span>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+    <div class="color-circulo bg-warning"></div><span>Ocupada</span>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+    <div class="color-circulo bg-danger"></div><span>Reservada</span>
+    </div>
+    </div>
 
 
-        </div> *@
+    </div> *@
     </div>
 
     <div class="mesas-grid mt-3">
@@ -216,16 +216,11 @@ else
                             <i class="bi bi-grid-3x3-gap-fill text-primary"></i>
                             Detalle Mesa @MesaSeleccionada.Numero
                         </h5>
-
-                       
                     </div>
-
-
-                   
-
-                    <button type="button" class="btn-close" @onclick="CerrarModal"></button>
+                    <button type="button" class="btn-close text-dark" @onclick="CerrarModal" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-
                 <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
                     <div class="row g-3">
                         @if (PedidoActual?.ClienteId != null && ClienteSeleccionado != null)
@@ -248,7 +243,6 @@ else
                                 </div>
                             </div>
                         }
-
                         <!-- Estado (fuera del if) -->
                         <div class="d-flex justify-content-center mt-2">
                             <div class="badge bg-info text-white small d-flex align-items-center px-3 py-2">
@@ -260,69 +254,145 @@ else
                                     )
                             </div>
                         </div>
+                        <!-- TABS -->
+                        <ul class="nav nav-tabs nav-fill w-100 mb-3" id="pedidoTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="tab-mozos"
+                                        data-bs-toggle="tab" data-bs-target="#pane-mozos"
+                                        type="button" role="tab">
+                                    <i class="fas fa-user-tie me-1"></i> Mozos
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="tab-clientes"
+                                        data-bs-toggle="tab" data-bs-target="#pane-clientes"
+                                        type="button" role="tab">
+                                    <i class="fas fa-users me-1"></i> Clientes
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="tab-detalle"
+                                        data-bs-toggle="tab" data-bs-target="#pane-detalle"
+                                        type="button" role="tab">
+                                    <i class="fas fa-info-circle me-1"></i> Detalle Cliente
+                                </button>
+                            </li>
+                        </ul>
 
-                        <div class="d-flex flex-wrap justify-content-center gap-3">
-                            @foreach (var mozo in Mozos)
-                            {
-                                <div class="card"
-                                     style="width: 250px; cursor: pointer;"
-                                     @onclick="() => SeleccionarMozo(mozo.Id)">
-                                    <div class="card-header p-3">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <p class="text-sm mb-0 text-capitalize">Mozo</p>
-                                                <h4 class="mb-0" style="color:@(MozoSeleccionadoId == mozo.Id ? "#28a745" : "inherit")">
-                                                    @mozo.Nombre
-                                                </h4>
-                                            </div>
-                                            <div class="icon icon-md icon-shape shadow text-center border-radius-lg"
-                                                 style="background: @(MozoSeleccionadoId == mozo.Id
-                             ? "linear-gradient(195deg, #66bb6a, #43a047)"
-                             : "#6c757d");">
-                                                <i class="material-symbols-rounded opacity-10" style="font-size: 2rem;">
-                                                    person
-                                                </i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-                        </div>
-
-                       
-                        <label>Buscar Cliente (teléfono, email, calle o altura)</label>
-                        <div class="input-group input-group-outline" b-t77ijd2y4e="">
-                            <input type="text" class="form-control" @bind="BusquedaCliente" @bind:event="oninput" b-t77ijd2y4e="" placeholder="Ej: 123456789 o calle">
-                        </div>
-                     
-                        @if (ClientesEncontrados.Any())
-                        {
-                            <div class="col-12 mt-3">
-                                <label>Seleccionar Cliente</label>
-                                <div class="d-flex flex-wrap gap-2">
-                                    @foreach (var cliente in ClientesEncontrados)
+                        <!-- CONTENIDO -->
+                        <div class="tab-content">
+                            <!-- Mozos -->
+                            <div class="tab-pane fade show active" id="pane-mozos" role="tabpanel">
+                                <div class="row mt-1">
+                                    @foreach (var mozo in Mozos)
                                     {
-                                        <div class="card text-center p-2"
-                                             style="cursor:pointer; min-width: 140px; flex: 1 0 140px; border: 2px solid @(ClienteSeleccionadoId == cliente.Id ? "#0d6efd" : "#ccc"); background-color: @(ClienteSeleccionadoId == cliente.Id ? "#cfe2ff" : "white");"
-                                             @onclick="() => ClienteSeleccionadoId = cliente.Id">
-                                            <div class="card-body p-2">
-                                                <i class="bi bi-person-circle" style="font-size: 2rem;"></i>
-                                                <h6 class="mt-2 mb-1">@cliente.Nombre @cliente.Apellido</h6>
-                                                <small class="text-muted d-block">
-                                                    @cliente.Telefono <br />
-                                                    @cliente.Calle @cliente.Altura, Piso @cliente.Piso
-                                                </small>
+                                        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                                            <div class="card card-body shadow-sm @(MozoSeleccionadoId == mozo.Id ? "border-success" : "border")"
+                                                 style="cursor:pointer;"
+                                                 @onclick="() => SeleccionarMozo(mozo.Id)">
+                                                <div class="row gx-4 mb-2">
+                                                    <div class="col-auto">
+                                                        <div class="avatar avatar-xl position-relative">
+                                                            <img src="../assets/img/bruce-mars.jpg"
+                                                                 alt="foto mozo"
+                                                                 class="w-100 border-radius-lg shadow-sm" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col my-auto">
+                                                        <div class="h-100">
+                                                            <p class="mb-1" style="color:@(MozoSeleccionadoId == mozo.Id ? "#28a745" : "inherit")">
+                                                                @mozo.Nombre
+                                                            </p>
+                                                            <p class="mb-0 font-weight-normal text-sm">Mozo</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     }
                                 </div>
                             </div>
-                        }
 
+                            <!-- Clientes -->
+                            <div class="tab-pane fade" id="pane-clientes" role="tabpanel">
+                                <div class="card blur shadow-blur max-height-vh-70 overflow-auto">
+                                    <div class="card-header p-3">
+                                        <h6>Clientes</h6>
+                                        <label class="form-label">Buscar cliente</label>
+                                        <div class="input-group input-group-outline">
+                                            <input class="form-control" placeholder="Teléfono, email, calle..."
+                                                   @bind="BusquedaCliente" @bind:event="oninput" />
+                                        </div>
+                                    </div>
+                                    <div class="card-body p-2">
+                                        @if (ClientesEncontrados.Any())
+                                        {
+                                            @foreach (var cliente in ClientesEncontrados)
+                                            {
+                                                <a href="javascript:;" class="d-block p-2 @(ClienteSeleccionadoId == cliente.Id ? "bg-gradient-dark border-radius-lg" : "")"
+                                                   @onclick="() => SeleccionarCliente(cliente.Id)">
+                                                    <div class="d-flex p-2">
+                                                        <img alt="Cliente" src="../../assets/img/team-5.jpg" class="avatar shadow">
+                                                        <div class="ms-3">
+                                                            <h6 class="@(ClienteSeleccionadoId == cliente.Id ? "text-white mb-0" : "mb-0")">
+                                                                @cliente.Nombre @cliente.Apellido
+                                                            </h6>
+                                                            <p class="@(ClienteSeleccionadoId == cliente.Id ? "text-white mb-0 text-sm" : "text-muted text-xs mb-0")">
+                                                                @cliente.Telefono
+                                                            </p>
+                                                            <span class="text-muted text-sm d-block">@cliente.Calle @cliente.Altura</span>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <p class="text-center text-muted">No se encontraron clientes</p>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Detalle Cliente -->
+                            <div class="tab-pane fade" id="pane-detalle" role="tabpanel">
+                                <div class="card blur shadow-blur h-100">
+                                    <div class="card-header p-3">
+                                        <h6>Información del cliente</h6>
+                                    </div>
+                                    @if (ClienteSeleccionado != null)
+                                    {
+                                        <div class="card-body p-3">
+                                            <ul class="list-group">
+                                                <li class="list-group-item border-0 ps-0 text-sm">
+                                                    <strong class="text-dark">Nombre completo:</strong>
+                                                    @ClienteSeleccionado.Nombre @ClienteSeleccionado.Apellido
+                                                </li>
+                                                <li class="list-group-item border-0 ps-0 text-sm">
+                                                    <strong class="text-dark">Teléfono:</strong> @ClienteSeleccionado.Telefono
+                                                </li>
+                                                <li class="list-group-item border-0 ps-0 text-sm">
+                                                    <strong class="text-dark">Email:</strong> @ClienteSeleccionado.Email
+                                                </li>
+                                                <li class="list-group-item border-0 ps-0 text-sm">
+                                                    <strong class="text-dark">Dirección:</strong>
+                                                    @ClienteSeleccionado.Calle @ClienteSeleccionado.Altura
+                                                    @(string.IsNullOrWhiteSpace(ClienteSeleccionado.Piso) ? "" : $", Piso {ClienteSeleccionado.Piso}")
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="card-body p-3 text-center text-muted">
+                                            <p class="mt-2 mb-0">Ningún cliente seleccionado</p>
+                                            <small>Usa el buscador para elegir uno</small>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
                     </div>
-
-                    
-
                     @if (!string.IsNullOrWhiteSpace(ErrorMensaje))
                     {
                         <div class="alert alert-danger mt-2">@ErrorMensaje</div>
@@ -451,7 +521,7 @@ else
                 </div>
             </div>
         </div>
-    </div> 
+    </div>
 }
 
 @code {
@@ -606,7 +676,14 @@ else
     {
         if (MesaSeleccionada == null)
             return;
-
+        if (MozoSeleccionadoId == 0 || MozoSeleccionadoId == null)
+        {
+            await JS.InvokeVoidAsync("mostrarAlerta",
+                "Falta seleccionar mozo",
+                "Por favor selecciona un mozo antes de iniciar el pedido.",
+                "warning");
+            return;
+        }
         try
         {
             var pedido = new CrearPedidoRequest
@@ -734,5 +811,19 @@ else
     {
         NuevoCliente = new ClienteViewModel(); // Reinicia el objeto
     }
+    private async Task SeleccionarCliente(int clienteId)
+    {
+        if (clienteId > 0)
+        {
+            ClienteSeleccionado = ClientesEncontrados.FirstOrDefault(c => c.Id == clienteId);
+            ClienteSeleccionadoId = clienteId; // lo seguís guardando si querés
+        }
+        else
+        {
+            ClienteSeleccionado = null;
+            ClienteSeleccionadoId = null;
+        }
 
+        //await JS.InvokeVoidAsync("cerrarModal", "#modalAsignarCliente");
+    }
 }

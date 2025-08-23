@@ -235,20 +235,20 @@
             });
             console.log("Observando tbody hasta que se carguen filas...");
         };
-        document.addEventListener("DOMContentLoaded", () => {
-            const trigger = document.querySelector('[data-bs-target="#profileExamples"]');
-            const collapseEl = document.getElementById('profileExamples');
+        //document.addEventListener("DOMContentLoaded", () => {
+        //    const trigger = document.querySelector('[data-bs-target="#profileExamples"]');
+        //    const collapseEl = document.getElementById('profileExamples');
 
-            collapsed.addEventListener('shown.bs.collapse', () => {
-                trigger.classList.remove('collapsed');
-                trigger.setAttribute('aria-expanded', 'true');
-            });
+        //    collapsed.addEventListener('shown.bs.collapse', () => {
+        //        trigger.classList.remove('collapsed');
+        //        trigger.setAttribute('aria-expanded', 'true');
+        //    });
 
-            collapsed.addEventListener('hidden.bs.collapse', () => {
-                trigger.classList.add('collapsed');
-                trigger.setAttribute('aria-expanded', 'false');
-            });
-        });
+        //    collapsed.addEventListener('hidden.bs.collapse', () => {
+        //        trigger.classList.add('collapsed');
+        //        trigger.setAttribute('aria-expanded', 'false');
+        //    });
+        //});
 
     </script>
 </body>

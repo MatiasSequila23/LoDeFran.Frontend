@@ -11,12 +11,15 @@
 @using System.Globalization
 @using LoDeFran.Frontend.Models
 @using LoDeFran.Frontend.Utlis
+@using System.Linq
 
 <!-- CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-..." crossorigin="anonymous" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
-<link href="../css/pedidomesa.css" rel="stylesheet" />
+
 <script src="../js/print.js"></script>
+<link href="../css/imprimir.css" rel="stylesheet" />
+<link href="../css/pedidomesa.css" rel="stylesheet" />
 <style>
     .pedido-container {
         display: flex;
@@ -247,16 +250,26 @@ else
 
                 </div>
 
+
+
+
+                <button class="btn btn-success btn-lg mt-3 w-100" @onclick="ConfirmarPedido">
+                    Confirmar pedido y enviar a cocina
+                </button>
                 @if (PedidoActual?.EstadoId == (int)Enums.EstadoPedido.Abierto && PedidoActual.DetallePedido.Count > 0)
                 {
-                    <button class="btn btn-success btn-lg mt-3 w-100" @onclick="ConfirmarPedido">
-                        Confirmar pedido y enviar a cocina
-                    </button>
+
                 }
                 @if (PromocionesDisponibles.Any())
                 {
                     <button class="btn btn-secondary btn-lg w-100" @onclick="AbrirModalPromociones">
                         Ver promociones disponibles
+                    </button>
+                }
+                @if (PedidoActual?.EstadoId != (int)Enums.EstadoPedido.Abierto && PedidoActual.DetallePedido.Count > 0)
+                {
+                    <button class="btn btn-warning btn-lg w-100" @onclick="ImprimirTicketsPorArea">
+                        Volver a imprimir comanda
                     </button>
                 }
             }
@@ -400,15 +413,28 @@ else
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Editar: @ItemEditando.Producto?.Nombre</h5>
-                    <button type="button" class="btn-close" @onclick="CerrarModalEditar"></button>
+                    <button type="button" class="btn-close text-dark" @onclick="CerrarModalEditar" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <label>Cantidad</label>
-                    <div class="input-group mb-2" style="max-width:220px;">
-                        <button class="btn btn-dark" @onclick="DecrementarCantidad"><i class="bi bi-dash-lg"></i></button>
-                        <input type="text" class="form-control text-center" @bind="EditCantidad" />
-                        <button class="btn btn-dark" @onclick="IncrementarCantidad"><i class="bi bi-plus-lg"></i></button>
+                    <div class="d-flex justify-content-center mb-2">
+                        <div class="input-group" style="max-width:220px;">
+                            <button class="btn btn-dark d-flex align-items-center justify-content-center"
+                                    style="width:60px; height: 50px;"
+                                    @onclick="DecrementarCantidad">
+                                <i class="bi bi-dash-lg"></i>
+                            </button>
+                            <input type="text" class="form-control text-center" @bind="EditCantidad" />
+                            <button class="btn btn-dark d-flex align-items-center justify-content-center"
+                                    style="width:60px; height: 50px;"
+                                    @onclick="IncrementarCantidad">
+                                <i class="bi bi-plus-lg"></i>
+                            </button>
+                        </div>
                     </div>
+
                     <label>Comentario</label>
                     <textarea class="form-control" rows="2" @bind="EditComentario"></textarea>
                 </div>
@@ -420,62 +446,117 @@ else
         </div>
     </div>
 }
-<div style="display:none">
-    <div id="ticket-to-print">
-        <h3>🍽️ Pedido #@PedidoActual.Id</h3>
 
-        <p>
-            @* Solo salón muestra mesa y mozo *@
+
+
+<div style="display:none">
+    @foreach (var area in areas)
+    {
+        // 1️⃣ Filtrar productos para el área actual
+        var productosArea = PedidoActual.DetallePedido
+        .Where(p => p.Producto.CategoriaProductoId.HasValue &&
+        area.Value.Contains(p.Producto.CategoriaProductoId.Value))
+        .ToList();
+
+        // 🚩 Ajuste especial para Barra: solo subcategorías 6 y 28
+        if (area.Key == "Barra")
+        {
+            productosArea = productosArea
+            .Where(p => p.Producto.SubcategoriaProductoId == 6 ||
+            p.Producto.SubcategoriaProductoId == 28)
+            .ToList();
+        }
+
+        // 2️⃣ Quedarse solo con productos pendientes (no confirmados)
+        var productosPendientes = productosArea
+        .Where(p => p.Cantidad > p.CantidadConfirmada)
+        .ToList();
+
+        // ⚠️ Si no hay nada pendiente en esta área, no se imprime ticket
+        if (!productosPendientes.Any())
+        {
+            continue;
+        }
+
+        // 3️⃣ Detectar otras áreas combinadas
+        var otrasAreas = areas
+        .Where(a => a.Key != area.Key &&
+        PedidoActual.DetallePedido.Any(p =>
+        p.Producto.CategoriaProductoId.HasValue &&
+        a.Value.Contains(p.Producto.CategoriaProductoId.Value)))
+        .Select(a => a.Key)
+        .ToList();
+
+        // 4️⃣ Renderizar ticket SOLO con pendientes
+        <div class="ticket-area" id="ticket-to-print-@area.Key">
+            <h2>@area.Key</h2>
+
+            @if (otrasAreas.Any())
+            {
+                <h4 style="font-weight:bold; color:red;">
+                    👉 Combina con: @string.Join(", ", otrasAreas)
+                </h4>
+            }
+
+            <h3>Pedido #@PedidoActual.Id</h3>
+
             @if (PedidoActual.TipoPedidoId == 1 && PedidoActual.Mesa != null)
             {
-                <span><strong>Mesa:</strong> @PedidoActual.Mesa.Numero</span>
-
-                <br />
-                <span><strong>Mozo:</strong> @PedidoActual.NombreMozo</span>
-
-                <br />
+                <p>
+                    <span><strong>Mesa:</strong> @PedidoActual.Mesa.Numero</span><br />
+                    <span><strong>Mozo:</strong> @PedidoActual.NombreMozo</span><br />
+                </p>
             }
 
-            @* Tipo y hora siempre *@
-            <span><strong>Tipo:</strong> @PedidoActual.TipoPedidoNombre</span><br />
-            <span><strong>Fecha - Hora:</strong> @PedidoActual.FechaPedido</span><br />
-        </p>
+            <p>
+                <span><strong>Tipo:</strong> @PedidoActual.TipoPedidoNombre</span><br />
+                <span><strong>Fecha - Hora:</strong> @PedidoActual.FechaPedido</span><br />
+            </p>
+            <hr />
 
-        <hr />
+            <ul style="list-style-type:none; padding:0; margin:0;">
+                @foreach (var item in productosPendientes)
+                {
+                    int cant = item.Cantidad - item.CantidadConfirmada;
 
-        <ul style="list-style-type:none; padding:0; margin:0;">
-            @foreach (var item in PedidoActual.DetallePedido)
-            {
-                <li style="margin-bottom:8px;">
-                    <strong>@item.Cantidad x @item.Producto.Nombre</strong>
-                    <small>(@item.Producto.CategoriaProductoNombre)</small><br />
-
-                    @if (!string.IsNullOrEmpty(item.Comentario))
-                    {
-                        <small>📝 @item.Comentario</small>
-                    }
-                </li>
-            }
-
-            @if (PedidoActual.PedidoCombos.Any())
-            {
-                <li>
-                    <strong>Combos:</strong>
-                    <ul style="list-style-type:circle; padding-left:15px;">
-                        @foreach (var combo in PedidoActual.PedidoCombos)
+                    <li style="margin-bottom:8px;">
+                        <strong>@cant x @item.Producto.Nombre</strong>
+                        @if (!string.IsNullOrEmpty(item.Comentario))
                         {
-                            <li>@combo.Nombre (x@combo.Cantidad)</li>
+                            <small>(@item.Comentario)</small>
                         }
-                    </ul>
-                </li>
-            }
-        </ul>
-    </div>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
 </div>
 
 <div style="display:none">
     <iframe id="print-frame"></iframe>
 </div>
+
+@code {
+    private Dictionary<string, int[]> areas = new()
+    {
+        { "Pizzería", new int[] { 1 ,6} }, // Pizzería y Combos
+        { "Cocina", new int[] { 2, 5 } },  // Cocina y Postres
+        { "Barra", new int[] { 3, 4 } }    // Bebidas y Cafetería
+    };
+
+    private async Task ImprimirTicketsPorArea()
+    {
+        var ticketIds = areas.Keys.ToList();
+
+        foreach (var area in ticketIds)
+        {
+            var ticketDivId = $"ticket-to-print-{area}";
+            await JS.InvokeVoidAsync("imprimirTicket", ticketDivId);
+        }
+    }
+}
+
+
 @code {
     [Parameter] public int idPedido { get; set; }
 
@@ -631,6 +712,8 @@ else
     // --- Editar item ---
     private void EditarItem(int idDetalle)
     {
+
+
         ItemEditando = PedidoActual?.DetallePedido.FirstOrDefault(d => d.Id == idDetalle);
         if (ItemEditando is null) return;
         EditCantidad = ItemEditando.Cantidad;
@@ -663,6 +746,11 @@ else
     // --- Otros métodos ---
     private async Task EliminarItem(int idDetalle)
     {
+        bool confirmacion = await JS.InvokeAsync<bool>(
+                "mostrarConfirmacion",
+                "Confirmar",
+                "¿Seguro que deseas eliminar?"
+            ); if (!confirmacion) return;
         await ServicioDeMesaService.DeleteAsync(idPedido, idDetalle);
         PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorIdAsync(idPedido);
     }
@@ -723,9 +811,20 @@ else
         PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorIdAsync(idPedido);
 
 
-        // Imprime SOLO el ticket
-        var html = await JS.InvokeAsync<string>("eval", "document.getElementById('ticket-to-print').outerHTML");
-        await JS.InvokeVoidAsync("printIframe", html);
+        foreach (var item in PedidoActual.DetallePedido)
+        {
+            await DetallePedidoServicie.ModificarCantidadConfirmProductoAsync(item.Id, item.Cantidad);
+        }
+
+        // Imprime el ticket
+        var ticketIds = areas.Keys.ToList();
+
+        foreach (var area in ticketIds)
+        {
+            var ticketDivId = $"ticket-to-print-{area}";
+            await JS.InvokeVoidAsync("imprimirTicket", ticketDivId);
+        }
+
     }
 
     private string ObtenerClaseStock(int stock)

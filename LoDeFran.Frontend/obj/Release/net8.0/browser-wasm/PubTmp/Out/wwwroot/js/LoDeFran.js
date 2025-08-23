@@ -12,3 +12,11 @@
 
     return result.isConfirmed;
 };
+window.mostrarAlerta = async function (titulo, mensaje, tipo) {
+    await Swal.fire({
+        title: titulo,
+        text: mensaje,
+        icon: tipo, // "success", "error", "warning", "info", "question"
+        confirmButtonText: 'Aceptar'
+    });
+};
