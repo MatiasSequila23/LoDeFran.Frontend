@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "m8UxCPUqx/xwZOx+geEzS40EfkAuVfVeG5r6rLbOahE=",
+  "Hash": "Mao3v/uIbyJp9wuVxx7+/HdXtIZeMbkabdrVP36oNQU=",
   "Source": "LoDeFran.Frontend",
   "BasePath": "/",
   "Mode": "Root",
@@ -14835,6 +14835,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\LoDeFran.Frontend.bundle.scp.css"
+    },
+    {
+      "Identity": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\appsettings.json",
+      "SourceId": "LoDeFran.Frontend",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\",
+      "BasePath": "/",
+      "RelativePath": "appsettings.json",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "WasmResource",
+      "AssetTraitValue": "settings",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\appsettings.json"
     },
     {
       "Identity": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\assets\\css\\material-dashboard.css",

@@ -1,10 +1,10 @@
-using LoDeFran.Frontend;
+Ôªøusing LoDeFran.Frontend;
 using LoDeFran.Frontend.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Syncfusion.Blazor;
 
-// Cambi· esta IP y puerto por los de tu servidor IIS
+// Cambi√° esta IP y puerto por los de tu servidor IIS
 string servidorApi = "192.168.1.31";
 string puertoApi = "82";
 
@@ -13,13 +13,40 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddSyncfusionBlazor();
 
+
+var environment = builder.HostEnvironment.Environment; // Esto devuelve "Development" o "Production"
 // Detectar si estamos en localhost (ahora que builder ya existe)
 bool esLocalhost = builder.HostEnvironment.BaseAddress.Contains("localhost");
+string baseUrl;
+if (esLocalhost)
+{
+    baseUrl = $"http://localhost:{puertoApi}/api/";
+}
+else
+{
+    if(environment == "Production")
+    {
+        baseUrl = $"http://192.168.1.6:81/api/";
+    }
+    else
+    {
+        baseUrl = $"http://192.168.1.31:82/api/";
+    }
+}
 
-// Si est· en localhost usa localhost, si no usa IP
-string baseUrl = esLocalhost
-    ? $"http://localhost:{puertoApi}/api/"
-    : $"http://{servidorApi}:{puertoApi}/api/";
+
+//if (environment == "Production")
+//{
+//    baseUrl = $"http://192.168.1.31:82/api/";
+//}
+//else
+//{
+//    baseUrl = esLocalhost
+//     ? $"http://localhost:{puertoApi}/api/"
+//     : $"http://{servidorApi}:{puertoApi}/api/";
+//}
+// Si est√° en localhost usa localhost, si no usa IP
+
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseUrl) });
 

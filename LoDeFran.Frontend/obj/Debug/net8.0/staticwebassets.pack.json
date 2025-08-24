@@ -13,6 +13,10 @@
       "PackagePath": "staticwebassets\\LoDeFran.Frontend.styles.css"
     },
     {
+      "Id": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\appsettings.json",
+      "PackagePath": "staticwebassets\\appsettings.json"
+    },
+    {
       "Id": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\assets\\css\\material-dashboard.css",
       "PackagePath": "staticwebassets\\assets\\css\\material-dashboard.css"
     },
