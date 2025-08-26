@@ -5,102 +5,160 @@
 @inject Services.MotivoMovimientoService MotivoMovimientoService
 @using LoDeFran.Frontend.Models
 
-<h3>Movimientos de Caja - Caja @CajaId</h3>
+<div class="container mt-3">
+    <!-- Header -->
+    <div class="card shadow-lg mb-4 border-0 rounded-3">
+        <div class="card-header bg-gradient bg-dark text-white d-flex justify-content-between align-items-center rounded-top">
+            <h4 class="mb-0 text-white"><i class="fas fa-cash-register me-2"></i> Movimientos de Caja - Caja @CajaId</h4>
+            <button class="btn btn-sm btn-light shadow-sm" @onclick="NuevoMovimiento">
+                <i class="fas fa-plus"></i> Nuevo Movimiento
+            </button>
+        </div>
+    </div>
 
-<button class="btn btn-primary mb-3" @onclick="NuevoMovimiento">Nuevo Movimiento</button>
-
-@if (Movimientos == null)
-{
-    <p>Cargando...</p>
-}
-else
-{
-    <table class="table table-bordered" id="tablaMovimientos">
-        <thead class="table-dark">
-            <tr>
-                <th>Fecha</th>
-                <th>Tipo</th>
-                <th>Motivo</th>
-                <th>Método Pago</th>
-                <th>Monto</th>
-                <th>Descripción</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var mov in Movimientos)
+    <!-- Tabla de movimientos -->
+    <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-body">
+            @if (Movimientos == null)
             {
-                <tr>
-                    <td>@mov.FechaMovimiento.ToString("g")</td>
-                    <td>@mov.TipoMovimientoNombre</td>
-                    <td>@mov.MotivoNombre</td>
-                    <td>@mov.MetodoPagoNombre</td>
-                    <td>$@mov.Monto</td>
-                    <td>@mov.Descripcion</td>
-                    <td>
-                        <button class="btn btn-sm btn-warning me-1" @onclick="() => EditarMovimiento(mov)">Editar</button>
-                        <button class="btn btn-sm btn-danger" @onclick="() => EliminarMovimiento(mov.Id)">Eliminar</button>
-                    </td>
-                </tr>
+                <div class="text-center my-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                    <p class="mt-2">Cargando movimientos...</p>
+                </div>
             }
-        </tbody>
-    </table>
-}
+            else if (Movimientos.Count == 0)
+            {
+                <div class="alert alert-info text-center m-0">
+                    <i class="fas fa-info-circle me-2"></i> No hay movimientos registrados en esta caja.
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover align-middle shadow-sm" id="tablaMovimientos">
+                        <thead class="table-dark text-center">
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Tipo</th>
+                                <th>Motivo</th>
+                                <th>Método Pago</th>
+                                <th class="text-end">Monto</th>
+                                <th>Descripción</th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var mov in Movimientos)
+                            {
+                                <tr>
+                                    <td>@mov.FechaMovimiento.ToString("g")</td>
+                                    <td>
+                                        <span class="badge d-inline-flex align-items-center
+                                                     @(mov.TipoMovimientoNombre == "Ingreso" ? "bg-success" : "bg-danger")">
+                                            <i class="fas @(mov.TipoMovimientoNombre == "Ingreso" ? "fa-arrow-up" : "fa-arrow-down") me-1"></i>
+                                            @mov.TipoMovimientoNombre
+                                        </span>
+                                    </td>
+                                    <td>@mov.MotivoNombre</td>
+                                    <td>@mov.MetodoPagoNombre</td>
+                                    <td class="text-end fw-bold">$@mov.Monto</td>
+                                    <td>@mov.Descripcion</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-outline-warning me-1 shadow-sm"
+                                                title="Editar"
+                                                @onclick="() => EditarMovimiento(mov)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger shadow-sm"
+                                                title="Eliminar"
+                                                @onclick="() => EliminarMovimiento(mov.Id)">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
 
 <!-- Modal para crear/editar movimiento -->
 <div class="modal fade" id="modalMovimiento" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content rounded-3 shadow-lg">
             <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title">@((Movimiento.Id == 0) ? "Nuevo Movimiento" : "Editar Movimiento")</h5>
+                <h5 class="modal-title">
+                    <i class="fas @(Movimiento.Id == 0 ? "fa-plus" : "fa-edit") me-2"></i>
+                    @((Movimiento.Id == 0) ? "Nuevo Movimiento" : "Editar Movimiento")
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
             <div class="modal-body">
-                <div class="mb-2">
-                    <label>Fecha Movimiento</label>
-                    <input type="date" class="form-control" @bind="Movimiento.FechaMovimiento" />
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Fecha Movimiento</label>
+                        <div class="input-group input-group-outline">
+                            <input type="date" class="form-control" @bind="Movimiento.FechaMovimiento" />
+                        </div>
+                       
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Motivo Movimiento</label>
+                        <select class="form-select" @bind="Movimiento.MotivoMovimientoId">
+                            <option value="">-- Seleccionar --</option>
+                            @foreach (var motivo in Motivos)
+                            {
+                                <option value="@motivo.Id">@motivo.Nombre</option>
+                            }
+                        </select>
+                    </div>
                 </div>
 
-                <div class="mb-2">
-                    <label>Motivo Movimiento</label>
-                    <select class="form-control" @bind="Movimiento.MotivoMovimientoId">
-                        <option value="">-- Seleccionar --</option>
-                        @foreach (var motivo in Motivos)
-                        {
-                            <option value="@motivo.Id">@motivo.Nombre</option>
-                        }
-                    </select>
-
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="form-label">Método de Pago</label>
+                        <select class="form-select" @bind="Movimiento.MetodoPagoId">
+                            <option value="">-- Seleccionar --</option>
+                            @foreach (var metodo in MetodosPago)
+                            {
+                                <option value="@metodo.Id">@metodo.Nombre</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Monto</label>
+                        <div class="input-group input-group-outline">
+                            <input type="number" step="0.01" class="form-control" placeholder="Ej: 1500.50" @bind="Movimiento.Monto" />
+                        </div>
+                    </div>                    
                 </div>
-
-                <div class="mb-2">
-                    <label>Método de Pago</label>
-                    <select class="form-control" @bind="Movimiento.MetodoPagoId">
-                        <option value="">-- Seleccionar --</option>
-                        @foreach (var metodo in MetodosPago)
-                        {
-                            <option value="@metodo.Id">@metodo.Nombre</option>
-                        }
-                    </select>
+                   
+                <div class="col-12">
+                    <label class="form-label">Descripción</label>
+                    <div class="input-group input-group-outline">
+                        <textarea class="form-control" rows="3" placeholder="Detalle del movimiento..." @bind="Movimiento.Descripcion"></textarea>
+                    </div>
                 </div>
-
-                <div class="mb-2">
-                    <label>Monto</label>
-                    <input type="number" step="0.01" class="form-control" @bind="Movimiento.Monto" />
-                </div>
-
-                <div class="mb-2">
-                    <label>Descripción</label>
-                    <textarea class="form-control" @bind="Movimiento.Descripcion"></textarea>
-                </div>
+                
+                <hr />
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button class="btn btn-success" @onclick="GuardarMovimiento">Guardar</button>
+                <button class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button class="btn btn-success" @onclick="GuardarMovimiento">
+                    <i class="fas fa-save"></i> Guardar
+                </button>
             </div>
         </div>
     </div>
 </div>
+
 
 @code {
     [Parameter] public int CajaId { get; set; }

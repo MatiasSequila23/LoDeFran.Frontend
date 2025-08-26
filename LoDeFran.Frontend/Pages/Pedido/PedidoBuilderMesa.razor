@@ -592,13 +592,24 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorIdAsync(idPedido);
-        PromocionSeleccionadaId = PedidoActual?.PromocionId;
-        ProductosDisponibles = await ServicioDeMesaService.GetProductosAsync();
-        CategoriasDisponibles = await ServicioDeMesaService.GetCategoriasProductosAsync();
+        // Ejecutar varias tareas en paralelo
+        var pedidoTask = ServicioDeMesaService.ObtenerPedidoPorIdAsync(idPedido);
+        var productosTask = ServicioDeMesaService.GetProductosAsync();
+        var categoriasTask = ServicioDeMesaService.GetCategoriasProductosAsync();
+        var menuTask = CategoriaProductoService.GetMenuAsync();
+        var combosTask = ComboService.GetAllAsync();
+        var promocionesTask = PromocionService.ObtenerPromocionesParaPedidoAsync(idPedido);
 
-        // Cargar menú completo con subcategorías y productos
-        Menu = await CategoriaProductoService.GetMenuAsync();
+        await Task.WhenAll(pedidoTask, productosTask, categoriasTask, menuTask, combosTask, promocionesTask);
+
+        // Asignar resultados
+        PedidoActual = pedidoTask.Result;
+        PromocionSeleccionadaId = PedidoActual?.PromocionId;
+        ProductosDisponibles = productosTask.Result;
+        CategoriasDisponibles = categoriasTask.Result;
+        Menu = menuTask.Result;
+        var combos = combosTask.Result;
+        PromocionesDisponibles = promocionesTask.Result;
 
         // Buscar la categoría Genérica (Id = 6)
         var categoriaGenerica = Menu.FirstOrDefault(c => c.Id == 6);
@@ -606,40 +617,33 @@ else
         {
             // Crear subcategoría "Combos" si no existe
             var subcategoriaCombos = categoriaGenerica.Subcategorias
-                .FirstOrDefault(sc => sc.Nombre == "Combos");
-            if (subcategoriaCombos == null)
-            {
-                subcategoriaCombos = new SubcategoriaProductoViewModel
+                .FirstOrDefault(sc => sc.Nombre == "Combos")
+                ?? new SubcategoriaProductoViewModel
                     {
                         Id = -1, // Id temporal
                         Nombre = "Combos",
                         Productos = new List<ProductoViewModel>()
                     };
-                categoriaGenerica.Subcategorias.Add(subcategoriaCombos);
-            }
 
-            // Obtener combos y agregarlos como productos a la subcategoría
-            var combos = await ComboService.GetAllAsync();
-            foreach (var combo in combos)
-            {
-                subcategoriaCombos.Productos.Add(new ProductoViewModel
-                    {
-                        Id = combo.Id,
-                        Nombre = combo.Nombre,
-                        Precio = combo.Precio,
-                        Stock = Convert.ToInt32(combo.Stock),
-                        CategoriaProductoId = 6 // Genérica
-                    });
-            }
+            if (!categoriaGenerica.Subcategorias.Contains(subcategoriaCombos))
+                categoriaGenerica.Subcategorias.Add(subcategoriaCombos);
+
+            // Agregar combos como productos a la subcategoría
+            subcategoriaCombos.Productos.AddRange(combos.Select(combo => new ProductoViewModel
+                {
+                    Id = combo.Id,
+                    Nombre = combo.Nombre,
+                    Precio = combo.Precio,
+                    Stock = Convert.ToInt32(combo.Stock),
+                    CategoriaProductoId = 6
+                }));
         }
 
         // Seleccionar primera categoría y subcategoría por defecto
         CategoriaSeleccionada = Menu.FirstOrDefault()?.Id;
         SubcategoriaSeleccionada = Menu.FirstOrDefault()?.Subcategorias.FirstOrDefault()?.Id;
-
-        // Cargar promociones disponibles
-        PromocionesDisponibles = await PromocionService.ObtenerPromocionesParaPedidoAsync(idPedido);
     }
+
 
     private void SeleccionarCategoria(int id)
     {

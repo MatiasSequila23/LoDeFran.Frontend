@@ -4,76 +4,122 @@
 @using LoDeFran.Frontend.Models
 @using System.Globalization
 
-<h3>Listado de Combos</h3>
-
-<button class="btn btn-success mb-3" @onclick="MostrarModalNuevoCombo">Crear Combo</button>
-
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Precio</th>
-            <th>Stock</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var combo in CombosList)
-        {
-            <tr>
-                <td>@combo.Nombre</td>
-                <td>@combo.Descripcion</td>
-                <td>@combo.Precio.ToString("C", new CultureInfo("es-AR"))</td>
-                <td>@combo.Stock</td>
-                <td>@(combo.EstadoId == 1 ? "Activo" : "Inactivo")</td>
-                <td>
-                    <button class="btn btn-sm btn-secondary" @onclick="() => VerItems(combo.Id)">Ver Items</button>
-
-                    @if (combo.EstadoId == 1)
-                    {
-                        <button class="btn btn-sm btn-warning" @onclick="() => CambiarEstado(combo.Id, 2)">Desactivar</button>
-                    }
-                    else
-                    {
-                        <button class="btn btn-sm btn-success" @onclick="() => CambiarEstado(combo.Id, 1)">Activar</button>
-                    }
-
-                    <button class="btn btn-sm btn-danger" @onclick="() => EliminarCombo(combo.Id)">Eliminar</button>
-                </td>
-            </tr>
-        }
-    </tbody>
-
-</table>
-
-<!-- Modal para nuevo combo -->
-@if (MostrarModal)
-{
-    <div class="modal fade show d-block" tabindex="-1" role="dialog" style="background-color: rgba(0,0,0,0.5);">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content p-3">
-                <h5>Nuevo Combo</h5>
-                <InputText class="form-control mb-2" @bind-Value="NuevoCombo.Nombre" placeholder="Nombre" />
-                <InputTextArea class="form-control mb-2" @bind-Value="NuevoCombo.Descripcion" placeholder="Descripción" />
-                <InputNumber class="form-control mb-2" @bind-Value="NuevoCombo.Precio" placeholder="Precio" />
-
-                <button class="btn btn-success" @onclick="GuardarNuevoCombo">Guardar</button>
-                <button class="btn btn-secondary ms-2" @onclick="() => MostrarModal = false">Cancelar</button>
-            </div>
+<div class="container-fluid py-2">
+    <!-- Header -->
+    <div class="card shadow-lg mb-4 border-0 rounded-3">
+        <div class="card-header bg-gradient bg-dark text-white d-flex justify-content-between align-items-center rounded-top">
+            <h4 class="mb-0 text-white"><i class="fas fa-users me-2"></i> Listado de Combos</h4>
+            <button class="btn btn-success" @onclick="MostrarModalNuevoCombo" disabled="@isLoading">
+                @if (isLoading)
+                {
+                    <span class="spinner-border spinner-border-sm me-2"></span>
+                }
+                Crear Combo
+            </button>
         </div>
     </div>
-}
+
+    <div class="card shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-striped mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var combo in CombosList)
+                    {
+                        <tr>
+                            <td>@combo.Nombre</td>
+                            <td>@combo.Descripcion</td>
+                            <td>@combo.Precio.ToString("C", new CultureInfo("es-AR"))</td>
+                            <td>@combo.Stock</td>
+                            <td>@(combo.EstadoId == 1 ? "Activo" : "Inactivo")</td>
+                            <td class="d-flex flex-wrap gap-1">
+                                <button class="btn btn-sm btn-secondary" @onclick="() => VerItems(combo.Id)">Ver Items</button>
+
+                                @if (combo.EstadoId == 1)
+                                {
+                                    <button class="btn btn-sm btn-warning" @onclick="() => CambiarEstado(combo.Id, 2)" disabled="@isLoading">Desactivar</button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-sm btn-success" @onclick="() => CambiarEstado(combo.Id, 1)" disabled="@isLoading">Activar</button>
+                                }
+
+                                <button class="btn btn-sm btn-danger" @onclick="() => EliminarCombo(combo.Id)" disabled="@isLoading">Eliminar</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Spinner general -->
+    @if (isLoading)
+    {
+        <div class="text-center mt-3">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+        </div>
+    }
+
+    <!-- Modal para nuevo combo -->
+    @if (MostrarModal)
+    {
+        <div class="modal fade show d-block" tabindex="-1" role="dialog" style="background-color: rgba(0,0,0,0.5);">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content p-3 shadow-sm">
+                    <h5 class="mb-3">Nuevo Combo</h5>
+
+                    <div class="input-group input-group-outline mb-2">
+                        <InputText class="form-control" @bind-Value="NuevoCombo.Nombre" placeholder="Nombre" />
+                    </div>
+
+                    <div class="input-group input-group-outline mb-2">
+                        <InputTextArea class="form-control" @bind-Value="NuevoCombo.Descripcion" placeholder="Descripción" />
+                    </div>
+
+                    <div class="input-group input-group-outline mb-2">
+                        <InputNumber class="form-control" @bind-Value="NuevoCombo.Precio" placeholder="Precio" />
+                    </div>
+
+                    <div class="d-flex justify-content-end mt-2">
+                        <button class="btn btn-success" @onclick="GuardarNuevoCombo" disabled="@isLoading">
+                            @if (isLoading)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2"></span>
+                            }
+                            Guardar
+                        </button>
+                        <button class="btn btn-secondary ms-2" @onclick="() => MostrarModal = false" disabled="@isLoading">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
 
 @code {
     private List<ComboViewModel> CombosList = new();
     private bool MostrarModal = false;
     private ComboViewModel NuevoCombo = new();
+    private bool isLoading = false;
 
     protected override async Task OnInitializedAsync()
     {
-        CombosList = await ComboService.GetAllAsync();
+        await RunWithLoading(async () =>
+        {
+            CombosList = await ComboService.GetAllAsync();
+        });
     }
 
     private void MostrarModalNuevoCombo()
@@ -84,23 +130,46 @@
 
     private async Task GuardarNuevoCombo()
     {
-        var comboCreado = await ComboService.CreateAndReturnIdAsync(NuevoCombo);
-        MostrarModal = false;
-        Nav.NavigateTo($"/combo/gestioncombo/{comboCreado}");
+        await RunWithLoading(async () =>
+        {
+            var comboCreado = await ComboService.CreateAndReturnIdAsync(NuevoCombo);
+            MostrarModal = false;
+            Nav.NavigateTo($"/combo/gestioncombo/{comboCreado}");
+        });
     }
 
     private void VerItems(int id) => Nav.NavigateTo($"/combo/gestioncombo/{id}");
 
     private async Task CambiarEstado(int id, int nuevoEstadoId)
     {
-        await ComboService.CambiarEstadoAsync(id, nuevoEstadoId);
-        CombosList = await ComboService.GetAllAsync();
+        await RunWithLoading(async () =>
+        {
+            await ComboService.CambiarEstadoAsync(id, nuevoEstadoId);
+            CombosList = await ComboService.GetAllAsync();
+        });
     }
-
 
     private async Task EliminarCombo(int id)
     {
-        await ComboService.DeleteAsync(id);
-        CombosList = await ComboService.GetAllAsync();
+        await RunWithLoading(async () =>
+        {
+            await ComboService.DeleteAsync(id);
+            CombosList = await ComboService.GetAllAsync();
+        });
+    }
+
+    private async Task RunWithLoading(Func<Task> action)
+    {
+        isLoading = true;
+        StateHasChanged();
+        try
+        {
+            await action();
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
     }
 }

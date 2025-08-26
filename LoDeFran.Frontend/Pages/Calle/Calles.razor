@@ -1,11 +1,11 @@
 ﻿@page "/calle/calles"
 @inject Services.CalleService CalleService
-
 @inject IJSRuntime JS
 
 @using LoDeFran.Frontend.Models
 
 <h3 class="text-center d-flex justify-content-center align-items-center gap-2">
+
     <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
          width="92" height="100" viewBox="0 0 500.476 520.476" xml:space="preserve">
 <path style="fill:#C7B299;" d="M416.366,375.732H39.845c-17.698,0-32.044-14.346-32.044-32.044V103.355
@@ -71,114 +71,129 @@
 	c-14.476-22.256-32.253-53.668-32.253-66.084C304.002,117.615,318.471,103.146,336.256,103.146z M336.256,247.763
 	c-4.532,0-8.221-3.687-8.221-8.22c0-4.532,3.688-8.221,8.221-8.221s8.221,3.689,8.221,8.221
 	C344.476,244.076,340.789,247.763,336.256,247.763z" />
-</svg> Gestión de Calles
+</svg>
+    Gestión de Calles
 </h3>
 
-<input @bind="nombreBusqueda" @bind:event="oninput" placeholder="Buscar calle..." class="form-control mb-2" />
-<div class="d-flex flex-column flex-md-row justify-content-center align-items-center gap-2 mt-3">
-    <button class="btn btn-primary w-100 w-md-auto" @onclick="BuscarCalles">Buscar en Base</button>
-    <button class="btn btn-secondary w-100 w-md-auto" @onclick="BuscarEnExcel">Buscar en Excel</button>
-    <button class="btn btn-success w-100 w-md-auto" @onclick="ImportarDesdeExcel">Importar desde Excel</button>
+<div class="container-fluid py-2">
+    <div class="row">
+        <div class="col-12 col-md-12 col-lg-12 mx-auto my-5">
+            <div class="card">
+                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                    <div class="bg-gradient-dark shadow-dark border-radius-lg py-3 pe-1">
+                        <h4 class="text-white font-weight-bolder text-center mt-2">Informacion</h4>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="input-group input-group-outline my-3">
+                        <input @bind="nombreBusqueda" @bind:event="oninput" placeholder="Buscar calle..." class="form-control mb-2" />
+                    </div>
+                    <div class="d-flex flex-column flex-md-row justify-content-center align-items-center gap-2 mt-3">
+                        <button class="btn btn-primary w-100 w-md-auto" @onclick="BuscarCalles" disabled="@isLoading">Buscar en Base</button>
+                        <button class="btn btn-secondary w-100 w-md-auto" @onclick="BuscarEnExcel" disabled="@isLoading">Buscar en Excel</button>
+                        <button class="btn btn-success w-100 w-md-auto" @onclick="ImportarDesdeExcel" disabled="@isLoading">Importar desde Excel</button>
+                        @if (resultados?.Any() == true)
+                        {
+                            <button class="btn btn-warning w-100 w-md-auto" @onclick="GuardarTodas" disabled="@isLoading">Guardar todas</button>
+                        }
+                    </div>
+
+                    <!-- Spinner -->
+                    @if (isLoading)
+                    {
+                        <div class="text-center mt-3">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Cargando...</span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (resultados?.Any() == true)
+    {
+        <div class="card">
+            <div class="table-responsive">
+                <table class="table align-items-center mb-0">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Código</th>
+                            <th>NomOficial</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var calle in resultados)
+                        {
+                            <tr>
+                                <td>@calle.Id</td>
+                                <td>@calle.Codigo</td>
+                                <td>@calle.NomOficial.Trim()</td>
+                                <td>
+                                    <button class="btn btn-success btn-sm" @onclick="() => GuardarCalle(calle)" disabled="@isLoading">Guardar</button>
+                                    <button class="btn btn-danger btn-sm" @onclick="() => EliminarCalle(calle.Id)" disabled="@isLoading">Eliminar</button>
+                                    <button class="btn btn-danger btn-sm" @onclick="() => EliminarSoloDelFront(calle.Id)" disabled="@isLoading">Quitar</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
 </div>
-
-
-
-@if (resultados?.Any() == true)
-{
-    <table class="table table-striped mt-3">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Código</th>
-                <th>NomOficial</th>
-                <th>AltIzqIni</th>
-                <th>AltIzqFin</th>
-                <th>AltDerIni</th>
-                <th>AltDerFin</th>
-                <th>NomAnter</th>
-                <th>NomMapa</th>
-                <th>TipoC</th>
-                <th>Bicisenda</th>
-                <th>RedJerarq</th>
-                <th>TipoFfcc</th>
-                <th>Comuna</th>
-                <th>ComPar</th>
-                <th>ComImpar</th>
-                <th>Barrio</th>
-                <th>BarrioPar</th>
-                <th>BarrioImp</th>
-                <th>Geometry</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var calle in resultados)
-            {
-                <tr>
-                    <td>@calle.Id</td>
-                    <td>@calle.Codigo</td>
-                    <td>@calle.NomOficial</td>
-                    <td>@calle.AltIzqIni</td>
-                    <td>@calle.AltIzqFin</td>
-                    <td>@calle.AltDerIni</td>
-                    <td>@calle.AltDerFin</td>
-                    <td>@calle.NomAnter</td>
-                    <td>@calle.NomMapa</td>
-                    <td>@calle.TipoC</td>
-                    <td>@calle.Bicisenda</td>
-                    <td>@calle.RedJerarq</td>
-                    <td>@calle.TipoFfcc</td>
-                    <td>@calle.Comuna</td>
-                    <td>@calle.ComPar</td>
-                    <td>@calle.ComImpar</td>
-                    <td>@calle.Barrio</td>
-                    <td>@calle.BarrioPar</td>
-                    <td>@calle.BarrioImp</td>
-                    <td>@calle.Geometry</td>
-                    <td>
-                        <button class="btn btn-success btn-sm" @onclick="() => GuardarCalle(calle)">Guardar</button>
-                        <button class="btn btn-danger btn-sm" @onclick="() => EliminarCalle(calle.Id)">Eliminar</button>
-                        <button class="btn btn-danger btn-sm" @onclick="() => EliminarSoloDelFront(calle.Id)">Quitar</button>
-
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-}
 
 @code {
     private string nombreBusqueda = string.Empty;
     private List<CalleViewModel> resultados = new();
+    private bool isLoading = false;
 
-    private async Task BuscarCalles()
+    private async Task RunWithLoading(Func<Task> action)
+    {
+        isLoading = true;
+        StateHasChanged();
+        try
+        {
+            await action();
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private Task BuscarCalles() => RunWithLoading(async () =>
     {
         resultados = await CalleService.BuscarDesdeBase(nombreBusqueda);
-    }
+    });
 
-    private async Task BuscarEnExcel()
+    private Task BuscarEnExcel() => RunWithLoading(async () =>
     {
         resultados = await CalleService.BuscarDesdeExcel(nombreBusqueda);
-    }
+    });
 
-    private async Task ImportarDesdeExcel()
+    private Task ImportarDesdeExcel() => RunWithLoading(async () =>
     {
         await CalleService.ImportarDesdeExcel();
         await BuscarCalles();
-    }
+    });
 
-    private async Task GuardarCalle(CalleViewModel calle)
+    private Task GuardarCalle(CalleViewModel calle) => RunWithLoading(async () =>
     {
         await CalleService.GuardarDesdeExcel(calle);
         await BuscarCalles();
-    }
+    });
 
-    private async Task EliminarCalle(int id)
+    private Task EliminarCalle(int id) => RunWithLoading(async () =>
     {
         await CalleService.EliminarCalle(id);
         await BuscarCalles();
-    }
+    });
+
     private void EliminarSoloDelFront(int id)
     {
         var item = resultados.FirstOrDefault(c => c.Id == id);
@@ -188,4 +203,12 @@
         }
     }
 
+    private Task GuardarTodas() => RunWithLoading(async () =>
+    {
+        foreach (var calle in resultados)
+        {
+            await CalleService.GuardarDesdeExcel(calle);
+        }
+        await BuscarCalles();
+    });
 }

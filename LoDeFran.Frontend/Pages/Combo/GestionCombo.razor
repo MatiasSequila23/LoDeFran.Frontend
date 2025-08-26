@@ -6,94 +6,126 @@
 @using LoDeFran.Frontend.Models
 @using System.Globalization
 
-
-<h3>Gestión de Combo</h3>
-
-<EditForm Model="@Combo" OnValidSubmit="GuardarCambios">
-    <div class="row">
-        <div class="col-md-6">
-            <label>Nombre</label>
-            <InputText class="form-control" @bind-Value="Combo.Nombre" />
-        </div>
-        <div class="col-md-6">
-            <label>Precio</label>
-            <InputNumber class="form-control" @bind-Value="Combo.Precio" />
-        </div>
+<!-- Header -->
+<div class="card shadow-lg mb-4 border-0 rounded-3">
+    <div class="card-header bg-gradient bg-dark text-white d-flex justify-content-between align-items-center rounded-top">
+        <h4 class="mb-0 text-white">Gestión de Combo</h4>
     </div>
+</div>
 
-    <div class="mt-3">
-        <label>Descripción</label>
-        <InputTextArea class="form-control" @bind-Value="Combo.Descripcion" />
-    </div>
-
-    <button class="btn btn-primary mt-3" type="submit">Guardar Cambios</button>
-</EditForm>
-
-<hr />
-
-<h5>Items del Combo</h5>
-
-<ul class="nav nav-tabs mt-4" role="tablist">
-    @foreach (var categoriaId in ProductosPorCategoria.Keys)
-    {
-        var nombreCategoria = CategoriasDisponibles.FirstOrDefault(c => c.Id == categoriaId)?.Nombre ?? "Sin nombre";
-        <li class="nav-item">
-            <a class="nav-link @(CategoriaSeleccionada == categoriaId ? "active" : "")"
-               @onclick="() => CategoriaSeleccionada = categoriaId"
-               href="javascript:void(0)">
-                @nombreCategoria
-            </a>
-        </li>
-    }
-</ul>
-
-@if (CategoriaSeleccionada.HasValue && ProductosPorCategoria.TryGetValue(CategoriaSeleccionada.Value, out var productos))
-{
-    <div class="row mt-3">
-        @foreach (var producto in productos)
-        {
-            <div class="col-md-4 mb-3">
-                <div class="card h-100">
-                    <div class="card-body text-center">
-                        <h6 class="card-title">@producto.Nombre</h6>
-                        <p class="card-text">@producto.Precio.ToString("C", new CultureInfo("es-AR"))</p>
-                        <button class="btn btn-sm btn-primary" @onclick="() => AgregarProducto(producto)">
-                            Agregar
-                        </button>
+<div class="container-fluid py-2">
+    <!-- Card: Edición del combo -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-gradient-dark text-white">
+            <h5 class="mb-0 text-white">Datos del Combo</h5>
+        </div>
+        <div class="card-body">
+            <EditForm Model="@Combo" OnValidSubmit="GuardarCambios">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="input-group input-group-outline">
+                            <InputText class="form-control" @bind-Value="Combo.Nombre" placeholder="Nombre" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group input-group-outline">
+                            <InputNumber class="form-control" @bind-Value="Combo.Precio" placeholder="Precio" />
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
+
+                <div class="input-group input-group-outline mt-3">
+                    <InputTextArea class="form-control" @bind-Value="Combo.Descripcion" placeholder="Descripción" />
+                </div>
+
+                <button class="btn btn-primary mt-3" type="submit" disabled="@isLoading">
+                    @if (isLoading)
+                    {
+                        <span class="spinner-border spinner-border-sm me-2"></span>
+                    }
+                    Guardar Cambios
+                </button>
+            </EditForm>
+        </div>
     </div>
 
-  
-}
-
-<table class="table table-sm mt-4">
-    <thead>
-        <tr>
-            <th>Producto</th>
-            <th>Cantidad</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Combo.Items)
+    <!-- Card: Productos disponibles por categoría -->
+    <ul class="nav nav-tabs mt-2" role="tablist">
+        @foreach (var categoriaId in ProductosPorCategoria.Keys)
         {
-            var prod = ProductosDisponibles.FirstOrDefault(p => p.Id == item.ProductoId);
-            <tr>
-                <td>@prod?.Nombre</td>
-                <td>
-                    <input type="number" class="form-control form-control-sm"
-                           @bind="item.Cantidad" min="1" />
-                </td>
-                <td>
-                    <button class="btn btn-sm btn-danger" @onclick="() => QuitarProducto(item.ProductoId)">Quitar</button>
-                </td>
-            </tr>
+            var nombreCategoria = CategoriasDisponibles.FirstOrDefault(c => c.Id == categoriaId)?.Nombre ?? "Sin nombre";
+            <li class="nav-item">
+                <a class="nav-link @(CategoriaSeleccionada == categoriaId ? "active" : "")"
+                   @onclick="() => CategoriaSeleccionada = categoriaId"
+                   href="javascript:void(0)">
+                    @nombreCategoria
+                </a>
+            </li>
         }
-    </tbody>
-</table>
+    </ul>
+
+    @if (CategoriaSeleccionada.HasValue && ProductosPorCategoria.TryGetValue(CategoriaSeleccionada.Value, out var productos))
+    {
+        <div class="row mt-3">
+            @foreach (var producto in productos)
+            {
+                <div class="col-md-4 mb-3">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body text-center d-flex flex-column justify-content-between">
+                            <div>
+                                <h6 class="card-title">@producto.Nombre</h6>
+                                <p class="card-text">@producto.Precio.ToString("C", new CultureInfo("es-AR"))</p>
+                            </div>
+                            <button class="btn btn-sm btn-primary mt-2" @onclick="() => AgregarProducto(producto)" disabled="@isLoading">
+                                @if (isLoadingAgregarId == producto.Id)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-2"></span>
+                                }
+                                Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+
+    <!-- Card: Tabla de items agregados -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-gradient-dark text-white">
+            <h5 class="mb-0 text-white">Productos agregados al Combo</h5>
+        </div>
+        <div class="card-body table-responsive">
+            <table class="table table-sm table-striped mb-0">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Combo.Items)
+                    {
+                        var prod = ProductosDisponibles.FirstOrDefault(p => p.Id == item.ProductoId);
+                        <tr>
+                            <td>@prod?.Nombre</td>
+                            <td>
+                                <div class="input-group input-group-outline">
+                                    <input type="number" class="form-control form-control-sm" @bind="item.Cantidad" min="1" />
+                                </div>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-danger" @onclick="() => QuitarProducto(item.ProductoId)" disabled="@isLoading">Quitar</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
 @code {
     [Parameter] public int ComboId { get; set; }
@@ -103,30 +135,49 @@
     private List<CategoriaProductoViewModel> CategoriasDisponibles = new();
     private int? CategoriaSeleccionada;
 
-    
+    private bool isLoading = false;
+    private int? isLoadingAgregarId = null;
+
     protected override async Task OnInitializedAsync()
     {
-        Combo = await ComboService.GetByIdAsync(ComboId);
-        ProductosDisponibles = await ProductoService.GetProductosAsync();
-        CategoriasDisponibles = await CategoriaProducto.GetCategoriasProductosAsync();
+        await RunWithLoading(async () =>
+        {
+            Combo = await ComboService.GetByIdAsync(ComboId);
+            ProductosDisponibles = await ProductoService.GetProductosAsync();
+            CategoriasDisponibles = await CategoriaProducto.GetCategoriasProductosAsync();
 
-        CategoriaSeleccionada = CategoriasDisponibles.FirstOrDefault()?.Id;
+            CategoriaSeleccionada = CategoriasDisponibles.FirstOrDefault()?.Id;
+        });
     }
 
     private async Task GuardarCambios()
     {
-        await ComboService.UpdateAsync(Combo);
+        await RunWithLoading(async () =>
+        {
+            await ComboService.UpdateAsync(Combo);
+        });
     }
 
-    private void AgregarProducto(ProductoViewModel producto)
+    private async Task AgregarProducto(ProductoViewModel producto)
     {
-        if (!Combo.Items.Any(i => i.ProductoId == producto.Id))
+        isLoadingAgregarId = producto.Id;
+        StateHasChanged();
+
+        try
         {
-            Combo.Items.Add(new ComboItemViewModel
-                {
-                    ProductoId = producto.Id,
-                    Cantidad = 1
-                });
+            if (!Combo.Items.Any(i => i.ProductoId == producto.Id))
+            {
+                Combo.Items.Add(new ComboItemViewModel
+                    {
+                        ProductoId = producto.Id,
+                        Cantidad = 1
+                    });
+            }
+        }
+        finally
+        {
+            isLoadingAgregarId = null;
+            StateHasChanged();
         }
     }
 
@@ -141,4 +192,19 @@
             .GroupBy(p => p.CategoriaProductoId.Value)
             .OrderBy(g => g.Key)
             .ToDictionary(g => g.Key, g => g.ToList());
+
+    private async Task RunWithLoading(Func<Task> action)
+    {
+        isLoading = true;
+        StateHasChanged();
+        try
+        {
+            await action();
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
 }
