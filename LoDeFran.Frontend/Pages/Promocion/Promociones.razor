@@ -8,134 +8,187 @@
 @inject NavigationManager Nav
 @using LoDeFran.Frontend.Models
 
-<h3>Gestión de Promociones</h3>
+<div class="container mt-3">
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark d-flex justify-content-between align-items-center">
+            <h4 class="mb-0 text-white">🎁 Gestión de Promociones</h4>
+            <div class="d-flex gap-2">
+                <button class="btn btn-light btn-sm" @onclick="CargarPromociones" disabled="@isLoading">
+                    @if (isLoading)
+                    {
+                        <span class="spinner-border spinner-border-sm me-2"></span>
+                        @:Actualizando...
+                    }
+                    else
+                    {
+                        @:🔄 Actualizar
+                    }
+                </button>
+                <button class="btn btn-primary btn-sm" @onclick="Nuevo">➕ Nueva</button>
+            </div>
+        </div>
 
-<button class="btn btn-primary mb-3" @onclick="Nuevo">Nueva Promoción</button>
-
-@if (PromocionesList == null)
-{
-    <p><em>Cargando promociones...</em></p>
-}
-else if (!PromocionesList.Any())
-{
-    <p>No hay promociones para mostrar.</p>
-}
-else
-{
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Tipo Descuento</th>
-                <th>Tipo Promocion</th>
-                <th>Valor</th>
-                <th>Fecha Inicio</th>
-                <th>Fecha Fin</th>
-                <th>Aplicación</th>
-                <th>Estado</th>
-                <th>Días</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var promo in PromocionesList)
+        <div class="card-body">
+            @if (!promocionesCargadas)
             {
-                <tr>
-                    <td>@promo.Nombre</td>
-                    <td>@promo.NombreTipoDescuento</td>
-                    <td>@promo.NombreTipoPromocion</td>
-                    <td>@promo.ValorDescuento</td>
-                    <td>@promo.FechaInicio?.ToString("dd/MM/yyyy")</td>
-                    <td>@promo.FechaFin?.ToString("dd/MM/yyyy")</td>
-                    <td>@promo.NombreAplicacion</td>
-                    <td>@promo.NombreEstado</td>
-                    <td>@string.Join(", ", promo.PromocionDia.Select(d => d.DiaNombre))</td>
-                    <td>
-                        <button class="btn btn-sm btn-warning me-2" @onclick="() => Editar(promo.Id)">Editar</button>
-                        <button class="btn btn-sm btn-danger" @onclick="() => Eliminar(promo.Id)">Eliminar</button>
-                    </td>
-                </tr>
+                <div class="text-center my-4">
+                    <div class="spinner-border text-primary"></div>
+                    <p class="mt-2">Cargando promociones...</p>
+                </div>
             }
-        </tbody>
-    </table>
-}
+            else if (PromocionesList == null || !PromocionesList.Any())
+            {
+                <div class="alert alert-info text-center text-white">
+                    No hay promociones para mostrar.
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Tipo Descuento</th>
+                                <th>Tipo Promoción</th>
+                                <th>Valor</th>
+                                <th>Fecha Inicio</th>
+                                <th>Fecha Fin</th>
+                                <th>Aplicación</th>
+                                <th>Estado</th>
+                                <th>Días</th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var promo in PromocionesList)
+                            {
+                                <tr>
+                                    <td>@promo.Nombre</td>
+                                    <td>@promo.NombreTipoDescuento</td>
+                                    <td>@promo.NombreTipoPromocion</td>
+                                    <td>@promo.ValorDescuento</td>
+                                    <td>@promo.FechaInicio?.ToString("dd/MM/yyyy")</td>
+                                    <td>@promo.FechaFin?.ToString("dd/MM/yyyy")</td>
+                                    <td>@promo.NombreAplicacion</td>
+                                    <td><span class="badge bg-secondary">@promo.NombreEstado</span></td>
+                                    <td>@string.Join(", ", promo.PromocionDia.Select(d => d.DiaNombre))</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-warning me-1" @onclick="() => Editar(promo.Id)">✏️</button>
+                                        <button class="btn btn-sm btn-danger" @onclick="() => Eliminar(promo.Id)">🗑️</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
 
 @if (ModalVisible)
 {
     <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
-        <div class="modal-dialog">
-            <div class="modal-content p-3">
-                <h5>@(PromocionModel.Id == 0 ? "Nueva Promoción" : "Editar Promoción")</h5>
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content shadow-lg">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title">@((PromocionModel.Id == 0 ? "Nueva Promoción" : "Editar Promoción"))</h5>
+                    <button type="button" class="btn-close btn-close-white" @onclick="Cancelar"></button>
+                </div>
+                <div class="modal-body">
+                    <label class="form-label">Nombre</label>
+                    <div class="input-group input-group-static mb-3">
 
-                <div class="mb-3">
-                    <label>Nombre</label>
-                    <input class="form-control" @bind="PromocionModel.Nombre" />
-                </div>
-                <div class="mb-3">
-                    <label>Descripción</label>
-                    <textarea class="form-control" @bind="PromocionModel.Descripcion"></textarea>
-                </div>
-                <div class="mb-3">
-                    <label>Tipo Descuento</label>
-                    <select class="form-control" @bind="PromocionModel.TipoDescuentoId">
-                        <option value="">-- Seleccione --</option>
-                        @foreach (var tipo in TiposDescuento)
-                        {
-                            <option value="@tipo.Id">@tipo.Nombre</option>
-                        }
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label>Tipo Promocion</label>
-                    <select class="form-control" @bind="PromocionModel.TipoPromocionId">
-                        <option value="">-- Seleccione --</option>
-                        @foreach (var tipo in TiposPromocion)
-                        {
-                            <option value="@tipo.Id">@tipo.Nombre</option>
-                        }
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label>Aplicación</label>
-                    <select class="form-control" @bind="PromocionModel.AplicacionId">
-                        <option value="">-- Seleccione --</option>
-                        @foreach (var app in Aplicaciones)
-                        {
-                            <option value="@app.Id">@app.Nombre</option>
-                        }
-                    </select>
-                </div>
+                        <input class="form-control" @bind="PromocionModel.Nombre" placeholder="Ingrese nombre" />
+                    </div>
+                    <label class="form-label">Descripción</label>
+                    <div class="input-group input-group-static mb-3">
+                        <textarea class="form-control" @bind="PromocionModel.Descripcion" placeholder="Ingrese descripción"></textarea>
+                    </div>
 
-                <div class="mb-3">
-                    <label>Valor Descuento</label>
-                    <input type="number" step="0.01" class="form-control" @bind="PromocionModel.ValorDescuento" />
-                </div>
-                <div class="mb-3">
-                    <label>Fecha Inicio</label>
-                    <input type="date" class="form-control" @bind="PromocionModel.FechaInicio" />
-                </div>
-                <div class="mb-3">
-                    <label>Fecha Fin</label>
-                    <input type="date" class="form-control" @bind="PromocionModel.FechaFin" />
-                </div>
-                <div class="mb-3">
-                    <label>Días</label>
-                    @foreach (var dia in DiasDisponibles)
-                    {
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input"
-                                   checked="@dia.Seleccionado"
-                                   @onchange="e => ActualizarSeleccionDia(dia.Id, ((ChangeEventArgs)e).Value as bool? ?? false)" />
-                            <label class="form-check-label">@dia.Nombre</label>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">Tipo Descuento</label>
+                            <div class="input-group input-group-static mb-3">
+                                <select class="form-control" @bind="PromocionModel.TipoDescuentoId">
+                                    <option value="">-- Seleccione --</option>
+                                    @foreach (var tipo in TiposDescuento)
+                                    {
+                                        <option value="@tipo.Id">@tipo.Nombre</option>
+                                    }
+                                </select>
+                            </div>
                         </div>
-                    }
-                </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Tipo Promoción</label>
+                            <div class="input-group input-group-static mb-3">
+                                <select class="form-control" @bind="PromocionModel.TipoPromocionId">
+                                    <option value="">-- Seleccione --</option>
+                                    @foreach (var tipo in TiposPromocion)
+                                    {
+                                        <option value="@tipo.Id">@tipo.Nombre</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
 
-                <button class="btn btn-primary mb-2" @onclick="Guardar">Guardar</button>
-                <button class="btn btn-secondary" @onclick="Cancelar">Cancelar</button>
+                    <label class="form-label">Aplicación</label>
+                    <div class="input-group input-group-static mb-3">
+                        <select class="form-control" @bind="PromocionModel.AplicacionId">
+                            <option value="">-- Seleccione --</option>
+                            @foreach (var app in Aplicaciones)
+                            {
+                                <option value="@app.Id">@app.Nombre</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">Valor Descuento</label>
+                            <div class="input-group input-group-static mb-3">
+                                <input type="number" step="0.01" class="form-control" @bind="PromocionModel.ValorDescuento" placeholder="0.00" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Fecha Inicio</label>
+                            <div class="input-group input-group-static mb-3">
+                                <input type="date" class="form-control" @bind="PromocionModel.FechaInicio" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Fecha Fin</label>
+                            <div class="input-group input-group-static mb-3">
+                                <input type="date" class="form-control" @bind="PromocionModel.FechaFin" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Días</label>
+                        <div class="d-flex flex-wrap gap-3">
+                            @foreach (var dia in DiasDisponibles)
+                            {
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input"
+                                           checked="@dia.Seleccionado"
+                                           @onchange="e => ActualizarSeleccionDia(dia.Id, ((ChangeEventArgs)e).Value as bool? ?? false)" />
+                                    <label class="form-check-label">@dia.Nombre</label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" @onclick="Guardar">💾 Guardar</button>
+                    <button class="btn btn-secondary" @onclick="Cancelar">Cancelar</button>
+                </div>
             </div>
         </div>
     </div>
+
 }
 
 @code {
@@ -148,6 +201,8 @@ else
     private List<TipoPromocionViewModel> TiposPromocion = new();
 
     private bool ModalVisible = false;
+    private bool isLoading = false;
+    private bool promocionesCargadas = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -157,7 +212,6 @@ else
             TiposDescuento = formData.TiposDescuento;
             Aplicaciones = formData.Aplicaciones;
             DiasDisponibles = formData.Dias;
-            //EstadosDisponibles = formData.Estados; // si lo necesitás luego
             TiposPromocion = formData.TiposPromocion;
         }
 
@@ -166,7 +220,19 @@ else
 
     private async Task CargarPromociones()
     {
-        PromocionesList = await PromocionService.GetPromocionesAsync();
+        isLoading = true;
+        promocionesCargadas = false;
+
+        try
+        {
+            PromocionesList = await PromocionService.GetPromocionesAsync();
+            promocionesCargadas = true;
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
     }
 
     private void Nuevo()
@@ -213,7 +279,7 @@ else
         }
         else
         {
-            await JS.InvokeVoidAsync("alert", "Error al guardar la promoción.");
+            await JS.InvokeVoidAsync("alert", "❌ Error al guardar la promoción.");
         }
     }
 

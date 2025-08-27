@@ -2,112 +2,86 @@
 
 @inject Services.ProductoService ProductoService
 @inject Services.SubcategoriaProductoService SubcategoriaProductoService
-@* @inject Services.CategoriaProductoService CategoriaProductoService  *@
 @inject IJSRuntime JS
-
 @using LoDeFran.Frontend.Models
 
-<h3 class="mb-4 text-center">
-    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-       height="100px" width="100px"  viewBox="0 0 508 508" xml:space="preserve">
-<circle style="fill:#324A5E;" cx="254" cy="254" r="254" />
-<path style="fill:#2B3B4E;" d="M63.2,421.5C109.8,474.5,178,508,254,508c76.1,0,144.3-33.5,190.8-86.5H63.2z" />
-<rect x="156.5" y="172.7" style="fill:#FFD05B;" width="245.7" height="198.1" />
-<g>
-    <rect x="362.1" y="172.7" style="fill:#F9B54C;" width="7.2" height="198.1" />
-    <rect x="318.9" y="172.7" style="fill:#F9B54C;" width="7.2" height="198.1" />
-    <rect x="275.7" y="172.7" style="fill:#F9B54C;" width="7.2" height="198.1" />
-    <rect x="232.6" y="172.7" style="fill:#F9B54C;" width="7.2" height="198.1" />
-    <rect x="189.4" y="172.7" style="fill:#F9B54C;" width="7.2" height="198.1" />
-</g>
-<rect x="156.5" y="207.5" style="fill:#E6E9EE;" width="245.7" height="26.5" />
-<g>
-    <circle style="fill:#CED5E0;" cx="385.3" cy="220.7" r="4.2" />
-    <circle style="fill:#CED5E0;" cx="343.3" cy="220.7" r="4.2" />
-    <circle style="fill:#CED5E0;" cx="301.4" cy="220.7" r="4.2" />
-    <circle style="fill:#CED5E0;" cx="259.5" cy="220.7" r="4.2" />
-    <circle style="fill:#CED5E0;" cx="217.5" cy="220.7" r="4.2" />
-    <circle style="fill:#CED5E0;" cx="175.6" cy="220.7" r="4.2" />
-</g>
-<rect x="156.5" y="313" style="fill:#E6E9EE;" width="245.7" height="26.5" />
-<g>
-    <circle style="fill:#CED5E0;" cx="385.3" cy="326.3" r="4.2" />
-    <circle style="fill:#CED5E0;" cx="343.3" cy="326.3" r="4.2" />
-    <circle style="fill:#CED5E0;" cx="301.4" cy="326.3" r="4.2" />
-    <circle style="fill:#CED5E0;" cx="259.5" cy="326.3" r="4.2" />
-    <circle style="fill:#CED5E0;" cx="217.5" cy="326.3" r="4.2" />
-    <circle style="fill:#CED5E0;" cx="175.6" cy="326.3" r="4.2" />
-</g>
-<path style="fill:#84DBFF;" d="M424.2,384.3H122c-4.4,0-7.9-3.6-7.9-7.9V180.1l-37.5-37.5c-3.1-3.1-3.1-8.1,0-11.2
-	c3.1-3.1,8.1-3.1,11.2,0l39.8,39.8c1.5,1.5,2.3,3.5,2.3,5.6v191.6h294.3c4.4,0,7.9,3.6,7.9,7.9S428.5,384.3,424.2,384.3z" />
-<circle style="fill:#2B3B4E;" cx="382.7" cy="392.8" r="29.1" />
-<circle style="fill:#E6E9EE;" cx="382.7" cy="392.8" r="18" />
-<circle style="fill:#2B3B4E;" cx="169.8" cy="392.8" r="29.1" />
-<circle style="fill:#E6E9EE;" cx="169.8" cy="392.8" r="18" />
-</svg> Gestión de Productos
-</h3>
+<div class="container mt-3">
 
-<!-- Button trigger modal -->
-<button type="button" class="btn bg-gradient-primary" @onclick="MostrarModalNuevo" data-bs-toggle="modal" data-bs-target="#exampleModal">
-    <i class="fas fa-plus"></i> Nuevo Producto
-</button>
-
-
-
-@if (productos == null)
-{
-    <div class="text-center">
-        <div class="spinner-border text-warning" role="status">
-            <span class="visually-hidden">Cargando...</span>
+    <!-- Header -->
+    <div class="card shadow-lg mb-4 border-0 rounded-3">
+        <div class="card-header bg-gradient bg-dark text-white d-flex justify-content-between align-items-center rounded-top">
+            <h4 class="mb-0 text-white"><i class="fas fa-box me-2"></i> Gestión de Productos</h4>
+            <button class="btn btn-sm btn-primary" @onclick="MostrarModalNuevo" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <i class="fas fa-plus"></i> Nuevo Producto
+            </button>
         </div>
     </div>
-}
-else
-{
-    <table class="table table-striped table-hover" id="tablaProductos">
-        <thead class="table-dark">
-            <tr>
-                <th>Nombre</th>
-                <th>Descripción</th>
-                <th>Precio</th>
-                <th>Stock</th>
-                <th>Categoría</th>
-                <th>Sub categoría</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var producto in productos)
+    <!-- Card Productos -->
+    <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-body">
+            @if (productos == null)
             {
-                <tr>
-                    <td>@producto.Nombre</td>
-                    <td>@producto.Descripcion</td>
-                    <td>$@producto.Precio.ToString("N2")</td>
-                    <td>@producto.Stock</td>
-                    <td>@(producto.CategoriaProductoNombre ?? "Sin categoría")</td>
-                    <td>@(producto.SubcategoriaProductoNombre ?? "Sin sub categoría")</td>
-                    <td>@(producto.EstadoNombre ?? "Sin estado")</td>
-
-                    <td>
-                        <button class="btn btn-sm btn-outline-primary me-2" title="Editar" @onclick="() => EditarProducto(producto)" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger" title="Eliminar" @onclick="() => EliminarProducto(producto.Id)">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                        @if (producto.TieneInsumos)
-                        {
-                            <button class="btn btn-sm btn-outline-success me-2" style="margin-left: 10px;" title="Insumos" @onclick="() => GestionarInsumos(producto)">
-                                <i class="fas fa-boxes"></i>
-                            </button>
-                        }
-                    </td>
-                </tr>
+                <div class="text-center my-4">
+                    <div class="spinner-border text-warning" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                </div>
             }
-        </tbody>
-    </table>
-}
+            else
+            {
+                <div class="table-responsive">
+                    <table id="tablaProductos" class="table table-striped table-hover" @key="claveTabla">
+                        <thead class="table-dark text-center">
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Descripción</th>
+                                <th>Precio</th>
+                                <th>Stock</th>
+                                <th>Categoría</th>
+                                <th>Subcategoría</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var producto in productos)
+                            {
+                                <tr>
+                                    <td>@producto.Nombre</td>
+                                    <td>@producto.Descripcion</td>
+                                    <td>$@producto.Precio.ToString("N2")</td>
+                                    <td>@producto.Stock</td>
+                                    <td>@(producto.CategoriaProductoNombre ?? "Sin categoría")</td>
+                                    <td>@(producto.SubcategoriaProductoNombre ?? "Sin subcategoría")</td>
+                                    <td>@(producto.EstadoNombre ?? "Sin estado")</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-outline-primary me-2" title="Editar"
+                                                @onclick="() => EditarProducto(producto)" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger me-2" title="Eliminar"
+                                                @onclick="() => EliminarProducto(producto.Id)">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                        @if (producto.TieneInsumos)
+                                        {
+                                            <button class="btn btn-sm btn-outline-success" title="Insumos"
+                                                    @onclick="() => GestionarInsumos(producto)">
+                                                <i class="fas fa-boxes"></i>
+                                            </button>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal Insumos -->
 @if (mostrarModalInsumos)
 {
     <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
@@ -149,7 +123,6 @@ else
                             else
                             {
                                 <tr><td colspan="3">Sin insumos asignados</td></tr>
-
                             }
                         </tbody>
                     </table>
@@ -179,13 +152,11 @@ else
     </div>
 }
 
-<!-- Modal -->
+<!-- Modal Producto -->
 @if (mostrarModal)
 {
-
-    <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered  modal-lg" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">@((productoEditar.Id == 0) ? "Agregar Producto" : "Editar Producto")</h5>
@@ -194,49 +165,40 @@ else
                     </button>
                 </div>
                 <div class="modal-body">
+                    <!-- FORM PRODUCTO -->
                     <div class="row">
                         <div class="col-12 col-md-6">
-                            <!-- Nombre -->
                             <div class="input-group input-group-static mb-3">
                                 <label>Nombre:</label>
-                                <input type="text" class="form-control" @bind="productoEditar.Nombre"
-                                       placeholder="Nombre del producto" onfocus="focused(this)" onfocusout="defocused(this)">
+                                <input type="text" class="form-control" @bind="productoEditar.Nombre" placeholder="Nombre del producto">
                             </div>
                         </div>
                         <div class="col-12 col-md-6">
-                            <!-- Descripción -->
+                            <label>Descripción:</label>
                             <div class="input-group input-group-static mb-3">
-                                <label>Descripción:</label>
-                                <input class="form-control" @bind="productoEditar.Descripcion"
-                                          placeholder="Descripción del producto" onfocus="focused(this)" onfocusout="defocused(this)"></input>
+                                <input class="form-control" @bind="productoEditar.Descripcion" placeholder="Descripción del producto">
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12 col-md-6">
-                            <!-- Precio -->
+                            <label>Precio:</label>
                             <div class="input-group input-group-static mb-3">
-                                <label>Precio:</label>
-                                <input type="number" class="form-control" @bind="productoEditar.Precio"
-                                       placeholder="Precio" onfocus="focused(this)" onfocusout="defocused(this)">
+                                <input type="number" class="form-control" @bind="productoEditar.Precio" placeholder="Precio">
                             </div>
                         </div>
                         <div class="col-12 col-md-6">
-                            <!-- Stock -->
+                            <label>Stock:</label>
                             <div class="input-group input-group-static mb-3">
-                                <label>Stock:</label>
-                                <input type="number" class="form-control" @bind="productoEditar.Stock"
-                                       placeholder="Stock" onfocus="focused(this)" onfocusout="defocused(this)">
+                                <input type="number" class="form-control" @bind="productoEditar.Stock" placeholder="Stock">
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12 col-md-6">
-                            <!-- Categoría -->
                             <div class="input-group input-group-static mb-3">
                                 <label>Categoría:</label>
-                                <select class="form-control" @bind="CategoriaSeleccionada" @bind:event="onchange"
-                                        onfocus="focused(this)" onfocusout="defocused(this)">
+                                <select class="form-control" @bind="CategoriaSeleccionada" @bind:event="onchange">
                                     <option selected value="">-- Seleccionar --</option>
                                     @foreach (var cat in categorias)
                                     {
@@ -246,11 +208,9 @@ else
                             </div>
                         </div>
                         <div class="col-12 col-md-6">
-                            <!-- Subcategoría -->
                             <div class="input-group input-group-static mb-3">
-                                <label>Sub Categoría:</label>
-                                <select class="form-control" @bind="productoEditar.SubcategoriaProductoId"
-                                        onfocus="focused(this)" onfocusout="defocused(this)">
+                                <label>Subcategoría:</label>
+                                <select class="form-control" @bind="productoEditar.SubcategoriaProductoId">
                                     <option value="">-- Seleccionar --</option>
                                     @foreach (var sub in subCategoriasFiltradas)
                                     {
@@ -262,11 +222,9 @@ else
                     </div>
                     <div class="row">
                         <div class="col-12 col-md-6">
-                            <!-- Estado -->
                             <div class="input-group input-group-static mb-3">
                                 <label>Estado:</label>
-                                <select class="form-control" @bind="productoEditar.EstadoId"
-                                        onfocus="focused(this)" onfocusout="defocused(this)">
+                                <select class="form-control" @bind="productoEditar.EstadoId">
                                     <option value="">-- Seleccionar --</option>
                                     @foreach (var estado in estados)
                                     {
@@ -276,14 +234,13 @@ else
                             </div>
                         </div>
                         <div class="col-12 col-md-6">
-                            <!-- Tiene insumos -->
-                            <div class="form-check form-switch mt-3">
+                            <div class="form-check form-switch mt-4">
                                 <input class="form-check-input" type="checkbox" role="switch" id="tieneInsumosSwitch"
                                        @bind="productoEditar.TieneInsumos" />
                                 <label class="form-check-label" for="tieneInsumosSwitch">¿Tiene insumos?</label>
                             </div>
                         </div>
-                    </div>           
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn bg-gradient-secondary" @onclick="CerrarModal" data-bs-dismiss="modal">Cancelar</button>
@@ -292,41 +249,71 @@ else
             </div>
         </div>
     </div>
-
 }
+
 @code {
     List<ProductoViewModel> productos = new();
     ProductoViewModel productoEditar = new();
     List<CategoriaProductoViewModel> categorias = new();
     List<SubcategoriaProductoViewModel> subCategorias = new();
     List<EstadoProductoViewModel> estados = new();
+
     bool mostrarModal = false;
+    bool mostrarModalInsumos = false;
+
+    ProductoViewModel productoSeleccionado;
+    List<InsumoViewModel> insumosDisponibles = new();
+    InsumoProductoViewModel nuevoInsumo = new();
+
+    List<SubcategoriaProductoViewModel> subCategoriasFiltradas = new();
+
+    bool isLoading = false;
+    bool productosCargados = false;
+    Guid claveTabla = Guid.NewGuid();
 
     protected override async Task OnInitializedAsync()
     {
         await CargarCategorias();
         await CargarEstados();
-        await CargarProductos();
         await CargarSubCategorias();
+        await CargarProductos();
     }
 
     async Task CargarProductos()
     {
-        productos = await ProductoService.GetProductosAsync();
-        StateHasChanged(); // Fuerza renderizado
-        await JS.InvokeVoidAsync("initializeDataTable", "tablaProductos"); // Inicializa DataTable después del render
+        try
+        {
+            isLoading = true;
+            productosCargados = false;
+            await JS.InvokeVoidAsync("destroyDataTable", "tablaProductos");
+
+            productos = await ProductoService.GetProductosAsync();
+
+            productosCargados = true;
+            claveTabla = Guid.NewGuid(); // 🔁 fuerza recreación de tabla
+
+            await InvokeAsync(StateHasChanged);
+            await JS.InvokeVoidAsync("initializeDataTable", "tablaProductos");
+        }
+        finally
+        {
+            isLoading = false;
+        }
     }
+
     async Task CargarCategorias()
     {
-        categorias = await ProductoService.GetCategoriasProductosAsync(); // asegurate que ProductoService tenga este método
+        categorias = await ProductoService.GetCategoriasProductosAsync();
     }
+
     async Task CargarSubCategorias()
     {
-        subCategorias = await SubcategoriaProductoService.GetSubCategoriasProductosAsync(); // asegurate que ProductoService tenga este método
+        subCategorias = await SubcategoriaProductoService.GetSubCategoriasProductosAsync();
     }
+
     async Task CargarEstados()
     {
-        estados = await ProductoService.GetEstadosProductosAsync(); // asegurate que esté en el service
+        estados = await ProductoService.GetEstadosProductosAsync();
     }
 
     void MostrarModalNuevo()
@@ -350,14 +337,12 @@ else
                 TieneInsumos = p.TieneInsumos
             };
 
-        // Filtra las subcategorías según la categoría actual
         subCategoriasFiltradas = subCategorias
             .Where(s => s.CategoriaId == productoEditar.CategoriaProductoId)
             .ToList();
 
         mostrarModal = true;
     }
-
 
     void CerrarModal()
     {
@@ -408,25 +393,17 @@ else
     {
         await JS.InvokeVoidAsync("initializeDataTable", "tablaProductos");
     }
-    bool mostrarModalInsumos = false;
-    ProductoViewModel productoSeleccionado;
-    List<InsumoViewModel> insumosDisponibles = new();
-    InsumoProductoViewModel nuevoInsumo = new();
 
     async Task GestionarInsumos(ProductoViewModel producto)
     {
         productoSeleccionado = producto;
 
-        // Insumos disponibles para agregar (lista completa)
         insumosDisponibles = await ProductoService.GetInsumosAsync();
-
-        // Insumos ya asignados al producto
         productoSeleccionado.InsumosProducto = await ProductoService.GetInsumosAsignadosAsync(producto.Id);
 
         nuevoInsumo = new InsumoProductoViewModel();
         mostrarModalInsumos = true;
     }
-
 
     void CerrarModalInsumos()
     {
@@ -448,19 +425,11 @@ else
 
                 if (insumoExistente != null)
                 {
-                    // Actualiza cantidad en la lista local
                     insumoExistente.Cantidad = nuevoInsumo.Cantidad;
-
-                    // Llama a PUT en la API con los dos IDs
-                    await ProductoService.ActualizarInsumoProductoAsync(
-                        productoSeleccionado.Id,
-                        nuevoInsumo.InsumoId,
-                        nuevoInsumo
-                    );
+                    await ProductoService.ActualizarInsumoProductoAsync(productoSeleccionado.Id, nuevoInsumo.InsumoId, nuevoInsumo);
                 }
                 else
                 {
-                    // Agrega a la lista local
                     productoSeleccionado.InsumosProducto.Add(new InsumoProductoViewModel
                         {
                             InsumoId = nuevoInsumo.InsumoId,
@@ -468,30 +437,28 @@ else
                             Cantidad = nuevoInsumo.Cantidad
                         });
 
-                    // Llama a POST en la API
                     await ProductoService.AsociarInsumoAProducto(productoSeleccionado.Id, nuevoInsumo);
                 }
+
                 productoSeleccionado = await ProductoService.RecalcularPrecioProductoAsync(productoSeleccionado.Id);
                 await CargarProductos();
             }
 
-            // Limpia los campos del formulario
             nuevoInsumo = new InsumoProductoViewModel();
             CerrarModalInsumos();
         }
     }
 
-
-
     void EditarInsumo(InsumoProductoViewModel insumo)
     {
         nuevoInsumo = new InsumoProductoViewModel
-        {
-            ProductoId = insumo.ProductoId,
-            InsumoId = insumo.InsumoId,
-            Cantidad = insumo.Cantidad
-        };
+            {
+                ProductoId = insumo.ProductoId,
+                InsumoId = insumo.InsumoId,
+                Cantidad = insumo.Cantidad
+            };
     }
+
     async Task EliminarInsumo(InsumoProductoViewModel insumo)
     {
         var exito = await ProductoService.EliminarInsumoProductoAsync(productoSeleccionado.Id, insumo.InsumoId);
@@ -503,23 +470,18 @@ else
         }
         else
         {
-            // Manejar el caso en el que no se pudo eliminar
             Console.WriteLine("No se pudo eliminar el insumo.");
         }
     }
-
-    List<SubcategoriaProductoViewModel> subCategoriasFiltradas = new();
 
     async Task CategoriaCambiada(ChangeEventArgs e)
     {
         if (int.TryParse(e.Value?.ToString(), out int categoriaId))
         {
-            // Filtra las subcategorías según la categoría seleccionada
             subCategoriasFiltradas = subCategorias
                 .Where(s => s.CategoriaId == categoriaId)
                 .ToList();
 
-            // Si la subcategoría actual no pertenece a esta categoría, la limpiamos
             if (!subCategoriasFiltradas.Any(s => s.Id == productoEditar.SubcategoriaProductoId))
             {
                 productoEditar.SubcategoriaProductoId = 0;
@@ -531,14 +493,13 @@ else
             productoEditar.SubcategoriaProductoId = 0;
         }
     }
+
     int? CategoriaSeleccionada
     {
         get => productoEditar.CategoriaProductoId ?? 0;
         set
         {
             productoEditar.CategoriaProductoId = value;
-
-            // Filtra subcategorías solo si hay valor
             if (value.HasValue)
             {
                 subCategoriasFiltradas = subCategorias
@@ -557,6 +518,4 @@ else
             }
         }
     }
-
-
 }

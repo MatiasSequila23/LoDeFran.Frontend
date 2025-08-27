@@ -30,7 +30,7 @@
     </div>
     <div class="card card-body mx-2 mx-md-2 mt-n9">
         <div class="row gx-4 mb-2">
-           <div class="col-auto">
+            <div class="col-auto">
                 <div class="avatar avatar-xl position-relative">
                     <img src="../../assets/img/delivery-moto.jpg" alt="profile_image" class="w-100 border-radius-lg shadow-sm">
                 </div>
@@ -54,16 +54,16 @@
                                 <span class="ms-1">Nuevo cliente</span>
                             </a>
                         </li>
-                        <li class="nav-item" role="presentation">
-                            <a class="nav-link mb-0 px-0 py-1 custom-nav-link"
-                               role="tab"
-                               aria-selected="false"
-                               tabindex="-1"
-                               @onclick="CrearPedido">
+                        <li class="nav-item">
+                            <button type="button"
+                                    class="nav-link mb-0 px-0 py-1 custom-nav-link btn btn-link text-decoration-none"
+                                    @onclick="CrearPedido"
+                                    disabled="@isCreandoPedido">
                                 <i class="material-symbols-rounded text-lg position-relative">email</i>
                                 <span class="ms-1">Crear pedido</span>
-                            </a>
+                            </button>
                         </li>
+
                     </ul>
                 </div>
             </div>
@@ -71,26 +71,33 @@
         <div class="row">
             <div class="row mt-4">
                 <div class="col-md-6 col-lg-6">
-                        <div class="card blur shadow-blur h-100 max-height-vh-70 overflow-auto overflow-x-hidden mb-5 mb-lg-0">
+                    <div class="card blur shadow-blur h-100 max-height-vh-70 overflow-auto overflow-x-hidden mb-5 mb-lg-0">
                         <div class="card-header p-3">
                             <h6>Clientes</h6> <label class="form-label">Buscar cliente</label>
                             <div class="input-group input-group-outline">
-                               
+
                                 <input class="form-control" placeholder="Teléfono, email, calle..."
                                        @bind="BusquedaCliente" @bind:event="oninput" />
                             </div>
                         </div>
                         <div class="card-body p-2">
-                            @if (ClientesEncontrados.Any())
+                            @if (isLoadingClientes)
+                            {
+                                <div class="text-center my-3">
+                                    <div class="spinner-border text-primary" role="status"></div>
+                                    <p class="mt-2 text-muted">Buscando clientes...</p>
+                                </div>
+                            }
+                            else if (ClientesEncontrados.Any())
                             {
                                 @foreach (var cliente in ClientesEncontrados)
                                 {
                                     <a href="javascript:;" class="d-block p-2 @(ClienteSeleccionadoId == cliente.Id ? "bg-gradient-dark border-radius-lg" : "")"
                                        @onclick="() => SeleccionarCliente(cliente.Id)">
                                         <div class="d-flex p-2">
-                                           @*  <img alt="Cliente"
-                                                 src="@(string.IsNullOrEmpty(cliente.FotoUrl) ? "/images/default-avatar.png" : cliente.FotoUrl)"
-                                                 class="avatar shadow"> *@
+                                            @*  <img alt="Cliente"
+                                    src="@(string.IsNullOrEmpty(cliente.FotoUrl) ? "/images/default-avatar.png" : cliente.FotoUrl)"
+                                    class="avatar shadow"> *@
                                             <img alt="Image" src="../../assets/img/team-5.jpg" class="avatar shadow">
                                             <div class="ms-3">
                                                 <h6 class="@(ClienteSeleccionadoId == cliente.Id ? "text-white mb-0" : "mb-0")">
@@ -113,7 +120,7 @@
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-6">
-                        <div class="card blur shadow-blur h-100 max-height-vh-70 overflow-auto overflow-x-hidden mb-5 mb-lg-0">
+                    <div class="card blur shadow-blur h-100 max-height-vh-70 overflow-auto overflow-x-hidden mb-5 mb-lg-0">
                         <div class="card-header p-3">
                             <div class="row">
                                 <div class="col-md-8 d-flex align-items-center">
@@ -126,45 +133,45 @@
                                 </div>
                             </div>
                         </div>
-                          @if (ClienteSeleccionado != null)
-                            {
-                                <div class="card-body p-3">
-                          
-                                        <div class="card-body p-3">
-                                            <h6 class="mb-3">Cliente seleccionado</h6>
-                                            <hr class="horizontal gray-light my-2">
+                        @if (ClienteSeleccionado != null)
+                        {
+                            <div class="card-body p-3">
 
-                                            <ul class="list-group">
-                                                <li class="list-group-item border-0 ps-0 pt-0 text-sm">
-                                                    <strong class="text-dark">Nombre completo:</strong> &nbsp;
-                                                    @ClienteSeleccionado.Nombre @ClienteSeleccionado.Apellido
-                                                </li>
-                                                <li class="list-group-item border-0 ps-0 text-sm">
-                                                    <strong class="text-dark">Teléfono:</strong> &nbsp;
-                                                    @ClienteSeleccionado.Telefono
-                                                </li>
-                                                <li class="list-group-item border-0 ps-0 text-sm">
-                                                    <strong class="text-dark">Email:</strong> &nbsp;
-                                                    @ClienteSeleccionado.Email
-                                                </li>
-                                                <li class="list-group-item border-0 ps-0 text-sm">
-                                                    <strong class="text-dark">Dirección:</strong> &nbsp;
-                                                    @ClienteSeleccionado.Calle @ClienteSeleccionado.Altura
-                                                    @(string.IsNullOrWhiteSpace(ClienteSeleccionado.Piso) ? "" : $", Piso {ClienteSeleccionado.Piso}")
-                                                </li>
-                                            </ul>
-                                        </div>         
+                                <div class="card-body p-3">
+                                    <h6 class="mb-3">Cliente seleccionado</h6>
+                                    <hr class="horizontal gray-light my-2">
+
+                                    <ul class="list-group">
+                                        <li class="list-group-item border-0 ps-0 pt-0 text-sm">
+                                            <strong class="text-dark">Nombre completo:</strong> &nbsp;
+                                            @ClienteSeleccionado.Nombre @ClienteSeleccionado.Apellido
+                                        </li>
+                                        <li class="list-group-item border-0 ps-0 text-sm">
+                                            <strong class="text-dark">Teléfono:</strong> &nbsp;
+                                            @ClienteSeleccionado.Telefono
+                                        </li>
+                                        <li class="list-group-item border-0 ps-0 text-sm">
+                                            <strong class="text-dark">Email:</strong> &nbsp;
+                                            @ClienteSeleccionado.Email
+                                        </li>
+                                        <li class="list-group-item border-0 ps-0 text-sm">
+                                            <strong class="text-dark">Dirección:</strong> &nbsp;
+                                            @ClienteSeleccionado.Calle @ClienteSeleccionado.Altura
+                                            @(string.IsNullOrWhiteSpace(ClienteSeleccionado.Piso) ? "" : $", Piso {ClienteSeleccionado.Piso}")
+                                        </li>
+                                    </ul>
                                 </div>
+                            </div>
                         }
                         else
                         {
                             <div class="card-body p-3 text-center text-muted">
-                            <p class="mt-2 mb-0">Ningún cliente seleccionado</p>
-                            <small>Usa el buscador para elegir uno</small>
-                             </div>
+                                <p class="mt-2 mb-0">Ningún cliente seleccionado</p>
+                                <small>Usa el buscador para elegir uno</small>
+                            </div>
                         }
                     </div>
-                </div>    
+                </div>
             </div>
         </div>
     </div>
@@ -219,17 +226,16 @@
 
 
 
-@if (Pedidos == null)
+@if (isLoadingPedidos)
 {
-    <div class="text-center">
-        <div class="spinner-border text-secondary" role="status">
-            <span class="visually-hidden">Cargando...</span>
-        </div>
+    <div class="text-center my-4">
+        <div class="spinner-border text-secondary" role="status"></div>
+        <p class="mt-2">Cargando pedidos delivery...</p>
     </div>
 }
-else if (!Pedidos.Any())
+else if (Pedidos == null || !Pedidos.Any())
 {
-    <div class="alert alert-info">No hay pedidos delivery registrados.</div>
+    <div class="alert alert-info text-white">No hay pedidos delivery registrados.</div>
 }
 else
 {
@@ -282,7 +288,7 @@ else
                 </tbody>
             </table>
         </div>
-    </div>   
+    </div>
 }
 
 <!-- Modal Nuevo Cliente -->
@@ -353,17 +359,17 @@ else
                 </button>
             </div>
             <div class="modal-body">
-@*                 <input class="form-control mb-2" placeholder="Buscar cliente (teléfono, email, calle...)" @bind="BusquedaCliente" @bind:event="oninput" />
- *@
+                @*                 <input class="form-control mb-2" placeholder="Buscar cliente (teléfono, email, calle...)" @bind="BusquedaCliente" @bind:event="oninput" />
+                *@
                 @if (ClientesEncontrados.Any())
                 {
                     @* <select class="form-select" @onchange="SeleccionarCliente">
-                        <option value="">-- Seleccionar cliente --</option>
-                        @foreach (var cliente in ClientesEncontrados)
-                        {
-                            <option value="@cliente.Id">@cliente.Nombre @cliente.Apellido - @cliente.Telefono</option>
-                        }
-                    </select> *@
+                <option value="">-- Seleccionar cliente --</option>
+                @foreach (var cliente in ClientesEncontrados)
+                {
+                <option value="@cliente.Id">@cliente.Nombre @cliente.Apellido - @cliente.Telefono</option>
+                }
+                </select> *@
 
                 }
 
@@ -417,7 +423,7 @@ else
                         </div>
                     </div>
                 </div>
-               
+
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -433,7 +439,9 @@ else
     private string? mensajeExito;
     private string _busquedaCliente = "";
     Guid claveTabla = Guid.NewGuid();
-
+    private bool isLoadingClientes = false;
+    private bool isCreandoPedido = false;
+    private bool isLoadingPedidos = false;
     private string BusquedaCliente
     {
         get => _busquedaCliente;
@@ -494,8 +502,13 @@ else
     {
         if (BusquedaCliente.Trim().Length >= 3)
         {
+            isLoadingClientes = true;
+            StateHasChanged();
+
             ClientesEncontrados = await ServicioDeMesaService.BuscarClientesAsync(BusquedaCliente.Trim());
             BuscoCliente = true;
+
+            isLoadingClientes = false;
             StateHasChanged();
         }
         else
@@ -522,40 +535,49 @@ else
 
     private async Task CrearPedido()
     {
+        isCreandoPedido = true;
+        StateHasChanged();
+
         try
         {
             int? clienteId = ClienteSeleccionadoId;
 
-            // Si no hay cliente seleccionado pero hay datos para uno nuevo, crearlo
             if (!clienteId.HasValue && !string.IsNullOrWhiteSpace(NuevoCliente.Nombre))
             {
                 var clienteCreado = await ClienteService.CrearClienteAsync(NuevoCliente);
                 clienteId = clienteCreado.Id;
             }
 
-            // Crear pedido con clienteId opcional (puede ser null)
             var pedido = await ServicioDeMesaService.CrearPedidoPorClienteAsync(clienteId, 3);
-
-            // Navegar al builder del pedido
             Nav.NavigateTo($"/Pedido/PedidoBuilder/{pedido.Id}");
         }
         catch (Exception ex)
         {
             await JS.InvokeVoidAsync("console.error", $"Error al crear pedido: {ex.Message}");
         }
+        finally
+        {
+            isCreandoPedido = false;
+        }
     }
     private async Task CargarPedidos()
     {
+        isLoadingPedidos = true;
+        StateHasChanged();
+
         await JS.InvokeVoidAsync("destroyDataTable", "tablaPedidos");
         await JS.InvokeVoidAsync("destroyDataTable", "tablaCaja");
+
         Pedidos = (await ServicioDeMesaService.PedidosFueraDeSalon())
             .Where(p => p.TipoPedidoNombre?.ToLower().Contains("delivery") == true)
             .ToList();
 
-        claveTabla = Guid.NewGuid(); // 🔁 Forzamos recreación del DOM
+        claveTabla = Guid.NewGuid();
 
         await InvokeAsync(StateHasChanged);
         await JS.InvokeVoidAsync("initializeDataTable", "tablaPedidos");
+
+        isLoadingPedidos = false;
     }
 
     private void VerPedido(int id) => Nav.NavigateTo($"/Pedido/PedidoBuilder/{id}");

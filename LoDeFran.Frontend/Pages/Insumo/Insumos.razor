@@ -2,128 +2,172 @@
 
 @inject Services.InsumoService InsumoService
 @inject IJSRuntime JS
-
 @using LoDeFran.Frontend.Models
 
-<h3 class=" text-center">
-    <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-    <svg width="100px" height="100px" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M341.333333 426.645333m-170.666666 0a170.666667 170.666667 0 1 0 341.333333 0 170.666667 170.666667 0 1 0-341.333333 0Z" fill="#FFB300" /><path d="M362.666667 725.312m-170.666667 0a170.666667 170.666667 0 1 0 341.333333 0 170.666667 170.666667 0 1 0-341.333333 0Z" fill="#FFB300" /><path d="M810.666667 551.936c0-131.562667-80.576-101.184-80.576-384.533333h-201.493334C528.597333 450.752 448 420.373333 448 551.936v313.728A30.293333 30.293333 0 0 0 478.229333 896h302.229334A30.293333 30.293333 0 0 0 810.666667 865.664V551.936z" fill="#90CAF9" /><path d="M746.666667 160.021333C746.666667 177.685333 733.525333 192 717.333333 192h-176C525.141333 192 512 177.685333 512 160.021333v-21.333333C512 121.024 525.141333 106.666667 541.333333 106.666667h176C733.525333 106.666667 746.666667 121.024 746.666667 138.688v21.333333z" fill="#9C27B0" /><path d="M770.368 825.173333a10.090667 10.090667 0 0 1-10.090667 10.133334H498.368a10.112 10.112 0 0 1-10.090667-10.133334V551.936c0-43.776 9.856-63.658667 24.768-93.781333 13.461333-27.136 28.608-58.026667 39.786667-108.629334h153.002667c11.157333 50.602667 26.325333 81.472 39.786666 108.629334 14.890667 30.101333 24.746667 50.005333 24.746667 93.781333V825.173333z" fill="#FAFAFA" /><path d="M170.666667 554.688L213.333333 896h597.333334l42.666666-341.312H170.666667zM320 832h-42.666667v-85.333333h42.666667v85.333333z m0-128h-42.666667v-85.333333h42.666667v85.333333z m106.666667 128h-42.666667v-85.333333h42.666667v85.333333z m0-128h-42.666667v-85.333333h42.666667v85.333333z m106.666666 128h-42.666666v-85.333333h42.666666v85.333333z m0-128h-42.666666v-85.333333h42.666666v85.333333z m106.666667 128h-42.666667v-85.333333h42.666667v85.333333z m0-128h-42.666667v-85.333333h42.666667v85.333333z m106.666667 128h-42.666667v-85.333333h42.666667v85.333333z m0-128h-42.666667v-85.333333h42.666667v85.333333z" fill="#E91E63" /><path d="M885.205333 512a21.333333 21.333333 0 0 0-21.333333-21.333333H160.128a21.333333 21.333333 0 0 0-21.333333 21.333333v42.688a21.333333 21.333333 0 0 0 21.333333 21.333333h703.744a21.333333 21.333333 0 0 0 21.333333-21.333333V512z" fill="#AD1457" /><path d="M341.333333 331.306667s-21.333333-139.285333-192-117.952c42.666667 149.333333 192 117.952 192 117.952z" fill="#4CAF50" /></svg> Gestión de Insumos
-</h3>
+<div class="container mt-3">
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0 text-white">
+                <i class="fas fa-boxes me-2"></i>Gestión de Insumos
+            </h4>
+            <button class="btn btn-light btn-sm" @onclick="MostrarModalNuevo">
+                <i class="fas fa-plus me-1"></i>Nuevo Insumo
+            </button>
+        </div>
 
-<button class="btn btn-primary mb-3" @onclick="MostrarModalNuevo"><i class="fas fa-plus"> </i>Nuevo Insumo</button>
-
-@if (insumos == null)
-{
-    <div class="text-center">
-        <div class="spinner-border text-warning" role="status">
-            <span class="visually-hidden">Cargando...</span>
+        <div class="card-body">
+            @if (insumos == null)
+            {
+                <div class="text-center my-4">
+                    <div class="spinner-border text-warning" role="status"></div>
+                    <p class="mt-2">Cargando insumos...</p>
+                </div>
+            }
+            else if (!insumos.Any())
+            {
+                <div class="alert alert-info text-center text-white">No hay insumos registrados.</div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover" id="tablaInsumos">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Descripción</th>
+                                <th>Unidad</th>
+                                <th>Costo</th>
+                                <th>Disponible</th>
+                                <th>Proveedor</th>
+                                <th>Últ. Ingreso</th>
+                                <th>Stock Mínimo</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var i in insumos)
+                            {
+                                <tr>
+                                    <td>@i.Nombre</td>
+                                    <td>@i.Descripcion</td>
+                                    <td>@i.Abreviatura</td>
+                                    <td>@i.Costo?.ToString("N2")</td>
+                                    <td>@i.CantidadDisponible</td>
+                                    <td>@i.ProveedorNombre</td>
+                                    <td>@i.FechaUltimoIngreso?.ToShortDateString()</td>
+                                    <td>@i.CantidadMinima</td>
+                                    <td>@i.EstadoNombre</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary me-2" @onclick="() => Editar(i)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger" @onclick="() => Eliminar(i.Id)">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
         </div>
     </div>
-}
-else
-{
-    <table class="table table-striped table-hover" id="tablaInsumos">
-        <thead class="table-dark">
-            <tr>
-                <th>Nombre</th>
-                <th>Descripción</th>
-                <th>Unidad</th>
-                <th>Costo</th>
-                <th>Disponible</th>
-                <th>Proveedor</th>
-                <th>Últ. Ingreso</th>
-                <th>Stock Mínimo</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var i in insumos)
-            {
-                <tr>
-                    <td>@i.Nombre</td>
-                    <td>@i.Descripcion</td>
-                    <td>@i.Abreviatura</td>
-                    <td>@i.Costo?.ToString("N2")</td>
-                    <td>@i.CantidadDisponible</td>
-                    <td>@i.ProveedorNombre</td>
-                    <td>@i.FechaUltimoIngreso?.ToShortDateString()</td>
-                    <td>@i.CantidadMinima</td>
-                    <td>@i.EstadoNombre</td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-primary me-2" @onclick="() => Editar(i)"><i class="fas fa-edit"></i></button>
-                        <button class="btn btn-sm btn-outline-danger" @onclick="() => Eliminar(i.Id)"><i class="fas fa-trash-alt"></i></button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+</div>
 
 @if (mostrarModal)
 {
     <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content shadow-lg">
+                <div class="modal-header bg-dark text-white">
                     <h5 class="modal-title">@((insumoEditar.Id == 0) ? "Agregar Insumo" : "Editar Insumo")</h5>
-                    <button type="button" class="btn-close" @onclick="CerrarModal"></button>
+                    <button type="button" class="btn-close btn-close-white" @onclick="CerrarModal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-2">
-                        <label>Nombre</label>
-                        <input class="form-control" @bind="insumoEditar.Nombre" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">Nombre</label>
+                            <div class="input-group input-group-static mb-3">
+                                <input class="form-control" @bind="insumoEditar.Nombre" placeholder="Nombre insumo" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Descripción</label>
+                            <div class="input-group input-group-static mb-3">
+                                <input class="form-control" @bind="insumoEditar.Descripcion" placeholder="Descripción"></input>
+                            </div>
+                        </div>
                     </div>
-                    <div class="mb-2">
-                        <label>Descripción</label>
-                        <textarea class="form-control" @bind="insumoEditar.Descripcion"></textarea>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="form-label">Unidad de Medida</label>
+                            <div class="input-group input-group-static mb-3">
+                                <select class="form-control" @bind="insumoEditar.UnidadMedidaId">
+                                    <option value="">-- Seleccionar --</option>
+                                    @foreach (var p in unidadMedida)
+                                    {
+                                        <option value="@p.Id">@p.Abreviatura</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Costo</label>
+                            <div class="input-group input-group-static mb-3">
+                                <input type="number" class="form-control" @bind="insumoEditar.Costo" placeholder="Costo" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Cantidad Disponible</label>
+                            <div class="input-group input-group-static mb-3">
+                                <input type="number" class="form-control" @bind="insumoEditar.CantidadDisponible" placeholder="Disponible" />
+                            </div>
+                        </div>
                     </div>
-                    <div class="mb-2">
-                        <label>Unidad de Medida</label>
-                        <select class="form-control" @bind="insumoEditar.UnidadMedidaId">
-                            <option value="">-- Seleccionar --</option>
-                            @foreach (var p in unidadMedida)
-                            {
-                                <option value="@p.Id">@p.Abreviatura</option>
-                            }
-                        </select>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">Proveedor</label>
+                            <div class="input-group input-group-static mb-3">
+                                <select class="form-control" @bind="insumoEditar.ProveedorId">
+                                    <option value="">-- Seleccionar --</option>
+                                    @foreach (var p in proveedores)
+                                    {
+                                        <option value="@p.Id">@p.Nombre</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Cantidad Mínima</label>
+                            <div class="input-group input-group-static mb-3">
+                                <input type="number" class="form-control" @bind="insumoEditar.CantidadMinima" placeholder="Stock mínimo" />
+                            </div>
+                        </div>
                     </div>
-                    <div class="mb-2">
-                        <label>Costo</label>
-                        <input type="number" class="form-control" @bind="insumoEditar.Costo" />
-                    </div>
-                    <div class="mb-2">
-                        <label>Cantidad Disponible</label>
-                        <input type="number" class="form-control" @bind="insumoEditar.CantidadDisponible" />
-                    </div>
-                    <div class="mb-2">
-                        <label>Proveedor</label>
-                        <select class="form-control" @bind="insumoEditar.ProveedorId">
-                            <option value="">-- Seleccionar --</option>
-                            @foreach (var p in proveedores)
-                            {
-                                <option value="@p.Id">@p.Nombre</option>
-                            }
-                        </select>
-                    </div>
-                    <div class="mb-2">
-                        <label>Cantidad Mínima</label>
-                        <input type="number" class="form-control" @bind="insumoEditar.CantidadMinima" />
-                    </div>
-                    <div class="mb-2">
-                        <label>Estado</label>
-                        <select class="form-control" @bind="insumoEditar.EstadoId">
-                            <option value="">-- Seleccionar --</option>
-                            @foreach (var estado in estados)
-                            {
-                                <option value="@estado.Id">@estado.Nombre</option>
-                            }
-                        </select>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">Estado</label>
+                            <div class="input-group input-group-static mb-3">
+                                <select class="form-control" @bind="insumoEditar.EstadoId">
+                                    <option value="">-- Seleccionar --</option>
+                                    @foreach (var estado in estados)
+                                    {
+                                        <option value="@estado.Id">@estado.Nombre</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
                 <div class="modal-footer">
                     <button class="btn btn-secondary" @onclick="CerrarModal">Cancelar</button>
-                    <button class="btn btn-primary" @onclick="Guardar">Guardar</button>
+                    <button class="btn btn-primary" @onclick="Guardar">💾 Guardar</button>
                 </div>
             </div>
         </div>
@@ -149,32 +193,24 @@ else
     async Task CargarInsumos()
     {
         insumos = await InsumoService.GetInsumosAsync();
-        StateHasChanged(); // Fuerza renderizado
+        StateHasChanged();
         await JS.InvokeVoidAsync("initializeDataTable", "tablaInsumos");
     }
 
-    async Task CargarProveedores()
-    {
-        proveedores = await InsumoService.GetProveedoresAsync();
-    }
+    async Task CargarProveedores() => proveedores = await InsumoService.GetProveedoresAsync();
+    async Task CargarEstados() => estados = await InsumoService.GetEstadosAsync();
+    async Task CargarUnidaddesMedidas() => unidadMedida = await InsumoService.GetUnidadesMedidaAsync();
 
-    async Task CargarEstados()
-    {
-        estados = await InsumoService.GetEstadosAsync();
-    }
-    async Task CargarUnidaddesMedidas()
-    {
-        unidadMedida = await InsumoService.GetUnidadesMedidaAsync();
-    }
     void MostrarModalNuevo()
     {
-        insumoEditar = new();
+        insumoEditar = new InsumoViewModel();
         mostrarModal = true;
     }
 
+
     void Editar(InsumoViewModel insumo)
     {
-        insumoEditar = new()
+        insumoEditar = new InsumoViewModel
             {
                 Id = insumo.Id,
                 Nombre = insumo.Nombre,
@@ -192,15 +228,11 @@ else
         mostrarModal = true;
     }
 
-    void CerrarModal()
-    {
-        mostrarModal = false;
-    }
+    void CerrarModal() => mostrarModal = false;
 
     async Task Guardar()
     {
         bool ok;
-
         if (insumoEditar.Id == 0)
         {
             ok = await InsumoService.CrearInsumoAsync(insumoEditar);
@@ -210,6 +242,7 @@ else
             ok = await InsumoService.ActualizarInsumoAsync(insumoEditar);
             ok = await InsumoService.RecalcularPreciosPorInsumoAsync(insumoEditar.Id);
         }
+
         if (ok)
         {
             mostrarModal = false;
@@ -220,10 +253,6 @@ else
     async Task Eliminar(int id)
     {
         var ok = await InsumoService.EliminarInsumoAsync(id);
-        if (ok)
-        {
-            await CargarInsumos();
-        }
+        if (ok) await CargarInsumos();
     }
-
 }

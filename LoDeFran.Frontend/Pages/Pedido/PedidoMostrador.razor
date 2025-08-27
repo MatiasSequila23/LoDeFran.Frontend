@@ -8,7 +8,7 @@
 
 @using LoDeFran.Frontend.Models
 @using LoDeFran.Frontend.Services
-@* 
+@*
 <h3 class="text-center d-flex justify-content-center align-items-center gap-2 ">
     <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="62" height="102" viewBox="0 0 460.476 330.476" fill="currentColor" xml:space="preserve">
 <rect x="40" y="360" style="fill:#FFFFFF;" width="400" height="112" />
@@ -264,21 +264,21 @@
 
 @if (mensajeExito is not null)
 {
-   <div class="alert alert-success mt-3">@mensajeExito</div>
+    <div class="alert alert-success mt-3">@mensajeExito</div>
 }
 
 
 @if (Pedidos == null)
 {
-        <div class="text-center">
-            <div class="spinner-border text-secondary" role="status">
-                <span class="visually-hidden">Cargando...</span>
-            </div>
+    <div class="text-center">
+        <div class="spinner-border text-secondary" role="status">
+            <span class="visually-hidden">Cargando...</span>
         </div>
+    </div>
 }
 else if (!Pedidos.Any())
 {
-        <div class="alert alert-info">No hay pedidos mostrador registrados.</div>
+    <div class="alert alert-info text-white">No hay pedidos mostrador registrados.</div>
 }
 else
 {
@@ -331,7 +331,7 @@ else
                 </tbody>
             </table>
         </div>
-    </div>  
+    </div>
 }
 
 <!-- Modal Nuevo Cliente -->
@@ -448,18 +448,18 @@ else
     private string _busquedaCliente = "";
     Guid claveTabla = Guid.NewGuid();
 
-private string BusquedaCliente
-{
-    get => _busquedaCliente;
-    set
+    private string BusquedaCliente
     {
-        if (_busquedaCliente != value)
+        get => _busquedaCliente;
+        set
         {
-            _busquedaCliente = value;
-            _ = BuscarClienteAutomaticamente();
+            if (_busquedaCliente != value)
+            {
+                _busquedaCliente = value;
+                _ = BuscarClienteAutomaticamente();
+            }
         }
     }
-}
 
     private List<ClienteViewModel> ClientesEncontrados = new();
     private ClienteViewModel NuevoCliente = new();
