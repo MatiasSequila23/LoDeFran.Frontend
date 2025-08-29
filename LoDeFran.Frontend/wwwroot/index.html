@@ -138,19 +138,22 @@
 
                 // Inicializa nuevamente
                 selector.DataTable({
-                    dom: 'Bfrtip',
-                    buttons: [
-                        {
-                            extend: 'excelHtml5',
-                            text: 'Exportar a Excel',
-                            className: 'btn btn-success'
-                        },
-                        {
-                            extend: 'pdfHtml5',
-                            text: 'Exportar a PDF',
-                            className: 'btn btn-danger'
-                        }
-                    ],
+                    //dom: 'Bfrtip',
+                    //buttons: [
+                    //    {
+                    //        extend: 'excelHtml5',
+                    //        text: 'Exportar a Excel',
+                    //        className: 'btn btn-success'
+                    //    },
+                    //    {
+                    //        extend: 'pdfHtml5',
+                    //        text: 'Exportar a PDF',
+                    //        className: 'btn btn-danger'
+                    //    }
+                    //],
+                    pageLength: 5,       // 👈 muestra solo 5 registros
+                    lengthChange: true,  // 👈 deja cambiar cantidad
+                    lengthMenu: [5, 10, 25, 50, 100], // 👈 menú para elegir
                     language: {
                         url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
                     }
@@ -178,7 +181,7 @@
                 load: function (query, callback) {
                     if (query.length < 3) return callback();
 
-                    const url = `http://localhost:82/api/calles/autocomplete?texto=${encodeURIComponent(query)}`;
+                    const url = `http://localhost:81/api/calles/autocomplete?texto=${encodeURIComponent(query)}`;
                     fetch(url)
                         .then(response => response.json())
                         .then(data => callback(data))

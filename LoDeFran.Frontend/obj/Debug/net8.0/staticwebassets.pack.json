@@ -77,6 +77,10 @@
       "PackagePath": "staticwebassets\\assets\\img\\Industrial-Bar-Counter.jpg"
     },
     {
+      "Id": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\assets\\img\\Sample_User_Icon.png",
+      "PackagePath": "staticwebassets\\assets\\img\\Sample_User_Icon.png"
+    },
+    {
       "Id": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\assets\\img\\aerea_obelisco.jpg",
       "PackagePath": "staticwebassets\\assets\\img\\aerea_obelisco.jpg"
     },

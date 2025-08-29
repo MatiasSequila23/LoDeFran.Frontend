@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Syncfusion.Blazor;
 
 // Cambiá esta IP y puerto por los de tu servidor IIS
-string servidorApi = "192.168.10.137";
-string puertoApi = "81";
+//string servidorApi = "192.168.10.137";
+//string puertoApi = "81";
+
+//string puertoApi = "81";
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -20,17 +22,17 @@ bool esLocalhost = builder.HostEnvironment.BaseAddress.Contains("localhost");
 string baseUrl;
 if (esLocalhost)
 {
-    baseUrl = $"http://localhost:{puertoApi}/api/";
+    baseUrl = $"http://localhost:81/api/";
 }
 else
 {
     if(environment == "Production")
     {
-        baseUrl = $"http://192.168.10.137:81/api/";
+        baseUrl = $"http://192.168.10.190:81/api/";
     }
     else
     {
-        baseUrl = $"http://192.168.1.31:82/api/";
+        baseUrl = $"http://192.168.10.190:88/api/";
     }
 }
 

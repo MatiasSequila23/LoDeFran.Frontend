@@ -117,11 +117,11 @@
 <!-- Modal Cobro -->
 @if (PedidoSeleccionado != null)
 {
-    <div class="modal fade show d-block" style="z-index:1050; background-color: rgba(0,0,0,0.5);" tabindex="-1">
+    <div class="modal fade show d-block"  tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content shadow-lg rounded-3 border-0">
-                <div class="modal-header bg-dark text-white">
-                    <h5 class="modal-title text-white">
+                <div class="modal-header ">
+                    <h5 class="modal-title ">
                         <i class="fas fa-wallet me-2"></i> Cobrar - Pedido #@PedidoSeleccionado.Id
                         (@(PedidoSeleccionado.TipoPedidoId switch
                         {
@@ -132,8 +132,9 @@
                         }
                            ))
                     </h5>
-
-                    <button class="btn-close btn-close-white" @onclick="CerrarModal"></button>
+                    <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close" @onclick="CerrarModal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
 
                 <div class="modal-body">
@@ -184,8 +185,8 @@
     <div class="modal fade show d-block" style="z-index:1051; background-color: rgba(0,0,0,0.5);" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content shadow-lg rounded-3 border-0">
-                <div class="modal-header bg-dark text-white">
-                    <h5 class="modal-title text-white">
+                <div class="modal-header ">
+                    <h5 class="modal-title ">
                         <i class="fas fa-gift me-2"></i> Promociones - Pedido #@PedidoSeleccionadoParaPromocion.Id
                         (@(PedidoSeleccionadoParaPromocion.TipoPedidoId switch
                         {

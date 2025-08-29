@@ -2,192 +2,292 @@
 @inject Services.ServicioDeMesaService ServicioDeMesaService
 @inject Services.ComboService ComboService
 @inject Services.PedidoService PedidoService
-@inject Services.PromocionService PromocionService
 @inject Services.DetallePedidoServicie DetallePedidoServicie
-@inject Services.ClienteService ClienteService
-
+@inject Services.CategoriaProductoService CategoriaProductoService
+@inject Services.PromocionService PromocionService
+@inject NavigationManager Nav
 @inject IJSRuntime JS
 @using System.Globalization
 @using LoDeFran.Frontend.Models
 @using LoDeFran.Frontend.Utlis
+@using System.Linq
+
+<!-- CSS y Scripts -->
+
+<script src="../js/print.js"></script>
+<link href="../css/imprimir.css" rel="stylesheet" />
+<link href="../css/pedidomesa.css" rel="stylesheet" />
+
 <style>
+    .pedido-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        height: calc(100vh - 180px);
+    }
+
+    .productos-panel {
+        flex: 2 1 300px;
+        border-right: 2px solid #eee;
+        padding-right: 0.5rem;
+        height: 100%;
+    }
+
+    .productos-scroll {
+        max-height: 70vh;
+        overflow-y: auto;
+        padding-right: 5px;
+    }
+
+    .pedido-panel {
+        flex: 1 1 250px;
+        overflow-y: auto;
+        padding-left: 0.5rem;
+        background: #fafafa;
+        border-left: 2px solid #eee;
+        height: 100%;
+    }
+
+    .card.producto {
+        min-height: 130px;
+    }
+
     .card.stock-disponible {
-        background-color: #e9f9e9; /* verde pastel */
+        background-color: #e9f9e9;
     }
 
     .card.stock-bajo {
-        background-color: #fffbe6; /* amarillo pastel */
+        background-color: #fffbe6;
     }
 
     .card.sin-stock {
-        background-color: #fdecea; /* rojo pastel */
+        background-color: #fdecea;
     }
-
 </style>
-<h3 class="text-center d-flex justify-content-center align-items-center gap-2">
-    Pedido - Agregar Productos
 
-</h3>
-
-@if (PedidoActual?.Mesa != null)
-{
-    <h4>Mesa Nº @PedidoActual.Mesa.Numero</h4>
-}
+<!-- Header -->
+<div class="card shadow-lg mb-4 border-0 rounded-3">
+    <div class="card-header bg-gradient bg-dark text-white d-flex justify-content-between align-items-center rounded-top">
+        <h4 class="mb-0 text-white"><i class="fas fa-users me-2"></i> Pedido - Agregar Productos</h4>
+    </div>
+</div>
 
 @if (PedidoActual == null)
 {
-    <p>Cargando pedido...</p>
+        <p>Cargando pedido...</p>
 }
 else
 {
+        <div class="pedido-container">
 
-
-    @if (PedidoActual != null)
-    {
-        <div class="mt-3">
-            <h6>Total sin descuento: @PedidoActual.TotalSinDescuento?.ToString("C", new CultureInfo("es-AR"))</h6>
-            <h6>Descuento: @PedidoActual.MontoDescuento?.ToString("C", new CultureInfo("es-AR"))</h6>
-            <h6>Total con descuento: @PedidoActual.Total?.ToString("C", new CultureInfo("es-AR"))</h6>
-        </div>
-    }
-
-
-
-    <div>
-        <ul class="nav nav-tabs mt-4" role="tablist">
-            @foreach (var categoriaId in ProductosPorCategoria.Keys)
+            <!-- Panel de productos -->
+            <div class="productos-panel">
+            @if (Menu.Any())
             {
-                var nombreCategoria = CategoriasDisponibles.FirstOrDefault(c => c.Id == categoriaId)?.Nombre ?? "Sin nombre";
-                <li class="nav-item">
-                    <a class="nav-link @(CategoriaSeleccionada == categoriaId ? "active" : "")"
-                       @onclick="() => CategoriaSeleccionada = categoriaId"
-                       href="javascript:void(0)">
-                        @nombreCategoria
-                    </a>
-                </li>
-            }
-        </ul>
-
-        @if (CategoriaSeleccionada.HasValue && ProductosPorCategoria.TryGetValue(CategoriaSeleccionada.Value, out var productos))
-        {
-            <div class="row mt-3">
-                @foreach (var producto in productos)
-                {
-                    <div class="col-md-4 mb-3">
-                        <div class="card h-100 @(ObtenerClaseStock(producto.Stock))">
-
-                            <div class="card-body text-center">
-                                <h6 class="card-title">@producto.Nombre</h6>
-                                <p class="card-text">@producto.Precio.ToString("C", new CultureInfo("es-AR"))</p>
-                                <p class="text-muted">Stock: @producto.Stock</p>
-
-                                @if (producto.Stock > 0)
-                                {
-                                    <button class="btn btn-sm btn-primary" @onclick="() => AgregarItem(producto)">
-                                        Agregar
-                                    </button>
-                                }
-                                else
-                                {
-                                    <button class="btn btn-sm btn-secondary" disabled>
-                                        Sin stock
-                                    </button>
-                                }
-
-                            </div>
-                        </div>
-                    </div>
-                }
-            </div>
-
-            <div class="mt-3">
-                <label><strong>Agregar por lista - @CategoriasDisponibles.FirstOrDefault(c => c.Id == CategoriaSeleccionada)?.Nombre</strong></label>
-                <select class="form-select" @onchange="async e => await AgregarProductoDesdeSelect(int.Parse(e.Value.ToString()))">
-                    <option value="">-- Seleccionar producto --</option>
-                    @foreach (var producto in productos)
+                        <!-- Categorías -->
+                        <ul class="nav nav-tabs" role="tablist" style="white-space: nowrap;">
+                    @foreach (var categoria in Menu)
                     {
-                        <option value="@producto.Id">@producto.Nombre (@producto.Precio.ToString("C", new CultureInfo("es-AR")))</option>
+                                    <li class="nav-item" style="display: inline-block;">
+                                        <a class="nav-link @(CategoriaSeleccionada == categoria.Id ? "active" : "")"
+                                           @onclick="() => SeleccionarCategoria(categoria.Id)"
+                                           href="javascript:void(0)">
+                                @categoria.Nombre
+                                        </a>
+                                    </li>
                     }
-                </select>
+                        </ul>
+
+                        <!-- Subcategorías -->
+                @if (CategoriaSeleccionada.HasValue)
+                {
+                    var subcategorias = Menu.FirstOrDefault(c => c.Id == CategoriaSeleccionada.Value)?.Subcategorias;
+                    if (subcategorias != null)
+                    {
+                                        <div class="subcategorias-scroll mt-2 mb-3" style="overflow-x: auto; white-space: nowrap; padding-bottom: 0.5rem;">
+                            @foreach (var sub in subcategorias)
+                            {
+                                                    <button class="btn me-2"
+                                                            style="border-radius:10px; background-color:@(SubcategoriaSeleccionada==sub.Id?"#CDE7FF":"#E6F2FF"); color:@(SubcategoriaSeleccionada==sub.Id?"#333":"#555");"
+                                                            @onclick="() => SubcategoriaSeleccionada = sub.Id">
+                                    @sub.Nombre
+                                                    </button>
+                            }
+                                        </div>
+                    }
+                }
+
+                        <!-- Lista de productos -->
+                        <div class="productos-scroll mt-3">
+                    @if (SubcategoriaSeleccionada.HasValue)
+                    {
+                        var productos = Menu
+                        .FirstOrDefault(c => c.Id == CategoriaSeleccionada.Value)?
+                        .Subcategorias
+                        .FirstOrDefault(sc => sc.Id == SubcategoriaSeleccionada.Value)?
+                        .Productos;
+
+                        @if (productos != null && productos.Any())
+                        {
+                                            <div class="row">
+                                @foreach (var producto in productos)
+                                {
+                                                        <div class="col-6 col-md-4 col-lg-3 mb-3">
+                                                            <div class="card producto @(ObtenerClaseStock(producto.Stock)) h-100">
+                                                                <div class="card-body text-center d-flex flex-column">
+                                                                    <h5 class="card-title">@producto.Nombre</h5>
+                                                                    <p class="card-text fw-bold">@producto.Precio.ToString("C", new CultureInfo("es-AR"))</p>
+                                                                    <div class="mt-auto">
+                                                    @if (producto.Stock > 0)
+                                                    {
+                                                                                <button class="btn btn-primary btn-sm w-100"
+                                                                                        @onclick="() => AgregarItem(producto)">
+                                                                                    Agregar
+                                                                                </button>
+                                                    }
+                                                    else
+                                                    {
+                                                                                <button class="btn btn-secondary btn-sm w-100" disabled>Sin stock</button>
+                                                    }
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                }
+                                            </div>
+                        }
+                        else
+                        {
+                                            <p class="text-muted mt-2">No hay productos en esta subcategoría</p>
+                        }
+                    }
+                        </div>
+            }
+            else
+            {
+                        <p class="text-muted">No hay categorías disponibles</p>
+            }
             </div>
-        }
 
-        @if (PedidoActual.DetallePedido.Any())
-        {
-            <h5 class="mt-4">Detalle del Pedido</h5>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Producto / Combo</th>
-                        <th>Cantidad</th>
-                        <th>Precio Unitario</th>
-                        <th>Total</th>
-                        <th>Comentario</th>
-                        <th>Estado Cocina</th>
+            <!-- Panel de pedido actual -->
+            <div class="pedido-panel">
+                <h5>Detalle del Pedido</h5>
+            @if (PedidoActual != null)
+            {
+                        <div class="d-flex justify-content-between align-items-center mt-2 p-2 bg-light border rounded" style="font-size:0.85rem;">
+                            <div>Total sin descuento: <strong>@PedidoActual.TotalSinDescuento?.ToString("C", new CultureInfo("es-AR"))</strong></div>
+                            <div>Descuento: <strong>@PedidoActual.MontoDescuento?.ToString("C", new CultureInfo("es-AR"))</strong></div>
+                            <div>Total: <strong>@PedidoActual.Total?.ToString("C", new CultureInfo("es-AR"))</strong></div>
+                        </div>
+            }
 
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
+            @if (PedidoActual.DetallePedido.Any() || PedidoActual.PedidoCombos.Any())
+            {
+                        <div class="d-flex flex-column gap-2">
                     @foreach (var item in PedidoActual.DetallePedido)
                     {
-                        var total = item.PrecioUnitario * item.Cantidad;
-                        <tr>
-                            <td>@item.Producto.Nombre</td>
-                            <td>@item.Cantidad</td>
-                            <td>@item.PrecioUnitario.ToString("C", new CultureInfo("es-AR"))</td>
-                            <td>@total.ToString("C", new CultureInfo("es-AR"))</td>
-                            <td>
-                                <textarea type="text" class="form-control"
-                                          value="@item.Comentario"
-                                          @onchange="async e => await ActualizarComentario(item.Id, e.Value?.ToString())" />
-                            </td>
-                            <td>@item.EstadoCocinaNombre</td>
-
-                            <td>
-                                <button class="btn btn-sm btn-danger" @onclick="() => EliminarItem(item.Id)">Eliminar</button>
-                            </td>
-                        </tr>
+                        var totales = item.Cantidad * item.PrecioUnitario;
+                                    <div class="card p-2 d-flex flex-row align-items-center justify-content-between">
+                                        <div>
+                                            <div><strong>@item.Producto.Nombre</strong> x @item.Cantidad</div>
+                                            <div>Total: @totales.ToString("C", new CultureInfo("es-AR"))</div>
+                                @if (!string.IsNullOrWhiteSpace(item.Comentario))
+                                {
+                                                    <div class="text-muted small">💬 @item.Comentario</div>
+                                }
+                                        </div>
+                                        <div class="">
+                                            <a class="btn btn-sm btn-outline-danger text-danger px-3 mb-0" @onclick="() => EliminarItem(item.Id)">
+                                                <i class="bi bi-trash me-2"></i>Eliminar
+                                            </a>
+                                            <a class="btn btn-sm btn-outline-warning text-warning px-3 mb-0" @onclick="() => EditarItem(item.Id)">
+                                                <i class="bi bi-pencil me-2"></i>Editar
+                                            </a>
+                                        </div>
+                                    </div>
                     }
 
                     @foreach (var combo in PedidoActual.PedidoCombos)
                     {
-                        var total = combo.Precio * combo.Cantidad;
-                        <tr class="table-warning">
-                            <td>
-                                <strong>[Combo]</strong> @combo.Nombre
-                            </td>
-                            <td>@combo.Cantidad</td>
-                            <td>@combo.Precio.ToString("C", new CultureInfo("es-AR"))</td>
-                            <td>@total.ToString("C", new CultureInfo("es-AR"))</td>
-                            <td>
-                                <textarea type="text" class="form-control"
-                                          value="@combo.Comentario"
-                                          @onchange="async f => await ActualizarComentarioCombo(combo.Id, f.Value?.ToString())" />
-                            </td>
-                            <td>sin estado</td>
-                            <td>
-                                <button class="btn btn-sm btn-info" @onclick="() => MostrarDetalleCombo(combo)">Ver productos</button>
-                            </td>
-                        </tr>
+                        var totalOtro = combo.Cantidad * combo.Precio;
+                                    <div class="card p-2 d-flex flex-row align-items-center justify-content-between" style="background-color: #fff8dc;">
+                                        <div>
+                                            <strong>[Combo]</strong> @combo.Nombre x @combo.Cantidad
+                                <div>Total: @totalOtro.ToString("C", new CultureInfo("es-AR"))</div>
+                                @if (!string.IsNullOrWhiteSpace(combo.Comentario))
+                                {
+                                                    <div class="text-muted small">💬 @combo.Comentario</div>
+                                }
+                                        </div>
+                                        <div class="d-flex flex-column gap-1">
+                                            <a class="btn btn-sm btn-outline-info px-3 mb-0" @onclick="() => MostrarDetalleCombo(combo)">
+                                                <i class="bi bi-eye me-2"></i>Productos
+                                            </a>
+                                            <a class="btn btn-sm btn-outline-warning text-warning px-3 mb-0" @onclick="() => AbrirModalEditarCombo(combo)">
+                                                <i class="bi bi-pencil me-2"></i>Editar
+                                            </a>
+                                            <a class="btn btn-sm btn-outline-danger text-danger px-3 mb-0" @onclick="() => EliminarCombo(combo.Id)">
+                                                <i class="bi bi-trash me-2"></i>Eliminar
+                                            </a>
+                                        </div>
+                                    </div>
                     }
-                </tbody>
-            </table>
-            @if (PedidoActual.EstadoId == (int)Enums.EstadoPedido.Abierto && PedidoActual.DetallePedido.Count > 0)
-            {
-                <button class="btn btn-success mt-3" @onclick="ConfirmarPedido">
-                    Confirmar pedido y enviar a cocina
-                </button>
+                        </div>
+
+                    <button class="btn btn-success btn-lg mt-3 w-100" @onclick="ConfirmarPedido">Confirmar pedido y enviar a cocina</button>
+                @if (PromocionesDisponibles.Any())
+                {
+                                <button class="btn btn-secondary btn-lg w-100" @onclick="AbrirModalPromociones">Ver promociones disponibles</button>
+                }
+                @if (PedidoActual?.EstadoId != (int)Enums.EstadoPedido.Abierto && PedidoActual.DetallePedido.Count > 0)
+                {
+                    <button class="btn btn-warning btn-lg w-100" @onclick="ImprimirTicketsPorArea">
+                        Volver a imprimir comanda
+                    </button>
+                }
+                @if (EstadoPedidoActualId == (int)Utlis.Enums.EstadoPedido.Entregado)
+                {
+                    <button class="btn btn-danger btn-lg w-100"
+                            @onclick="() => ImprimirCuenta()">
+                        Generar cuenta
+                    </button>
+                }
             }
+            else
+            {
+                        <p class="text-muted">No hay productos en el pedido</p>
+            }
+            </div>
+        </div>
+}
+<!-- Modal Agregar Producto -->
+@if (ModalAgregarVisible)
+{
+        <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Agregar: @ProductoSeleccionado?.Nombre</h5>
+                        <button type="button" class="btn-close" @onclick="CerrarModalAgregar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <label>Cantidad</label>
+                        <input type="number" min="1" class="form-control" @bind="CantidadAgregar" />
 
-
-        }
-
-    </div>
-
-    <!-- Modal para mostrar detalle del combo -->
-    @if (ComboDetalleVisible)
-    {
+                        <label class="mt-2">Comentario</label>
+                        <textarea class="form-control" rows="2" @bind="ComentarioAgregar"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" @onclick="CerrarModalAgregar">Cancelar</button>
+                        <button class="btn btn-primary" @onclick="ConfirmarAgregar">Agregar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+}
+<!-- Modal para mostrar detalle del combo -->
+@if (ComboDetalleVisible)
+{
         <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -197,10 +297,10 @@ else
                     </div>
                     <div class="modal-body">
                         <ul>
-                            @foreach (var item in ComboDetalleSeleccionado?.Items ?? new List<PedidoComboItemViewModel>())
-                            {
-                                <li>@item.NombreProducto x @item.Cantidad</li>
-                            }
+                        @foreach (var item in ComboDetalleSeleccionado?.Items ?? new List<PedidoComboItemViewModel>())
+                        {
+                                    <li>@item.NombreProducto x @item.Cantidad</li>
+                        }
                         </ul>
                     </div>
                     <div class="modal-footer">
@@ -209,229 +309,434 @@ else
                 </div>
             </div>
         </div>
-    }
-    @if (PromocionesDisponibles.Any())
-    {
-        <div class="mt-4">
-            <label for="promoSelect"><strong>Promociones disponibles</strong></label>
-            <select id="promoSelect" class="form-select" value="@PromocionSeleccionadaId?.ToString()" @onchange="OnSeleccionarPromocion">
-                <option value="">-- Seleccione una promoción --</option>
-                @foreach (var promo in PromocionesDisponibles)
-                {
-                    <option value="@promo.Id">@promo.Nombre - @promo.ValorDescuento% (@promo.Descripcion)</option>
-                }
-            </select>
-
-
-        </div>
-    }
-
-
-
 }
-<div class="modal fade" id="modalAsignarCliente" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5>Asignar Cliente</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <input class="form-control mb-2" placeholder="Buscar cliente (teléfono, email, calle...)" @bind="BusquedaCliente" @bind:event="oninput" />
+@* @if (PromocionesDisponibles.Any())
+{
+    <div class="mt-4">
+        <label for="promoSelect"><strong>Promociones disponibles</strong></label>
+        <select id="promoSelect" class="form-select" value="@PromocionSeleccionadaId?.ToString()" @onchange="OnSeleccionarPromocion">
+            <option value="">-- Seleccione una promoción --</option>
+            @foreach (var promo in PromocionesDisponibles)
+            {
+                <option value="@promo.Id">@promo.Nombre - @promo.ValorDescuento% (@promo.Descripcion)</option>
+            }
+        </select>
 
-                @if (ClientesEncontrados.Any())
-                {
-                    <select class="form-select" @bind="ClienteSeleccionadoId">
-                        <option value="">-- Seleccionar cliente --</option>
-                        @foreach (var cliente in ClientesEncontrados)
+
+    </div>
+} *@
+@if (ModalPromocionesVisible)
+{
+        <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Promociones disponibles</h5>
+                        <button type="button" class="btn-close" @onclick="CerrarModalPromociones"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                        @foreach (var promo in PromocionesDisponibles)
                         {
-                            <option value="@cliente.Id">@cliente.Nombre @cliente.Apellido - @cliente.Telefono</option>
+                            var isSelected = PromocionSeleccionadaId == promo.Id;
+                                    <div class="col-6 mb-3">
+                                        <div class="card p-3 @(isSelected ? "border-success bg-light" : "")"
+                                             style="cursor:pointer;"
+                                             @onclick="() => AplicarPromocion(promo.Id)">
+                                            <h6>@promo.Nombre - @promo.ValorDescuento%</h6>
+                                            <p>@promo.Descripcion</p>
+                                        </div>
+                                    </div>
                         }
-                    </select>
-                }
-
-                <hr />
-                <h6>O crear nuevo cliente:</h6>
-                <input class="form-control mb-2" placeholder="Nombre" @bind="NuevoCliente.Nombre" />
-                <input class="form-control mb-2" placeholder="Apellido" @bind="NuevoCliente.Apellido" />
-                <input class="form-control mb-2" placeholder="Teléfono" @bind="NuevoCliente.Telefono" />
-                <input class="form-control mb-2" placeholder="Email" @bind="NuevoCliente.Email" />
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button class="btn btn-success" @onclick="AsignarOCrearCliente">Guardar Cliente</button>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" @onclick="CerrarModalPromociones">Cerrar</button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+}
+<!-- Modal Editar Combo -->
+@if (ModalEditarComboVisible && ComboEditando != null)
+{
+        <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Editar combo: @ComboEditando.Nombre</h5>
+                        <button type="button" class="btn-close" @onclick="CerrarModalEditarCombo"></button>
+                    </div>
+                    <div class="modal-body">
+                        <label>Cantidad</label>
+                        <div class="input-group mb-2" style="max-width:220px;">
+                            <button class="btn btn-dark" @onclick="DecrementarCantidadCombo"><i class="bi bi-dash-lg"></i></button>
+                            <input type="text" class="form-control text-center" @bind="EditCantidadCombo" />
+                            <button class="btn btn-dark" @onclick="IncrementarCantidadCombo"><i class="bi bi-plus-lg"></i></button>
+                        </div>
+                        <label>Comentario</label>
+                        <textarea class="form-control" rows="2" @bind="EditComentarioCombo"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" @onclick="CerrarModalEditarCombo">Cancelar</button>
+                        <button class="btn btn-primary" @onclick="GuardarEdicionCombo">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+}
+<!-- Modal Editar Producto -->
+@if (ModalEditarVisible && ItemEditando != null)
+{
+        <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Editar: @ItemEditando.Producto?.Nombre</h5>
+                        <button type="button" class="btn-close text-dark" @onclick="CerrarModalEditar" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <label>Cantidad</label>
+                        <div class="d-flex justify-content-center mb-2">
+                            <div class="input-group" style="max-width:220px;">
+                                <button class="btn btn-dark d-flex align-items-center justify-content-center"
+                                        style="width:60px; height: 50px;"
+                                        @onclick="DecrementarCantidad">
+                                    <i class="bi bi-dash-lg"></i>
+                                </button>
+                                <input type="text" class="form-control text-center" @bind="EditCantidad" />
+                                <button class="btn btn-dark d-flex align-items-center justify-content-center"
+                                        style="width:60px; height: 50px;"
+                                        @onclick="IncrementarCantidad">
+                                    <i class="bi bi-plus-lg"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <label>Comentario</label>
+                        <textarea class="form-control" rows="2" @bind="EditComentario"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" @onclick="CerrarModalEditar">Cancelar</button>
+                        <button class="btn btn-primary" @onclick="GuardarEdicionItem">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+}
+
+
+
+<div style="display:none">
+    @foreach (var area in areas)
+    {
+        // 1️⃣ Filtrar productos para el área actual
+        var productosArea = PedidoActual.DetallePedido
+        .Where(p => p.Producto.CategoriaProductoId.HasValue &&
+        area.Value.Contains(p.Producto.CategoriaProductoId.Value))
+        .ToList();
+
+        // 🚩 Ajuste especial para Barra: solo subcategorías 6 y 28
+        if (area.Key == "Barra")
+        {
+            productosArea = productosArea
+            .Where(p => p.Producto.SubcategoriaProductoId == 6 ||
+            p.Producto.SubcategoriaProductoId == 28)
+            .ToList();
+        }
+
+        // 2️⃣ Quedarse solo con productos pendientes (no confirmados)
+        var productosPendientes = productosArea
+        .Where(p => p.Cantidad > p.CantidadConfirmada)
+        .ToList();
+
+        // ⚠️ Si no hay nada pendiente en esta área, no se imprime ticket
+        if (!productosPendientes.Any())
+        {
+            continue;
+        }
+
+        // 3️⃣ Detectar otras áreas combinadas
+        var otrasAreas = areas
+        .Where(a => a.Key != area.Key &&
+        PedidoActual.DetallePedido.Any(p =>
+        p.Producto.CategoriaProductoId.HasValue &&
+        a.Value.Contains(p.Producto.CategoriaProductoId.Value)))
+        .Select(a => a.Key)
+        .ToList();
+
+        // 4️⃣ Renderizar ticket SOLO con pendientes
+            <div class="ticket-area" id="ticket-to-print-@area.Key">
+                <h2>@area.Key</h2>
+
+            @if (otrasAreas.Any())
+            {
+                        <h4 style="font-weight:bold; color:red;">
+                            👉 Combina con: @string.Join(", ", otrasAreas)
+                        </h4>
+            }
+
+                <h3>Pedido #@PedidoActual.Id</h3>
+
+            @if (PedidoActual.TipoPedidoId == 1 && PedidoActual.Mesa != null)
+            {
+                        <p>
+                            <span><strong>Mesa:</strong> @PedidoActual.Mesa.Numero</span><br />
+                            <span><strong>Mozo:</strong> @PedidoActual.NombreMozo</span><br />
+                        </p>
+            }
+
+                <p>
+                    <span><strong>Tipo:</strong> @PedidoActual.TipoPedidoNombre</span><br />
+                    <span><strong>Fecha - Hora:</strong> @PedidoActual.FechaPedido</span><br />
+                </p>
+                <hr />
+
+                <ul style="list-style-type:none; padding:0; margin:0;">
+                @foreach (var item in productosPendientes)
+                {
+                    int cant = item.Cantidad - item.CantidadConfirmada;
+
+                            <li style="margin-bottom:8px;">
+                                <strong>@cant x @item.Producto.Nombre</strong>
+                        @if (!string.IsNullOrEmpty(item.Comentario))
+                        {
+                                        <small>(@item.Comentario)</small>
+                        }
+                            </li>
+                }
+                </ul>
+            </div>
+    }
 </div>
+<div id="ticket-cuenta" style="display:none; font-family: monospace; width:260px;">
+
+    <!-- Encabezado -->
+    <h3 style="text-align:center; margin:0;">🍕 Bar-Pizzería Lo De Fran</h3>
+    <p style="text-align:center; font-size:11px; margin:0;">
+        📞 Tel: 011-1234-5678<br />
+        📍 Potosí 3800
+    </p>
+
+    <h4 style="text-align:center; margin:4px 0;">🧾 Cuenta - Pedido #@PedidoActual.Id</h4>
+
+    <!-- Datos del cliente solo en Delivery (tipo 3) -->
+    @if (PedidoActual.TipoPedidoId == 3)
+    {
+        <p style="margin:0; font-size:12px;">
+            <strong>Cliente:</strong> @PedidoActual.ClienteNombre <br />
+            <strong>Tel:</strong> @PedidoActual.Telefono <br />
+            <strong>Dirección:</strong> @PedidoActual.Calle @PedidoActual.Altura
+            @if (!string.IsNullOrWhiteSpace(PedidoActual.Piso))
+            {
+                <span>, Piso/Depto: @PedidoActual.Piso</span>
+            }
+        </p>
+    }
+
+    <!-- Fecha -->
+    <p style="margin:5px 0; font-size:12px;">
+        <strong>Fecha:</strong> @PedidoActual.FechaPedido?.ToString("dd/MM/yyyy HH:mm")
+    </p>
+
+    <hr />
+
+    <!-- Detalle de productos -->
+    <ul style="list-style:none; padding:0; margin:0; font-size:13px;">
+        @foreach (var item in PedidoActual.DetallePedido)
+        {
+            <li style="display:flex; justify-content:space-between;">
+                <span>@item.Cantidad x @item.Producto.Nombre</span>
+                <span>@((item.Cantidad * item.PrecioUnitario).ToString("C", new CultureInfo("es-AR")))</span>
+            </li>
+        }
+
+        @if (PedidoActual.PedidoCombos.Any())
+        {
+            <li><strong>Combos:</strong></li>
+            @foreach (var combo in PedidoActual.PedidoCombos)
+            {
+                <li style="display:flex; justify-content:space-between; margin-left:10px;">
+                    <span>@combo.Cantidad x @combo.Nombre</span>
+                    <span>@((combo.Cantidad * combo.Precio).ToString("C", new CultureInfo("es-AR")))</span>
+                </li>
+            }
+        }
+    </ul>
+
+    <hr />
+
+    <!-- Totales -->
+    @{
+        var subtotal = PedidoActual.DetallePedido.Sum(x => x.Cantidad * x.PrecioUnitario)
+        + PedidoActual.PedidoCombos.Sum(c => c.Cantidad * c.Precio);
+
+        var descuento = PedidoActual.MontoDescuento ?? 0;
+        var total = subtotal - descuento;
+    }
+
+    <p style="display:flex; justify-content:space-between; font-size:12px;">
+        <strong>Subtotal:</strong> <span>@subtotal.ToString("C", new CultureInfo("es-AR"))</span>
+    </p>
+
+    @if (descuento > 0)
+    {
+        <p style="display:flex; justify-content:space-between; font-size:12px; color:#D81B60;">
+            <strong>Descuento:</strong> <span>-@descuento.ToString("C", new CultureInfo("es-AR"))</span>
+        </p>
+    }
+
+    <p style="display:flex; justify-content:space-between; font-size:14px;">
+        <strong>Total:</strong> <span>@total.ToString("C", new CultureInfo("es-AR"))</span>
+    </p>
+
+    <hr />
+
+    <!-- Mensaje de cortesía -->
+    <p style="text-align:center; font-size:11px; margin-top:4px;">
+        🙏 ¡Gracias por su compra! <br />
+        Propina no incluida, se recomienda dejar 10% <br />
+        *** Documento no válido como factura ***
+    </p>
+</div>
+
+
+
+<div style="display:none">
+    <iframe id="print-frame"></iframe>
+</div>
+
+
+@code {
+    private Dictionary<string, int[]> areas = new()
+    {
+        { "Pizzería", new int[] { 1 ,6} }, // Pizzería y Combos
+        { "Cocina", new int[] { 2, 5 } },  // Cocina y Postres
+        { "Barra", new int[] { 3, 4 } }    // Bebidas y Cafetería
+    };
+
+    private async Task ImprimirTicketsPorArea()
+    {
+        var ticketIds = areas.Keys.ToList();
+
+        foreach (var area in ticketIds)
+        {
+            var ticketDivId = $"ticket-to-print-{area}";
+            await JS.InvokeVoidAsync("imprimirTicket", ticketDivId);
+        }
+    }
+}
+
 
 @code {
     [Parameter] public int idPedido { get; set; }
-
-    private PedidoViewModel nuevoPedido = new();
-    private List<PedidoViewModel> Pedidos = new();
-    private string? mensajeExito;
-    private string _busquedaCliente = "";
-    Guid claveTabla = Guid.NewGuid();
-
-    private string BusquedaCliente
-    {
-        get => _busquedaCliente;
-        set
-        {
-            if (_busquedaCliente != value)
-            {
-                _busquedaCliente = value;
-                _ = BuscarClienteAutomaticamente();
-            }
-        }
-    }
-    private async Task BuscarClienteAutomaticamente()
-    {
-        if (BusquedaCliente.Trim().Length >= 3)
-        {
-            ClientesEncontrados = await ServicioDeMesaService.BuscarClientesAsync(BusquedaCliente.Trim());
-            BuscoCliente = true;
-            StateHasChanged();
-        }
-        else
-        {
-            ClientesEncontrados.Clear();
-            BuscoCliente = false;
-        }
-    }
-    private async Task AsignarOCrearCliente()
-    {
-        int clienteId;
-
-        if (ClienteSeleccionadoId.HasValue)
-        {
-            clienteId = ClienteSeleccionadoId.Value;
-        }
-        else
-        {
-            var clienteCreado = await ClienteService.CrearClienteAsync(NuevoCliente);
-            clienteId = clienteCreado.Id;
-        }
-
-        // asignar cliente al pedido
-        await PedidoService.AsignarClienteAsync(idPedido, clienteId);
-
-        PedidoActual.ClienteId = clienteId;
-        ClienteSeleccionadoId = clienteId;
-
-        await JS.InvokeVoidAsync("cerrarModal", "#modalAsignarCliente");
-    }
-
-    private bool BuscoCliente = false;
-    private List<ClienteViewModel> ClientesEncontrados = new();
-    private int? ClienteSeleccionadoId;
-    private ClienteViewModel NuevoCliente = new();
-    private ClienteViewModel? ClienteSeleccionado;
-    private DotNetObjectReference<PedidoBuilder>? _dotNetRef;
 
     private PedidoViewModel? PedidoActual;
     private List<ProductoViewModel> ProductosDisponibles = new();
     private List<CategoriaProductoViewModel> CategoriasDisponibles = new();
     private int? CategoriaSeleccionada;
+    private int? SubcategoriaSeleccionada;
+    private List<CategoriaProductoViewModel> Menu;
+    private int? EstadoPedidoActualId => PedidoActual?.EstadoId;
+    // Modal para agregar producto
+    private bool ModalAgregarVisible = false;
+    private bool ModalComentarioComboVisible = false;
+    private ProductoViewModel? ProductoSeleccionado;
+    private int CantidadAgregar = 1;
+    private string ComentarioAgregar = "";
+    private string ComentarioCombo = "";
+
+    // Modal para editar producto
+    private bool ModalEditarVisible = false;
+    private DetallePedidoViewModel? ItemEditando;
+    private int EditCantidad = 1;
+    private int EditSubtotal = 0;
+    private string? EditComentario = "";
+
+    // Combos
     private bool ComboDetalleVisible = false;
     private PedidoComboViewModel? ComboDetalleSeleccionado;
+    private bool combosCargados = false;
 
+    // Promociones
     private List<PromocionViewModel> PromocionesDisponibles = new();
     private int? PromocionSeleccionadaId;
-
+    private bool ModalPromocionesVisible = false;
 
     protected override async Task OnInitializedAsync()
     {
-        PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorIdAsync(idPedido);
-        PromocionSeleccionadaId = PedidoActual?.PromocionId;
-        ProductosDisponibles = await ServicioDeMesaService.GetProductosAsync();
-        CategoriasDisponibles = await ServicioDeMesaService.GetCategoriasProductosAsync();
+        // Cargar datos principales en paralelo
+        var pedidoTask = ServicioDeMesaService.ObtenerPedidoPorIdAsync(idPedido);
+        var productosTask = ServicioDeMesaService.GetProductosAsync();
+        var categoriasTask = ServicioDeMesaService.GetCategoriasProductosAsync();
+        var menuTask = CategoriaProductoService.GetMenuAsync();
+        var promocionesTask = PromocionService.ObtenerPromocionesParaPedidoAsync(idPedido);
 
-        // Obtener combos y agregarlos como productos ficticios (categoría -1)
+        await Task.WhenAll(pedidoTask, productosTask, categoriasTask, menuTask, promocionesTask);
+
+        PedidoActual = await pedidoTask;
+        ProductosDisponibles = await productosTask;
+        CategoriasDisponibles = await categoriasTask;
+        Menu = await menuTask;
+        PromocionesDisponibles = await promocionesTask;
+
+        PromocionSeleccionadaId = PedidoActual?.PromocionId;
+
+        // Seleccionar primera categoría y subcategoría por defecto
+        CategoriaSeleccionada = Menu.FirstOrDefault()?.Id;
+        SubcategoriaSeleccionada = Menu.FirstOrDefault()?.Subcategorias.FirstOrDefault()?.Id;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await CargarCombos();
+            combosCargados = true;
+            StateHasChanged();
+            await JS.InvokeVoidAsync("window.scrollTo", 0, 0);
+
+        }
+    }
+
+    private async Task CargarCombos()
+    {
+        var categoriaGenerica = Menu.FirstOrDefault(c => c.Id == 6);
+        if (categoriaGenerica == null) return;
+
+        var subcategoriaCombos = categoriaGenerica.Subcategorias
+            .FirstOrDefault(sc => sc.Nombre == "Combos") ?? new SubcategoriaProductoViewModel
+                {
+                    Id = -1,
+                    Nombre = "Combos",
+                    Productos = new List<ProductoViewModel>()
+                };
+
+        if (!categoriaGenerica.Subcategorias.Contains(subcategoriaCombos))
+            categoriaGenerica.Subcategorias.Add(subcategoriaCombos);
+
         var combos = await ComboService.GetAllAsync();
         foreach (var combo in combos)
         {
-            ProductosDisponibles.Add(new ProductoViewModel
+            subcategoriaCombos.Productos.Add(new ProductoViewModel
                 {
                     Id = combo.Id,
-                    Nombre = $"[Combo] {combo.Nombre}",
+                    Nombre = combo.Nombre,
                     Precio = combo.Precio,
-                    CategoriaProductoId = -1,
-                    Stock = Convert.ToInt32(combo.Stock)
+                    Stock = Convert.ToInt32(combo.Stock),
+                    CategoriaProductoId = 6
                 });
         }
-
-        CategoriasDisponibles.Insert(0, new CategoriaProductoViewModel { Id = -1, Nombre = "Combos" });
-
-        CategoriaSeleccionada = CategoriasDisponibles.FirstOrDefault()?.Id;
-
-        PromocionesDisponibles = await PromocionService.ObtenerPromocionesParaPedidoAsync(idPedido);
-
     }
 
-    private async Task AgregarItem(ProductoViewModel producto)
+    private void SeleccionarCategoria(int id)
     {
-        if (producto.CategoriaProductoId == -1)
-        {
-            await JS.InvokeVoidAsync("console.log", "Enviando combo:", idPedido, "prod:", producto);
-            await PedidoService.AgregarComboAlPedidoAsync(idPedido, producto.Id, 1);
-        }
-        else
-        {
-            await ServicioDeMesaService.AgregarProductoAlPedidoAsync(idPedido, producto.Id, 1);
-        }
-
-        PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorIdAsync(idPedido);
+        CategoriaSeleccionada = id;
+        SubcategoriaSeleccionada = Menu.FirstOrDefault(c => c.Id == id)?.Subcategorias.FirstOrDefault()?.Id;
     }
 
-    private async Task AgregarProductoDesdeSelect(int idProducto)
-    {
-        if (idProducto == 0)
-            return;
-
-        var cantidadStr = await JS.InvokeAsync<string>("prompt", "¿Cantidad a agregar?");
-        if (int.TryParse(cantidadStr, out int cantidad) && cantidad > 0)
-        {
-            var producto = ProductosDisponibles.FirstOrDefault(p => p.Id == idProducto);
-            if (producto != null)
-            {
-                // Clon manual
-                var copia = new ProductoViewModel
-                    {
-                        Id = producto.Id,
-                        Nombre = producto.Nombre,
-                        Precio = producto.Precio,
-                        CategoriaProductoId = producto.CategoriaProductoId
-                    };
-
-                await AgregarItem(copia);
-            }
-        }
-    }
-
-    private async Task EliminarItem(int idDetalle)
-    {
-        await ServicioDeMesaService.DeleteAsync(idPedido, idDetalle);
-        PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorIdAsync(idPedido);
-    }
-
-    private async Task CambiarCantidad(int idDetalle, int nuevaCantidad)
-    {
-        await ServicioDeMesaService.ModificarCantidadProductoAsync(idDetalle, nuevaCantidad);
-        PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorIdAsync(idPedido);
-    }
-    private void MostrarDetalleCombo(PedidoComboViewModel combo)
-    {
-        ComboDetalleSeleccionado = combo;
-        ComboDetalleVisible = true;
-    }
-
-    private void CerrarModalDetalleCombo()
-    {
-        ComboDetalleVisible = false;
-        ComboDetalleSeleccionado = null;
-    }
     private Dictionary<int, List<ProductoViewModel>> ProductosPorCategoria =>
         ProductosDisponibles
             .Where(p => p.CategoriaProductoId.HasValue)
@@ -439,54 +744,254 @@ else
             .OrderBy(g => g.Key)
             .ToDictionary(g => g.Key, g => g.ToList());
 
-
-    private async Task OnSeleccionarPromocion(ChangeEventArgs e)
+    // --- Abrir modal agregar ---
+    private void AbrirModalAgregar(ProductoViewModel producto)
     {
-        if (int.TryParse(e.Value?.ToString(), out int promoId))
-        {
-            PromocionSeleccionadaId = promoId;
-            await PromocionService.AsignarPromocionAlPedidoAsync(idPedido, promoId);
-            PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorIdAsync(idPedido);
-            StateHasChanged();
-        }
+        ProductoSeleccionado = producto;
+        CantidadAgregar = 1;
+        ComentarioAgregar = "";
+        ModalAgregarVisible = true;
     }
+
+    private void CerrarModalAgregar() => ModalAgregarVisible = false;
+
+    private async Task ConfirmarAgregar()
+    {
+        if (ProductoSeleccionado == null) return;
+
+        if (ProductoSeleccionado.CategoriaProductoId == -1)
+        {
+            await PedidoService.AgregarComboAlPedidoAsync(idPedido, ProductoSeleccionado.Id, CantidadAgregar);
+        }
+        else
+        {
+            await ServicioDeMesaService.AgregarProductoAlPedidoAsync(idPedido, ProductoSeleccionado.Id, CantidadAgregar);
+        }
+
+        // Actualizar comentario si aplica
+        if (!string.IsNullOrEmpty(ComentarioAgregar))
+        {
+            var detalle = PedidoActual.DetallePedido.LastOrDefault(d =>
+                d.Producto.Id == ProductoSeleccionado.Id ||
+                (ProductoSeleccionado.CategoriaProductoId == -1 && d.Id == ProductoSeleccionado.Id));
+
+            if (detalle != null)
+            {
+                if (ProductoSeleccionado.CategoriaProductoId == -1)
+                    await ComboService.ModificarComentarioComboAsync(detalle.Id, ComentarioAgregar);
+                else
+                    await DetallePedidoServicie.ModificarComentarioProductoAsync(detalle.Id, ComentarioAgregar);
+            }
+        }
+
+        // Solo actualizar detalle agregado localmente
+        await ActualizarPedidoParcial();
+        ModalAgregarVisible = false;
+    }
+
+    private async Task AgregarItem(ProductoViewModel producto)
+    {
+        if (producto.CategoriaProductoId == -1)
+            await PedidoService.AgregarComboAlPedidoAsync(idPedido, producto.Id, 1);
+        else
+            await ServicioDeMesaService.AgregarProductoAlPedidoAsync(idPedido, producto.Id, 1);
+
+        await ActualizarPedidoParcial();
+    }
+
+    // --- Editar item ---
+    private void EditarItem(int idDetalle)
+    {
+        ItemEditando = PedidoActual?.DetallePedido.FirstOrDefault(d => d.Id == idDetalle);
+        if (ItemEditando is null) return;
+        EditCantidad = ItemEditando.Cantidad;
+        EditSubtotal = Convert.ToInt32(ItemEditando.PrecioUnitario) * EditCantidad;
+        EditComentario = ItemEditando.Comentario ?? "";
+        ModalEditarVisible = true;
+    }
+
+    private void CerrarModalEditar()
+    {
+        ModalEditarVisible = false;
+        ItemEditando = null;
+        EditCantidad = 1;
+        EditComentario = "";
+    }
+
+    private async Task GuardarEdicionItem()
+    {
+        if (ItemEditando is null) return;
+        if (EditCantidad < 1) EditCantidad = 1;
+
+        if (EditCantidad != ItemEditando.Cantidad)
+            await ServicioDeMesaService.ModificarCantidadProductoAsync(ItemEditando.Id, EditCantidad);
+
+        await DetallePedidoServicie.ModificarComentarioProductoAsync(ItemEditando.Id, EditComentario ?? "");
+        await ActualizarPedidoParcial();
+        CerrarModalEditar();
+    }
+
+    private void IncrementarCantidad() => EditCantidad++;
+    private void DecrementarCantidad() { if (EditCantidad > 1) EditCantidad--; }
+
+    // --- Actualización parcial ---
+    private async Task ActualizarPedidoParcial()
+    {
+        // Solo recargar detalles para no bloquear la UI
+        var pedidoActualizado = await ServicioDeMesaService.ObtenerPedidoPorIdAsync(idPedido);
+        PedidoActual.DetallePedido = pedidoActualizado.DetallePedido;
+        PedidoActual.Total = pedidoActualizado.Total;
+        StateHasChanged();
+    }
+
+    // --- Otros métodos similares al original ---
+    private async Task EliminarItem(int idDetalle)
+    {
+        bool confirmacion = await JS.InvokeAsync<bool>(
+                "mostrarConfirmacion",
+                "Confirmar",
+                "¿Seguro que deseas eliminar?"
+            );
+        if (!confirmacion) return;
+
+        await ServicioDeMesaService.DeleteAsync(idPedido, idDetalle);
+        await ActualizarPedidoParcial();
+    }
+
     private string ObtenerClaseStock(int stock)
     {
-        if (stock == 0)
-            return "sin-stock";
-        if (stock < 5)
-            return "stock-bajo";
+        if (stock <= 0) return "sin-stock";
+        if (stock < 5) return "stock-bajo";
         return "stock-disponible";
     }
-    private async Task ActualizarComentario(int idDetalle, string? comentario)
+
+    private void AbrirModalPromociones() => ModalPromocionesVisible = true;
+    private void CerrarModalPromociones() => ModalPromocionesVisible = false;
+
+    private async Task AplicarPromocion(int promoId)
     {
-        await DetallePedidoServicie.ModificarComentarioProductoAsync(idDetalle, comentario ?? "");
-        PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorIdAsync(idPedido);
+        await PromocionService.AsignarPromocionAlPedidoAsync(idPedido, promoId);
+        PromocionSeleccionadaId = promoId;
+        await ActualizarPedidoParcial();
+        ModalPromocionesVisible = false;
     }
-    private async Task ActualizarComentarioCombo(int idDetalle, string? comentario)
+
+    private void AbrirModalComentarioCombo(PedidoComboViewModel combo)
     {
-        await ComboService.ModificarComentarioComboAsync(idDetalle, comentario ?? "");
-        PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorIdAsync(idPedido);
+        ComboDetalleSeleccionado = combo;
+        ComentarioCombo = combo.Comentario;
+        ModalComentarioComboVisible = true;
+    }
+
+    private async Task GuardarComentarioCombo()
+    {
+        if (ComboDetalleSeleccionado != null)
+        {
+            await ComboService.ModificarComentarioComboAsync(ComboDetalleSeleccionado.Id, ComentarioCombo ?? "");
+            await ActualizarPedidoParcial();
+            ModalComentarioComboVisible = false;
+        }
+    }
+
+    // --- Modales de combos, incrementos y ediciones ---
+    private bool ModalEditarComboVisible = false;
+    private PedidoComboViewModel ComboEditando;
+    private int EditCantidadCombo;
+    private string EditComentarioCombo;
+
+    private void AbrirModalEditarCombo(PedidoComboViewModel combo)
+    {
+        ComboEditando = combo;
+        EditCantidadCombo = combo.Cantidad;
+        EditComentarioCombo = combo.Comentario;
+        ModalEditarComboVisible = true;
+    }
+
+    private void CerrarModalEditarCombo()
+    {
+        ModalEditarComboVisible = false;
+        ComboEditando = null;
+    }
+
+    private async Task GuardarEdicionCombo()
+    {
+        if (ComboEditando != null)
+        {
+            var request = new Utlis.ClassAux.ActualizarComboRequest
+                {
+                    PedidoId = idPedido,
+                    ComboId = ComboEditando.Id,
+                    Cantidad = EditCantidadCombo,
+                    Comentario = EditComentarioCombo ?? ""
+                };
+
+            await PedidoService.ActualizarCombo(request);
+            await ActualizarPedidoParcial();
+            ModalEditarComboVisible = false;
+            ComboEditando = null;
+        }
+    }
+    private void MostrarDetalleCombo(PedidoComboViewModel combo)
+    {
+        ComboDetalleSeleccionado = combo;
+        ComboDetalleVisible = true;
+    }
+    private async Task EliminarCombo(int comboId)
+    {
+        // var combo = PedidoActual.PedidoCombos.FirstOrDefault(c => c.Id == comboId);
+        // if (combo != null)
+        // {
+        //     _context.PedidoCombos.Remove(combo);
+        //     await _context.SaveChangesAsync();
+        //     PedidoActual.PedidoCombos.Remove(combo);
+        //     // Recalcular totales si querés
+        // }
     }
     private async Task ConfirmarPedido()
     {
-        bool confirmacion = await JS.InvokeAsync<bool>("confirm", "¿Seguro que deseas confirmar y enviar el pedido a cocina?");
-        if (!confirmacion)
-            return;
-        if (PedidoActual.ClienteId == null)
-        {
-            // mostrar modal para asignar o crear cliente
-            await JS.InvokeVoidAsync("mostrarModal", "#modalAsignarCliente");
-        }
+        bool confirmacion = await JS.InvokeAsync<bool>(
+                "mostrarConfirmacion",
+                "Confirmar pedido",
+                "¿Seguro que deseas confirmar y enviar el pedido a cocina?"
+            ); if (!confirmacion) return;
+
         foreach (var item in PedidoActual.DetallePedido)
         {
-            if (item.EstadoCocinaId == (int)Enums.EstadoDetallePedidoCocina.Pendiente) // O según el nombre real en BD
+            if (item.EstadoCocinaId == (int)Enums.EstadoDetallePedidoCocina.Pendiente)
             {
-                await DetallePedidoServicie.ActualizarEstadoCocinaAsync(item.Id, (int)Enums.EstadoDetallePedidoCocina.EnPreparacion); // 2 = En cocina, por ejemplo
+                await DetallePedidoServicie.ActualizarEstadoCocinaAsync(item.Id, (int)Enums.EstadoDetallePedidoCocina.EnPreparacion);
             }
         }
         await PedidoService.CambiarEstadoAsync(idPedido, Utlis.Enums.EstadoPedido.EnPreparacion);
         PedidoActual = await ServicioDeMesaService.ObtenerPedidoPorIdAsync(idPedido);
+
+
+        foreach (var item in PedidoActual.DetallePedido)
+        {
+            await DetallePedidoServicie.ModificarCantidadConfirmProductoAsync(item.Id, item.Cantidad);
+        }
+
+        // Imprime el ticket
+        var ticketIds = areas.Keys.ToList();
+
+        foreach (var area in ticketIds)
+        {
+            var ticketDivId = $"ticket-to-print-{area}";
+            await JS.InvokeVoidAsync("imprimirTicket", ticketDivId);
+        }
+
+    }
+    private void CerrarModalDetalleCombo()
+    {
+        ComboDetalleVisible = false;
+        ComboDetalleSeleccionado = null;
+    }
+    private void IncrementarCantidadCombo() => EditCantidadCombo++;
+    private void DecrementarCantidadCombo() { if (EditCantidadCombo > 1) EditCantidadCombo--; }
+
+    private async Task ImprimirCuenta()
+    {
+        await JS.InvokeVoidAsync("imprimirEnIframe", "ticket-cuenta");
     }
 
 }

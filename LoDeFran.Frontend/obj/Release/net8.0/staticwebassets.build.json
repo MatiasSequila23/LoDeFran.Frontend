@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "84qt7DQ2lKDqRS6BM7Ir+Ke7vNJocMLJ457U1mAsdOg=",
+  "Hash": "3bDD40JKICgyAtpVrgLGPgq77O35MIlycjxOzy/ljEo=",
   "Source": "LoDeFran.Frontend",
   "BasePath": "/",
   "Mode": "Root",
@@ -16127,6 +16127,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\assets\\img\\product-12.jpg"
+    },
+    {
+      "Identity": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\assets\\img\\Sample_User_Icon.png",
+      "SourceId": "LoDeFran.Frontend",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\",
+      "BasePath": "/",
+      "RelativePath": "assets/img/Sample_User_Icon.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\assets\\img\\Sample_User_Icon.png"
     },
     {
       "Identity": "E:\\Sources\\LoDeFran.Frontend\\LoDeFran.Frontend\\wwwroot\\assets\\img\\small-logos\\bootstrap.svg",

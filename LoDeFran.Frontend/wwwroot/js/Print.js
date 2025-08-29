@@ -33,3 +33,20 @@ window.imprimirTicket = function (divId) {
     iframe.contentWindow.focus();
     iframe.contentWindow.print();
 }
+
+window.imprimirEnIframe = function (divId) {
+    var contenido = document.getElementById(divId).innerHTML;
+    var iframe = document.getElementById('print-frame');
+    var doc = iframe.contentWindow.document;
+
+    doc.open();
+    doc.write('<html><head><title>Imprimir</title>');
+    doc.write('<style>@media print { @page { margin: 0; } body { margin: 0; font-family: Arial, sans-serif; } }</style>');
+    doc.write('</head><body>');
+    doc.write(contenido);
+    doc.write('</body></html>');
+    doc.close();
+
+    iframe.contentWindow.focus();
+    iframe.contentWindow.print();
+};
