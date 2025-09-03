@@ -17,6 +17,8 @@
         public int? InsumoId { get; set; }
         public string? InsumoNombre { get; set; }
         public bool TieneInsumos { get; set; }
+        public bool TieneVariante { get; set; }
         public List<InsumoProductoViewModel>? InsumosProducto { get; set; }
+        public List<ProductoVarianteViewModel> Variantes { get; set; } = new();
     }
 }

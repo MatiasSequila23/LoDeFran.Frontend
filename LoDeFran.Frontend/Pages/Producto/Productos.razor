@@ -233,14 +233,88 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 col-md-3">
                             <div class="form-check form-switch mt-4">
                                 <input class="form-check-input" type="checkbox" role="switch" id="tieneInsumosSwitch"
                                        @bind="productoEditar.TieneInsumos" />
                                 <label class="form-check-label" for="tieneInsumosSwitch">¿Tiene insumos?</label>
                             </div>
                         </div>
+                        <div class="col-12 col-md-3">
+                            <div class="form-check form-switch mt-4">
+                                <input type="checkbox" class="form-check-input" id="chkVariedad" @bind="productoEditar.TieneVariante" />
+                                <label class="form-check-label" for="chkVariedad">¿Tiene variantes?</label>
+                            </div>
+                        </div>
                     </div>
+                    @if (productoEditar.TieneVariante)
+                    {           
+                        <hr />
+                        <h6>Variantes</h6>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Precio</th>
+                                    <th>Stock</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (productoEditar.Variantes != null && productoEditar.Variantes.Any())
+                                {
+                                    @foreach (var variante in productoEditar.Variantes)
+                                    {
+                                        <tr>
+                                            <td>@variante.Nombre</td>
+                                            <td>$@variante.Precio</td>
+                                            <td>@(variante.Stock ?? 0)</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary me-1"
+                                                        @onclick="() => EditarVariante(variante)">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-danger"
+                                                        @onclick="() => EliminarVariante(variante)">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr><td colspan="4">Sin variantes</td></tr>
+                                }
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="input-group input-group-static mb-3">
+                                    <input type="text" class="form-control" placeholder="Nombre variante"
+                                            @bind="nuevaVariante.Nombre" />
+                                </div>                           
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="input-group input-group-static mb-3">
+                                    <input type="number" class="form-control" placeholder="Precio"
+                                            @bind="nuevaVariante.Precio" />
+                                </div>
+                         
+                            </div>
+                            <div class="col-md-3">
+                                <div class="input-group input-group-static mb-3">
+                                    <input type="number" class="form-control" placeholder="Stock"
+                                            @bind="nuevaVariante.Stock" />
+                                </div>
+                           
+                            </div>
+                            <div class="col-md-1">
+                                <button class="btn btn-success" @onclick="AgregarVariante">+</button>
+                            </div>
+                        </div>
+                    }
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn bg-gradient-secondary" @onclick="CerrarModal" data-bs-dismiss="modal">Cancelar</button>
@@ -257,7 +331,7 @@
     List<CategoriaProductoViewModel> categorias = new();
     List<SubcategoriaProductoViewModel> subCategorias = new();
     List<EstadoProductoViewModel> estados = new();
-
+    private bool tieneVariedad = false;
     bool mostrarModal = false;
     bool mostrarModalInsumos = false;
 
@@ -518,4 +592,42 @@
             }
         }
     }
+    ProductoVarianteViewModel nuevaVariante = new();
+
+    void AgregarVariante()
+    {
+        if (!string.IsNullOrWhiteSpace(nuevaVariante.Nombre) && nuevaVariante.Precio > 0)
+        {
+            if (productoEditar.Variantes == null)
+                productoEditar.Variantes = new List<ProductoVarianteViewModel>();
+
+            productoEditar.Variantes.Add(new ProductoVarianteViewModel
+                {
+                    Nombre = nuevaVariante.Nombre,
+                    Precio = nuevaVariante.Precio,
+                    Stock = nuevaVariante.Stock
+                });
+
+            nuevaVariante = new ProductoVarianteViewModel(); // reset
+        }
+    }
+
+    void EditarVariante(ProductoVarianteViewModel variante)
+    {
+        nuevaVariante = new ProductoVarianteViewModel
+            {
+                IdVariante = variante.IdVariante,
+                Nombre = variante.Nombre,
+                Precio = variante.Precio,
+                Stock = variante.Stock
+            };
+
+        productoEditar.Variantes.Remove(variante); // lo saco y al guardar lo vuelve a agregar
+    }
+
+    void EliminarVariante(ProductoVarianteViewModel variante)
+    {
+        productoEditar.Variantes.Remove(variante);
+    }
+
 }
